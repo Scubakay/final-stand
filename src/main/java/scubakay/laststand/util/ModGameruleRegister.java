@@ -9,6 +9,8 @@ import scubakay.laststand.LastStand;
 public class ModGameruleRegister {
     public static final GameRules.Key<GameRules.IntRule> HUNTER_AMOUNT = GameRuleRegistry.register("hunterAmount", Category.MISC, GameRuleFactory.createIntRule(1, 1));
     public static final GameRules.Key<GameRules.IntRule> HUNTER_TRACKING_DEVICE_COOLDOWN = GameRuleRegistry.register("hunterTrackingDeviceCooldown", Category.MISC, GameRuleFactory.createIntRule(1000, 1));
+    public static final GameRules.Key<GameRules.IntRule> MAX_LIVES = GameRuleRegistry.register("maxLives", Category.MISC, GameRuleFactory.createIntRule(6, 1));
+    public static final GameRules.Key<GameRules.IntRule> MIN_LIVES = GameRuleRegistry.register("minLives", Category.MISC, GameRuleFactory.createIntRule(3, 1));
 
     public static void registerGamerules() {
         System.out.printf("[%s] Registering gamerules", LastStand.MOD_ID);

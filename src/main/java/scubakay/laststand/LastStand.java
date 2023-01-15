@@ -10,12 +10,8 @@ import scubakay.laststand.util.ModGameruleRegister;
 
 public class LastStand implements ModInitializer {
     public static final String MOD_ID = "laststand";
-    public static final int HUNTER_DEVICE_COOLDOWN = 10;
 
     public static final String COMMAND_ROOT = "ls";
-
-    public static final int MAX_LIVES = 10;
-    public static final int MIN_LIVES = 1;
 
     @Override
     public void onInitialize() {
