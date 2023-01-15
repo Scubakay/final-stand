@@ -27,7 +27,7 @@ public class ResetSessionCommand {
     public static int run(CommandContext<ServerCommandSource> context) {
         List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers();
 
-        context.getSource().sendFeedback(Text.literal("Resetting session"), true);
+        context.getSource().sendFeedback(Text.translatable("item.laststand.resetting_session"), true);
 
         players.forEach((ServerPlayerEntity player) -> {
             while(player.getInventory().containsAny(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE))) {

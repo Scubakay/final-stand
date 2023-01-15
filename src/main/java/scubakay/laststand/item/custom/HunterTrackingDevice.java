@@ -30,10 +30,10 @@ public class HunterTrackingDevice extends Item {
                 setCooldown(world, user);
                 double distance = getDistanceToTarget(user);
                 world.playSound(null, user.getBlockPos(), ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.PLAYERS, 1f, 1f);
-                user.sendMessage(Text.literal("Target is " + Math.round(distance) + " blocks away!")
+                user.sendMessage(Text.translatable("item.laststand.hunter_tracking_device_target_distance", Math.round(distance))
                         .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
             } else {
-                user.sendMessage(Text.literal("Something went wrong, no player found to track. Contact game host to solve the problem!")
+                user.sendMessage(Text.translatable("item.laststand.hunter_tracking_device_no_player_found_error")
                         .fillStyle(Style.EMPTY.withColor(Formatting.RED)), false);
             }
         }

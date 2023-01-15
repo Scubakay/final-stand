@@ -11,26 +11,26 @@ import scubakay.laststand.util.IEntityDataSaver;
 
 @Mixin(Entity.class)
 public class ModEntityDataSaverMixin implements IEntityDataSaver {
-    private NbtCompound persistenData;
+    private NbtCompound persistentData;
     @Override
     public NbtCompound getPersistentData() {
-        if(this.persistenData == null) {
-            this.persistenData = new NbtCompound();
+        if(this.persistentData == null) {
+            this.persistentData = new NbtCompound();
         }
-        return this.persistenData;
+        return this.persistentData;
     }
 
     @Inject(method = "writeNbt", at = @At("HEAD"))
     protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable info) {
-        if(persistenData != null) {
-            nbt.put("laststand.data", persistenData);
+        if(persistentData != null) {
+            nbt.put("laststand.data", persistentData);
         }
     }
 
     @Inject(method = "readNbt", at = @At("HEAD"))
     protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
         if(nbt.contains("laststand.data", 10)) {
-            persistenData = nbt.getCompound("laststand.data");
+            persistentData = nbt.getCompound("laststand.data");
         }
     }
 }

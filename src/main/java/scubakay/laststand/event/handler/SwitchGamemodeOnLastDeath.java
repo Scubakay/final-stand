@@ -16,10 +16,10 @@ public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.Allow
             int lives = LivesData.removeLives((IEntityDataSaver) player, 1);
             if(lives == 0) {
                 setGamemodeToSpectator(player);
-                player.sendMessage(Text.literal("Game over!"));
+                player.sendMessage(Text.translatable("item.laststand.game_over"));
                 return false;
             } else {
-                player.sendMessage(Text.literal(String.format("You have %d lives left", lives)));
+                player.sendMessage(Text.translatable("item.laststand.lives_left", lives));
                 return true;
             }
         } else {

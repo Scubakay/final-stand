@@ -36,11 +36,11 @@ public class StartSessionCommand {
 
         // Check if there are enough players
         if (players.size() <= 1 || players.size() < hunterAmount) {
-            context.getSource().sendFeedback(Text.literal("Not enough players to start session"), true);
+            context.getSource().sendFeedback(Text.translatable("item.laststand.not_enough_players"), true);
             return 1;
         }
 
-        context.getSource().getServer().getPlayerManager().broadcast(Text.literal("The bounty hunters have been selected!"), false);
+        context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.bounty_hunters_selected"), false);
         selectHunters(players, hunterAmount);
         return 1;
     }
@@ -76,7 +76,7 @@ public class StartSessionCommand {
         nbtData.putString("target", target.getUuidAsString());
         itemStack.setNbt(nbtData);
         hunter.getInventory().insertStack(itemStack);
-        hunter.sendMessage(Text.literal("You have been selected as a bounty hunter. Track down and kill your target!"));
+        hunter.sendMessage(Text.translatable("item.laststand.you_are_hunter"));
     }
 
     /**

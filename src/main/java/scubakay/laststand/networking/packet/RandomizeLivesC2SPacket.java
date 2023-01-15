@@ -13,7 +13,7 @@ public class RandomizeLivesC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         server.getPlayerManager().getPlayerList().forEach(serverPlayer -> {
             int lives = LivesData.randomizeLives((IEntityDataSaver) serverPlayer);
-            serverPlayer.sendMessage(Text.literal(String.format("You have %d lives", lives)));
+            serverPlayer.sendMessage(Text.translatable("item.laststand.amount_of_lives", lives));
         });
     }
 }
