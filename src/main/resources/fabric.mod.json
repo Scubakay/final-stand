@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "laststand",
+  "version": "${version}",
+  "name": "Last Stand",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/laststand/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "scubakay.laststand.client.LastStandClient"
+    ],
+    "main": [
+      "scubakay.laststand.LastStand"
+    ]
+  },
+  "mixins": [
+    "laststand.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.12",
+    "fabric": "*",
+    "minecraft": "1.19.3"
+  }
+}
