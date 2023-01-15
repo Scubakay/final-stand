@@ -37,4 +37,4 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         files: |
-          build/libs/last-stand-${{ tag_name }}.jar
+          build/libs/last-stand-${{github.ref_name}}.jar
