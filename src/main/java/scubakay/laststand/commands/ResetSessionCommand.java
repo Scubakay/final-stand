@@ -9,11 +9,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.laststand.LastStand;
 import scubakay.laststand.item.ModItems;
+import scubakay.laststand.util.HuntersState;
 
 import java.util.List;
 
 public class ResetSessionCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess ignoredCommandRegistryAccess, CommandManager.RegistrationEnvironment ignoredRegistrationEnvironment) {
         dispatcher.register(
                 CommandManager.literal(LastStand.COMMAND_ROOT)
                         .requires(source -> source.hasPermissionLevel(4)) // Must be OP to execute
@@ -34,6 +35,8 @@ public class ResetSessionCommand {
                 player.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, player.getInventory());
             }
         });
+
+        HuntersState.reset();
 
         return 1;
     }

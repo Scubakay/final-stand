@@ -9,21 +9,17 @@ import net.minecraft.text.Text;
 import scubakay.laststand.util.IEntityDataSaver;
 import scubakay.laststand.util.LivesData;
 
-public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.AllowDeath {
+public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.AfterDeath {
     @Override
-    public boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damageAmount) {
+    public void afterDeath(LivingEntity entity, DamageSource damageSource) {
         if(entity instanceof ServerPlayerEntity player) {
             int lives = LivesData.removeLives((IEntityDataSaver) player, 1);
             if(lives == 0) {
                 setGamemodeToSpectator(player);
                 player.sendMessage(Text.translatable("item.laststand.game_over"));
-                return false;
             } else {
                 player.sendMessage(Text.translatable("item.laststand.lives_left", lives));
-                return true;
             }
-        } else {
-            return true;
         }
     }
 
