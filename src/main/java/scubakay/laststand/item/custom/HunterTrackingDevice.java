@@ -12,11 +12,13 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import scubakay.laststand.sounds.ModSounds;
-import scubakay.laststand.util.ModGameruleRegister;
 
 import java.awt.geom.Point2D;
 
 public class HunterTrackingDevice extends Item {
+
+    public static int cooldown = 0;
+
     PlayerEntity trackedPlayer;
     public HunterTrackingDevice(Item.Settings settings) {
         super(settings);
@@ -27,7 +29,7 @@ public class HunterTrackingDevice extends Item {
         if(world.isClient()) {
             getTrackedPlayerFromNbt(world, user, hand);
             if(trackedPlayer != null) {
-                setCooldown(world, user);
+                setCooldown(user);
                 double distance = getDistanceToTarget(user);
                 world.playSound(null, user.getBlockPos(), ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.PLAYERS, 1f, 1f);
                 user.sendMessage(Text.translatable("item.laststand.hunter_tracking_device_target_distance", Math.round(distance))
@@ -41,8 +43,7 @@ public class HunterTrackingDevice extends Item {
         return super.use(world, user, hand);
     }
 
-    private void setCooldown(World world, PlayerEntity user) {
-        int cooldown = world.getGameRules().getInt(ModGameruleRegister.HUNTER_TRACKING_DEVICE_COOLDOWN);
+    private void setCooldown(PlayerEntity user) {
         user.getItemCooldownManager().set(this, cooldown);
     }
 
