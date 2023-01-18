@@ -8,5 +8,7 @@
   "item.laststand.resetting_session": "Resetting session",
   "item.laststand.not_enough_players": "Not enough players to start session",
   "item.laststand.bounty_hunters_selected": "The bounty hunters have been selected!",
-  "item.laststand.you_are_hunter": "You have been selected as a bounty hunter. Track down and kill your target!"
+  "item.laststand.you_are_hunter": "You have been selected as a bounty hunter. Track down and kill your target!",
+  "item.laststand.no-longer-being-hunted": "You are no longer being hunted",
+  "item.laststand.bounty-completed": "Your bounty was completed"
 }
