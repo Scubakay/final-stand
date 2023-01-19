@@ -8,10 +8,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.laststand.LastStand;
-import scubakay.laststand.util.HunterTarget;
-import scubakay.laststand.util.HuntersState;
-import scubakay.laststand.util.IEntityDataSaver;
-import scubakay.laststand.util.ModGameruleRegister;
+import scubakay.laststand.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class StartSessionCommand {
         boolean preventRedLifeHunter = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_HUNTER);
         boolean preventRedLifeTarget = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_TARGET);
 
-        List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers(p -> !p.isSpectator() && !p.isCreative());
+        List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers(p -> ((IServerPlayerEntity) p).isSurvival());
         HuntersState.reset(players);
         selectHunters(players, hunterAmount, preventRedLifeHunter, preventRedLifeTarget);
         context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.bounty_hunters_selected"), false);
