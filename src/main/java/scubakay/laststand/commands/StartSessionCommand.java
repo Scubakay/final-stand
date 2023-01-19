@@ -34,7 +34,7 @@ public class StartSessionCommand {
         boolean preventRedLifeHunter = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_HUNTER);
         boolean preventRedLifeTarget = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_TARGET);
 
-        List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers();
+        List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers(p -> !p.isSpectator() && !p.isCreative());
         HuntersState.reset(players);
         selectHunters(players, hunterAmount, preventRedLifeHunter, preventRedLifeTarget);
         context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.bounty_hunters_selected"), false);
