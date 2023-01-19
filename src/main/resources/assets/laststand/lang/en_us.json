@@ -10,5 +10,7 @@
   "item.laststand.bounty_hunters_selected": "The bounty hunters have been selected!",
   "item.laststand.you_are_hunter": "You have been selected as a bounty hunter. Track down and kill your target!",
   "item.laststand.no-longer-being-hunted": "You are no longer being hunted",
-  "item.laststand.bounty-completed": "Your bounty was completed"
+  "item.laststand.bounty-completed": "Your bounty was completed",
+  "item.laststand.bounty-failed": "You failed to kill your target. Losing one life!",
+  "item.laststand.session_ended": "The session has ended!"
 }
