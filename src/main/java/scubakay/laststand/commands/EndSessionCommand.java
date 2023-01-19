@@ -7,9 +7,10 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import scubakay.laststand.LastStand;
+import scubakay.laststand.util.HuntersState;
 
 public class EndSessionCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess ignoredCommandRegistryAccess, CommandManager.RegistrationEnvironment ignoredRegistrationEnvironment) {
         dispatcher.register(
                 CommandManager.literal(LastStand.COMMAND_ROOT)
                         .requires(source -> source.hasPermissionLevel(4)) // Must be OP to execute
@@ -21,7 +22,9 @@ public class EndSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
-        context.getSource().sendFeedback(Text.literal("Ending session: Not implemented"), true);
+        HuntersState.punishHunters();
+        context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.session_ended"), false);
+        context.getSource().sendFeedback(Text.literal("Ending session"), true);
         return 1;
     }
 }

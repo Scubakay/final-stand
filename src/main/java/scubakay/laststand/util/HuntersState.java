@@ -1,5 +1,7 @@
 package scubakay.laststand.util;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.laststand.item.ModItems;
@@ -16,8 +18,9 @@ import java.util.Optional;
 public class HuntersState {
     private static List<HunterTarget> hunters = new ArrayList<>();
 
-    public static void addHunter(HunterTarget hunterTarget) {
-        hunters.add(hunterTarget);
+    public static void addHunter(HunterTarget ht) {
+        hunters.add(ht);
+        addHunterTrackingDevice(ht);
     }
 
     public static void removeIfPlayerWasHunter(ServerPlayerEntity player) {
@@ -30,8 +33,37 @@ public class HuntersState {
         hts.forEach(HuntersState::removeHunterTrackingDevice);
     }
 
-    public static void reset() {
+    public static void reset(List<ServerPlayerEntity> players) {
+        players.forEach((ServerPlayerEntity player) -> {
+            while(player.getInventory().containsAny(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE))) {
+                player.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, player.getInventory());
+            }
+        });
         hunters = new ArrayList<>();
+    }
+
+    public static void punishHunters() {
+        hunters.forEach(ht -> {
+            ht.hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, ht.hunter.getInventory());
+            LivesData.removeLives((IEntityDataSaver) ht.hunter, 1);
+            ht.hunter.sendMessage(Text.translatable("item.laststand.bounty-failed"));
+        });
+        hunters = new ArrayList<>();
+    }
+
+    private static void addHunterTrackingDevice(HunterTarget ht) {
+        // Create device
+        ItemStack itemStack = new ItemStack(ModItems.HUNTER_TRACKING_DEVICE);
+        itemStack.setCount(1);
+
+        // Save target to device NBT
+        NbtCompound nbtData = new NbtCompound();
+        nbtData.putString("target", ht.target.getUuidAsString());
+        itemStack.setNbt(nbtData);
+
+        // Add device to hunter inventory
+        ht.hunter.getInventory().insertStack(itemStack);
+        ht.hunter.sendMessage(Text.translatable("item.laststand.you_are_hunter"));
     }
 
     private static void removeHunterTrackingDevice(HunterTarget ht) {
