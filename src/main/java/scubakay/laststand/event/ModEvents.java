@@ -8,8 +8,10 @@ import scubakay.laststand.LastStand;
 import scubakay.laststand.event.handler.*;
 
 public class ModEvents {
-    public static void registerEvents() {
+    public static void registerClientEvents() {
         ClientPlayConnectionEvents.JOIN.register(new ClientPlayConnectionJoin());
+    }
+    public static void registerServerEvents() {
         ServerPlayerEvents.AFTER_RESPAWN.register(new PlayerRespawnEvent());
         ServerLivingEntityEvents.AFTER_DEATH.register(new SwitchGamemodeOnLastDeath());
         ServerLivingEntityEvents.AFTER_DEATH.register(new CompleteBountyHunt());

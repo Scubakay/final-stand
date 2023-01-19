@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import scubakay.laststand.event.ModEvents;
 import scubakay.laststand.item.ModItems;
 import scubakay.laststand.networking.ModMessages;
 
@@ -13,6 +14,7 @@ public class LastStandClient implements ClientModInitializer {
     public void onInitializeClient() {
         ModItems.registerModItems();
         ModMessages.registerS2CPackets();
+        ModEvents.registerClientEvents();
 
         HudRenderCallback.EVENT.register(new LivesHudOverlay());
     }

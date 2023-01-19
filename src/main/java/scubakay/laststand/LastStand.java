@@ -22,9 +22,8 @@ public class LastStand implements ModInitializer {
 
         ModCommandRegister.registerCommands();
         ModMessages.registerC2SPackets();
-        ModMessages.registerS2CPackets();
         ModGameruleRegister.registerGamerules();
 
-        ModEvents.registerEvents();
+        ModEvents.registerServerEvents();
     }
 }
