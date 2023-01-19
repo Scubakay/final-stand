@@ -13,6 +13,7 @@ import scubakay.laststand.LastStand;
 import scubakay.laststand.item.ModItems;
 import scubakay.laststand.util.HunterTarget;
 import scubakay.laststand.util.HuntersState;
+import scubakay.laststand.util.IEntityDataSaver;
 import scubakay.laststand.util.ModGameruleRegister;
 
 import java.util.ArrayList;
@@ -32,38 +33,38 @@ public class StartSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
-        List<ServerPlayerEntity> players = new ArrayList<>(context.getSource().getWorld().getPlayers());
-
         int hunterAmount = context.getSource().getWorld().getGameRules().getInt(ModGameruleRegister.HUNTER_AMOUNT);
+        boolean preventRedLifeHunter = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_HUNTER);
+        boolean preventRedLifeTarget = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_TARGET);
 
-        // Check if there are enough players
-        if (players.size() <= 1 || players.size() < hunterAmount) {
-            context.getSource().sendFeedback(Text.translatable("item.laststand.not_enough_players"), true);
-            return 1;
-        }
-
+        selectHunters(context.getSource().getWorld().getPlayers(), hunterAmount, preventRedLifeHunter, preventRedLifeTarget);
         context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.bounty_hunters_selected"), false);
-        selectHunters(players, hunterAmount);
         return 1;
     }
 
     /**
      * Select X amount of random hunters
      */
-    private static void selectHunters(List<ServerPlayerEntity> players, int amount) {
+    private static void selectHunters(List<ServerPlayerEntity> players, int amount, boolean preventRedLifeHunter, boolean preventRedLifeTarget) {
+        // Prevent red lives from being hunter if preventRedLifeHunter is true
+        List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
+        if(preventRedLifeHunter) {
+            possibleHunters = possibleHunters.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
+        }
+
+        // Select hunters
         Random rand = new Random();
+        while(amount > 0 && possibleHunters.size() > 0) {
+            // Pick random hunter and target
+            int hunterIndex = rand.nextInt(possibleHunters.size());
+            ServerPlayerEntity hunter = possibleHunters.get(hunterIndex);
+            ServerPlayerEntity target = selectTarget(players, hunter, preventRedLifeTarget);
 
-        List<ServerPlayerEntity> hunters = new ArrayList<>();
-
-        while(amount > 0) {
-            int hunterIndex = rand.nextInt(players.size());
-            ServerPlayerEntity hunter = players.get(hunterIndex);
-
-            if (!hunters.contains(hunter)) {
-                hunters.add(hunter);
+            // Don't be hunter if there's no players left with > 1 life
+            if(target != null) {
                 amount--;
-                ServerPlayerEntity target = selectTarget(players, hunter);
                 giveHunterDevice(hunter, target);
+                possibleHunters = possibleHunters.stream().filter(h -> !h.equals(hunter)).toList();
             }
         }
     }
@@ -92,15 +93,20 @@ public class StartSessionCommand {
     /**
      * Select a random target for a hunter
      */
-    private static ServerPlayerEntity selectTarget(List<ServerPlayerEntity> players, ServerPlayerEntity hunter) {
+    private static ServerPlayerEntity selectTarget(List<ServerPlayerEntity> players, ServerPlayerEntity hunter, boolean preventRedLifeTarget) {
+        // Prevent red life targets if preventRedLifeTarget is true
+        List<ServerPlayerEntity> validTargets = new ArrayList<>(players);
+        validTargets.remove(hunter);
+        if(preventRedLifeTarget) {
+            validTargets = validTargets.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
+        }
+
+        // Select a target from valid targets
         Random rand = new Random();
-
         ServerPlayerEntity target = null;
-        players.remove(hunter);
-
-        while(target == null) {
-            int targetIndex = rand.nextInt(players.size());
-            target = players.get(targetIndex);
+        while(target == null && validTargets.size() > 0) {
+            int targetIndex = rand.nextInt(validTargets.size());
+            target = validTargets.get(targetIndex);
         }
 
         return target;
