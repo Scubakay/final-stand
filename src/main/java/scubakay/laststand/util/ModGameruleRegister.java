@@ -30,6 +30,7 @@ public class ModGameruleRegister {
     public static final GameRules.Key<GameRules.IntRule> MIN_LIVES = GameRuleRegistry.register("minLives", Category.MISC, GameRuleFactory.createIntRule(3, 1));
     public static final GameRules.Key<GameRules.BooleanRule> PREVENT_RED_LIFE_TARGET = GameRuleRegistry.register("preventRedLifeTarget", Category.MISC, GameRuleFactory.createBooleanRule(true));
     public static final GameRules.Key<GameRules.BooleanRule> PREVENT_RED_LIFE_HUNTER = GameRuleRegistry.register("preventRedLifeHunter", Category.MISC, GameRuleFactory.createBooleanRule(true));
+    public static final GameRules.Key<GameRules.BooleanRule> BOUNTY_REWARD = GameRuleRegistry.register("bountyReward", Category.MISC, GameRuleFactory.createBooleanRule(false));
 
     public static void registerGamerules() {
         System.out.printf("[%s] Registering gamerules", LastStand.MOD_ID);

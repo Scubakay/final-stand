@@ -6,19 +6,26 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import scubakay.laststand.util.HuntersState;
 import scubakay.laststand.util.IEntityDataSaver;
 import scubakay.laststand.util.LivesData;
+import scubakay.laststand.util.ModGameruleRegister;
 
 public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.AfterDeath {
     @Override
     public void afterDeath(LivingEntity entity, DamageSource damageSource) {
-        if(entity instanceof ServerPlayerEntity player) {
-            int lives = LivesData.removeLives((IEntityDataSaver) player, 1);
+        if(entity instanceof ServerPlayerEntity target) {
+            int lives = LivesData.removeLives((IEntityDataSaver) target, 1);
+            if(entity.getWorld().getGameRules().getBoolean(ModGameruleRegister.BOUNTY_REWARD)
+                    && damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
+                HuntersState.rewardHunter(hunter, target);
+            }
+
             if(lives == 0) {
-                setGamemodeToSpectator(player);
-                player.sendMessage(Text.translatable("item.laststand.game_over"));
+                setGamemodeToSpectator(target);
+                target.sendMessage(Text.translatable("item.laststand.game_over"));
             } else {
-                player.sendMessage(Text.translatable("item.laststand.lives_left", lives));
+                target.sendMessage(Text.translatable("item.laststand.lives_left", lives));
             }
         }
     }

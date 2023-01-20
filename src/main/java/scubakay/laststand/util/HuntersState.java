@@ -42,6 +42,15 @@ public class HuntersState {
         hunters = new ArrayList<>();
     }
 
+    /**
+     * Reward a bounty hunter with a life if they successfully kill their target
+     */
+    public static void rewardHunter(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+        if (hunters.stream().anyMatch(ht -> ht.hunter.equals(hunter) && ht.target.equals(target))) {
+            LivesData.addLives((IEntityDataSaver) hunter, 1);
+        }
+    }
+
     public static void punishHunters() {
         hunters.forEach(ht -> {
             ht.hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, ht.hunter.getInventory());

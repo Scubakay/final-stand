@@ -11,21 +11,21 @@ import scubakay.laststand.networking.ModMessages;
 import java.util.Random;
 
 public class LivesData {
-//    public static int addLives(IEntityDataSaver player, int amount) {
-//        NbtCompound nbt = player.getPersistentData();
-//        int lives = nbt.getInt("lives");
-//
-//        int maxLives = ((ServerPlayerEntity) player).getWorld().getGameRules().getInt(ModGameruleRegister.MAX_LIVES);
-//        if(lives + amount >= maxLives) {
-//            lives = maxLives;
-//        } else {
-//            lives += amount;
-//        }
-//
-//        nbt.putInt("lives", lives);
-//        syncLives(lives, (ServerPlayerEntity) player);
-//        return lives;
-//    }
+    public static int addLives(IEntityDataSaver player, int amount) {
+        NbtCompound nbt = player.getPersistentData();
+        int lives = nbt.getInt("lives");
+
+        int maxLives = ((ServerPlayerEntity) player).getWorld().getGameRules().getInt(ModGameruleRegister.MAX_LIVES);
+        if(lives + amount >= maxLives) {
+            lives = maxLives;
+        } else {
+            lives += amount;
+        }
+
+        nbt.putInt("lives", lives);
+        syncLives(lives, (ServerPlayerEntity) player);
+        return lives;
+    }
 
     public static int removeLives(IEntityDataSaver player, int amount) {
         NbtCompound nbt = player.getPersistentData();
