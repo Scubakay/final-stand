@@ -4,10 +4,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import scubakay.laststand.LastStand;
+import scubakay.laststand.util.IAbstractClientPlayerEntityMixin;
 import scubakay.laststand.util.IEntityDataSaver;
 
 /**
@@ -18,6 +20,11 @@ public class LivesHudOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        if(player == null || !((IAbstractClientPlayerEntityMixin) player).isSurvival()){
+            return;
+        }
+
         int x = 0;
         int y = 0;
         MinecraftClient client = MinecraftClient.getInstance();
@@ -33,8 +40,8 @@ public class LivesHudOverlay implements HudRenderCallback {
         RenderSystem.setShaderTexture(0, LIFE);
 
         for(int i = 0; i < 10; i++) {
-            if(((IEntityDataSaver) MinecraftClient.getInstance().player).getPersistentData().getInt("lives") > i) {
-                DrawableHelper.drawTexture(matrixStack, x - 94 + (i * 9), y - 54, x, x, 12, 12, 12, 12);
+            if(((IEntityDataSaver) player).getPersistentData().getInt("lives") > i) {
+                DrawableHelper.drawTexture(matrixStack, x - 94 + (i * 9), y - 54, 0, 0, 12, 12, 12, 12);
             } else {
                 break;
             }
