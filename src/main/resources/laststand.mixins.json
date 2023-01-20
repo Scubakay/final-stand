@@ -9,7 +9,8 @@
   ],
   "client": [
     "PlayerDeathMixin",
-    "AbstractClientPlayerEntityMixin"
+    "AbstractClientPlayerEntityMixin",
+    "PropertiesMixin"
   ],
   "injectors": {
     "defaultRequire": 1
