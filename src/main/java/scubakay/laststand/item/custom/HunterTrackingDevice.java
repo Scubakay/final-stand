@@ -1,5 +1,6 @@
 package scubakay.laststand.item.custom;
 
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import net.minecraft.world.World;
 import scubakay.laststand.sounds.ModSounds;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 
 public class HunterTrackingDevice extends Item {
 
@@ -41,6 +43,11 @@ public class HunterTrackingDevice extends Item {
         }
 
         return super.use(world, user, hand);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
+        tooltip.add(Text.translatable("item.laststand.hunter_tracking_device_tooltip").formatted(Formatting.BLUE));
     }
 
     private void setCooldown(PlayerEntity user) {
