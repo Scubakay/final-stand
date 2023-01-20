@@ -11,7 +11,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "scubakay.laststand.client.LastStandClient"
+      "scubakay.laststand.LastStandClient"
     ],
     "main": [
       "scubakay.laststand.LastStand"

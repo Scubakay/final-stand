@@ -7,7 +7,9 @@ import net.minecraft.network.PacketByteBuf;
 import scubakay.laststand.util.IEntityDataSaver;
 
 public class LivesSyncDataS2CPacket {
-    public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-        ((IEntityDataSaver) client.player).getPersistentData().putInt("lives", buf.readInt());
+    public static void receive(MinecraftClient client, ClientPlayNetworkHandler ignoredHandler, PacketByteBuf buf, PacketSender ignoredResponseSender) {
+        if (client.player != null) {
+            ((IEntityDataSaver) client.player).getPersistentData().putInt("lives", buf.readInt());
+        }
     }
 }
