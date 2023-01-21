@@ -1,4 +1,4 @@
-package scubakay.laststand.util;
+package scubakay.laststand.data;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -7,6 +7,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import scubakay.laststand.networking.ModMessages;
+import scubakay.laststand.util.IEntityDataSaver;
+import scubakay.laststand.util.ModGameruleRegister;
 
 import java.util.Random;
 

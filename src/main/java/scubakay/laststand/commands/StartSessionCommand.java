@@ -8,6 +8,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.laststand.LastStand;
+import scubakay.laststand.data.HuntersState;
 import scubakay.laststand.util.*;
 
 import java.util.ArrayList;

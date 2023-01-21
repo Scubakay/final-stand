@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import scubakay.laststand.LastStand;
 import scubakay.laststand.util.IEntityDataSaver;
 import scubakay.laststand.util.IServerPlayerEntity;
-import scubakay.laststand.util.LivesData;
+import scubakay.laststand.data.LivesData;
 
 public class InitSessionCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess ignoredCommandRegistryAccess, CommandManager.RegistrationEnvironment ignoredRegistrationEnvironment) {

@@ -6,9 +6,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import scubakay.laststand.util.HuntersState;
+import scubakay.laststand.data.HuntersState;
 import scubakay.laststand.util.IEntityDataSaver;
-import scubakay.laststand.util.LivesData;
+import scubakay.laststand.data.LivesData;
 import scubakay.laststand.util.ModGameruleRegister;
 
 public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.AfterDeath {

@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import scubakay.laststand.util.HuntersState;
+import scubakay.laststand.data.HuntersState;
 
 public class CompleteBountyHunt implements ServerLivingEntityEvents.AfterDeath {
     @Override

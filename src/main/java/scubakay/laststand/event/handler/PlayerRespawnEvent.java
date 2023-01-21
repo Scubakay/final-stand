@@ -3,7 +3,7 @@ package scubakay.laststand.event.handler;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import scubakay.laststand.util.IEntityDataSaver;
-import scubakay.laststand.util.LivesData;
+import scubakay.laststand.data.LivesData;
 
 public class PlayerRespawnEvent implements ServerPlayerEvents.AfterRespawn {
     @Override
