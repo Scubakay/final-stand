@@ -51,8 +51,7 @@ public class LivesHudOverlay implements HudRenderCallback {
     private static void drawAmount(MatrixStack matrixStack, int x, int y, int lives) {
         Text text = Text.literal("" + lives).formatted(Formatting.BOLD);
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-        int width = renderer.getWidth(text) / 2;
-        renderer.drawWithShadow(matrixStack, text, x - width, y - 56, 0xffffff);
+        renderer.drawWithShadow(matrixStack, text, x - 107, y - 43, 0xffffff);
     }
 
     private static void drawHeart(MatrixStack matrixStack, int x, int y, int lives) {
@@ -66,6 +65,6 @@ public class LivesHudOverlay implements HudRenderCallback {
         } else {
             RenderSystem.setShaderTexture(0, LIFE_YELLOW);
         }
-        DrawableHelper.drawTexture(matrixStack, x - 12, y - 64, -99, 0, 0, 24, 24, 24, 24);
+        DrawableHelper.drawTexture(matrixStack, x - 116, y - 51, -99, 0, 0, 24, 24, 24, 24);
     }
 }
