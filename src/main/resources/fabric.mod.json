@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "id": "laststand",
+  "id": "finalstand",
   "version": "${version}",
-  "name": "Last Stand",
+  "name": "Final Stand",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/laststand/icon.png",
+  "icon": "assets/finalstand/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "scubakay.laststand.LastStandClient"
+      "scubakay.finalstand.FinalStandClient"
     ],
     "main": [
-      "scubakay.laststand.LastStand"
+      "scubakay.finalstand.FinalStand"
     ]
   },
   "mixins": [
-    "laststand.mixins.json"
+    "finalstand.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.12",

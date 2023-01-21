@@ -1,0 +1,17 @@
+{
+  "item.finalstand.hunter_tracking_device": "Hunter Tracking Device",
+  "item.finalstand.hunter_tracking_device_no_player_found_error": "Something went wrong, no player found to track. Contact game host to solve the problem!",
+  "item.finalstand.hunter_tracking_device_target_distance": "Target is %d blocks away!",
+  "item.finalstand.amount_of_lives": "You have %d lives",
+  "item.finalstand.game_over": "Game over!",
+  "item.finalstand.lives_left": "You have %d lives left",
+  "item.finalstand.resetting_session": "Resetting session",
+  "item.finalstand.not_enough_players": "Not enough players to start session",
+  "item.finalstand.bounty_hunters_selected": "The bounty hunters have been selected!",
+  "item.finalstand.you_are_hunter": "You have been selected as a bounty hunter. Track down and kill your target!",
+  "item.finalstand.no-longer-being-hunted": "You are no longer being hunted",
+  "item.finalstand.bounty-completed": "Your bounty was completed",
+  "item.finalstand.bounty-failed": "You failed to kill your target. Losing one life!",
+  "item.finalstand.session_ended": "The session has ended!",
+  "item.finalstand.hunter_tracking_device_tooltip": "Use to locate your target!"
+}

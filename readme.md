@@ -1,26 +1,26 @@
-# Last Stand
+# Final Stand
 
 # Initialize game
 ```
-/ls init
+/fs init
 ```
 This command initializes a new game. All players online will receive a random amount of lives,
 configurable with gamerules.
 
 # Start session
 ```
-/ls start
+/fs start
 ```
-Starts a new Last Stand session. The configured number of Hunters will receive a Hunter Tracking Device
+Starts a new Final Stand session. The configured number of Hunters will receive a Hunter Tracking Device
 with a selected target they need to hunt down before the end of the session. If the Hunter fails
 they will lose a life.
 
 # Reset session
 ```
-/ls reset
+/fs reset
 ```
-If anything goes wrong, `/laststand reset` will remove all Tracking devices from the inventories.
-After running the command you can use `/laststand start` again to restart the session.
+If anything goes wrong, `/fs reset` will remove all Tracking devices from the inventories.
+After running the command you can use `/fs start` again to restart the session.
 
 # Gamerules
 This mod has a bunch of gamerules allowing you to customize certain aspects of the game.
