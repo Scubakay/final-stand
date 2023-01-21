@@ -7,6 +7,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import scubakay.laststand.LastStand;
 import scubakay.laststand.util.*;
 
@@ -34,7 +35,7 @@ public class StartSessionCommand {
         List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers(p -> ((IServerPlayerEntity) p).isSurvival());
         HuntersState.reset(players);
         selectHunters(players, hunterAmount, preventRedLifeHunter, preventRedLifeTarget);
-        context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.bounty_hunters_selected"), false);
+        TitleHelper.broadcastTitle(players, Text.translatable("item.laststand.bounty_hunters_selected").formatted(Formatting.RED));
         return 1;
     }
 
