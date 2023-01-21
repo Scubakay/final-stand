@@ -1,7 +1,6 @@
 package scubakay.laststand.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
@@ -12,13 +11,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import scubakay.laststand.LastStand;
+import scubakay.laststand.event.callback.HotbarRenderCallback;
 import scubakay.laststand.util.IAbstractClientPlayerEntityMixin;
 import scubakay.laststand.util.IEntityDataSaver;
 
 /**
  * Draws HUD overlay for lives
  */
-public class LivesHudOverlay implements HudRenderCallback {
+public class LivesHudOverlay implements HotbarRenderCallback {
     private static final Identifier LIFE_GREEN = new Identifier(LastStand.MOD_ID, "textures/lives/life-green.png");
     private static final Identifier LIFE_YELLOW = new Identifier(LastStand.MOD_ID, "textures/lives/life-yellow.png");
     private static final Identifier LIFE_RED = new Identifier(LastStand.MOD_ID, "textures/lives/life-red.png");
@@ -66,6 +66,7 @@ public class LivesHudOverlay implements HudRenderCallback {
         } else {
             RenderSystem.setShaderTexture(0, LIFE_YELLOW);
         }
-        DrawableHelper.drawTexture(matrixStack, x - 12, y - 64, -99, 0, 0, 24, 24, 24, 24);
+        int zOffset = -90;
+        DrawableHelper.drawTexture(matrixStack, x - 12, y - 64, zOffset, 0, 0, 24, 24, 24, 24);
     }
 }

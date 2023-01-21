@@ -3,9 +3,9 @@ package scubakay.laststand;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import scubakay.laststand.client.LivesHudOverlay;
 import scubakay.laststand.event.ModEvents;
+import scubakay.laststand.event.callback.HotbarRenderCallback;
 import scubakay.laststand.networking.ModMessages;
 
 @Environment(EnvType.CLIENT)
@@ -15,6 +15,6 @@ public class LastStandClient implements ClientModInitializer {
         ModMessages.registerS2CPackets();
         ModEvents.registerClientEvents();
 
-        HudRenderCallback.EVENT.register(new LivesHudOverlay());
+        HotbarRenderCallback.EVENT.register(new LivesHudOverlay());
     }
 }
