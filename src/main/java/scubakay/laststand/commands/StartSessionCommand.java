@@ -65,7 +65,7 @@ public class StartSessionCommand {
             // Don't be hunter if there's no players left with > 1 life
             if(target != null) {
                 amount--;
-                HuntersState.addHunter(new HunterTarget(hunter, target));
+                HuntersState.addHunter(hunter, target);
                 possibleHunters = possibleHunters.stream().filter(h -> !h.equals(hunter)).toList();
             } else {
                 break;
