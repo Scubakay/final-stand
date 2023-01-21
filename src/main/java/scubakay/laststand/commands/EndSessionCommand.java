@@ -22,7 +22,7 @@ public class EndSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
-        HuntersState.punishHunters();
+        HuntersState.punishHunters(context.getSource().getWorld().getPlayers());
         context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.laststand.session_ended"), false);
         context.getSource().sendFeedback(Text.literal("Ending session"), true);
         return 1;

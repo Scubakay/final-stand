@@ -6,79 +6,95 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.laststand.item.ModItems;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Keeps list of current hunters.
- * TODO: Persist state
- * <a href="https://www.fabricmc.net/wiki/tutorial:persistent_states">Persistent states</a>
  */
 public class HuntersState {
-    private static List<HunterTarget> hunters = new ArrayList<>();
+    private static final String TARGET_NBT_KEY = "laststand.target";
 
-    public static void addHunter(HunterTarget ht) {
-        hunters.add(ht);
-        addHunterTrackingDevice(ht);
+    public static void addHunter(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+        setTarget(hunter, target);
+        addHunterTrackingDevice(hunter, target);
     }
 
     public static void removeIfPlayerWasHunter(ServerPlayerEntity player) {
-        Optional<HunterTarget> hunterTarget = hunters.stream().filter(ht -> ht.hunter.equals(player)).findFirst();
-        hunterTarget.ifPresent(HuntersState::removeHunterTrackingDevice);
+        if(isHunter(player)){
+            removeHunterTrackingDevice(player);
+        }
     }
 
     public static void removeIfPlayerWasTarget(ServerPlayerEntity player) {
-        List<HunterTarget> hts = hunters.stream().filter(ht -> ht.target.equals(player)).toList();
-        hts.forEach(HuntersState::removeHunterTrackingDevice);
+        List<ServerPlayerEntity> players = player.getWorld().getPlayers();
+        players.stream()
+                .filter(p -> getTarget(p).equals(player.getUuidAsString()))
+                .forEach(HuntersState::removeHunterTrackingDevice);
     }
 
     public static void reset(List<ServerPlayerEntity> players) {
-        players.forEach((ServerPlayerEntity player) -> {
-            while(player.getInventory().containsAny(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE))) {
-                player.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, player.getInventory());
-            }
-        });
-        hunters = new ArrayList<>();
+        players.forEach(HuntersState::removeHunterTrackingDevice);
     }
 
     /**
      * Reward a bounty hunter with a life if they successfully kill their target
      */
     public static void rewardHunter(ServerPlayerEntity hunter, ServerPlayerEntity target) {
-        if (hunters.stream().anyMatch(ht -> ht.hunter.equals(hunter) && ht.target.equals(target))) {
+        if(isPlayerTarget(hunter, target)) {
+            removeHunterTrackingDevice(hunter);
             LivesData.addLives((IEntityDataSaver) hunter, 1);
         }
     }
 
-    public static void punishHunters() {
-        hunters.forEach(ht -> {
-            ht.hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, ht.hunter.getInventory());
-            LivesData.removeLives((IEntityDataSaver) ht.hunter, 1);
-            ht.hunter.sendMessage(Text.translatable("item.laststand.bounty-failed"));
-        });
-        hunters = new ArrayList<>();
+    public static void punishHunters(List<ServerPlayerEntity> players) {
+        players.stream()
+                .filter(HuntersState::isHunter)
+                .forEach(h -> {
+                    removeHunterTrackingDevice(h);
+                    LivesData.removeLives((IEntityDataSaver) h, 1);
+                    h.sendMessage(Text.translatable("item.laststand.bounty-failed"));
+                });
     }
 
-    private static void addHunterTrackingDevice(HunterTarget ht) {
+    private static void addHunterTrackingDevice(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         // Create device
         ItemStack itemStack = new ItemStack(ModItems.HUNTER_TRACKING_DEVICE);
         itemStack.setCount(1);
 
         // Save target to device NBT
         NbtCompound nbtData = new NbtCompound();
-        nbtData.putString("target", ht.target.getUuidAsString());
+        nbtData.putString("target", target.getUuidAsString());
         itemStack.setNbt(nbtData);
 
         // Add device to hunter inventory
-        ht.hunter.getInventory().insertStack(itemStack);
-        ht.hunter.sendMessage(Text.translatable("item.laststand.you_are_hunter"));
+        hunter.getInventory().insertStack(itemStack);
+        hunter.sendMessage(Text.translatable("item.laststand.you_are_hunter"));
     }
 
-    private static void removeHunterTrackingDevice(HunterTarget ht) {
-        ht.target.sendMessage(Text.translatable("item.laststand.no-longer-being-hunted"));
-        ht.hunter.sendMessage(Text.translatable("item.laststand.bounty-completed"));
-        ht.hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, ht.hunter.getInventory());
-        hunters.remove(ht);
+    private static void removeHunterTrackingDevice(ServerPlayerEntity hunter) {
+        removeTarget(hunter);
+        while(hunter.getInventory().containsAny(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE))) {
+            hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, hunter.getInventory());
+        }
+        hunter.sendMessage(Text.translatable("item.laststand.bounty-completed"));
+    }
+
+    private static void setTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+        ((IEntityDataSaver) hunter).getPersistentData().putString(TARGET_NBT_KEY, target.getUuidAsString());
+    }
+
+    private static String getTarget(ServerPlayerEntity hunter) {
+        return ((IEntityDataSaver) hunter).getPersistentData().getString(TARGET_NBT_KEY);
+    }
+
+    private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+        return ((IEntityDataSaver) hunter).getPersistentData().getString(TARGET_NBT_KEY).equals(target.getUuidAsString());
+    }
+
+    private static void removeTarget(ServerPlayerEntity hunter) {
+        ((IEntityDataSaver) hunter).getPersistentData().remove(TARGET_NBT_KEY);
+    }
+    private static boolean isHunter(ServerPlayerEntity hunter) {
+        return ((IEntityDataSaver) hunter).getPersistentData().contains(TARGET_NBT_KEY);
     }
 }
