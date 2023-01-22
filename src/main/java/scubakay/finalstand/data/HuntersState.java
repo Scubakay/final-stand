@@ -68,7 +68,12 @@ public class HuntersState {
         itemStack.setNbt(nbtData);
 
         // Add device to hunter inventory
-        hunter.getInventory().insertStack(itemStack);
+        if(hunter.getInventory().getEmptySlot() != -1) {
+            hunter.getInventory().insertStack(itemStack);
+        } else {
+            hunter.dropItem(itemStack, false);
+        }
+
         hunter.sendMessage(Text.translatable("item.finalstand.you_are_hunter"));
     }
 
