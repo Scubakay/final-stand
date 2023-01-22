@@ -7,6 +7,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import scubakay.finalstand.FinalStand;
+import scubakay.finalstand.data.TeamState;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.util.IServerPlayerEntity;
 import scubakay.finalstand.data.LivesData;
@@ -24,6 +25,7 @@ public class InitSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
+        TeamState.createTeams(context.getSource().getServer().getScoreboard());
         context.getSource().getWorld().getPlayers(p -> ((IServerPlayerEntity) p).isSurvival()).forEach(player -> {
             int lives = LivesData.randomizeLives((IEntityDataSaver) player);
             player.sendMessage(Text.translatable("item.finalstand.amount_of_lives", lives));
