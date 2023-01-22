@@ -61,6 +61,8 @@ public class LivesData {
     }
 
     public static void syncLives(int lives, ServerPlayerEntity player) {
+        TeamState.setPlayerTeam(lives, player);
+
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeInt(lives);
         ServerPlayNetworking.send(player, ModMessages.LIVES_SYNC, buffer);
