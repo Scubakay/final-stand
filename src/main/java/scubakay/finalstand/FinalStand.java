@@ -11,7 +11,7 @@ import scubakay.finalstand.util.ModGameruleRegister;
 public class FinalStand implements ModInitializer {
     public static final String MOD_ID = "finalstand";
 
-    public static final String COMMAND_ROOT = "ls";
+    public static final String COMMAND_ROOT = "fs";
 
     @Override
     public void onInitialize() {
