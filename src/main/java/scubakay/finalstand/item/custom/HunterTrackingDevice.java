@@ -63,8 +63,15 @@ public class HunterTrackingDevice extends Item {
             case 4 -> "item.finalstand.hunter_tracking_device_far_away";
             default -> "item.finalstand.hunter_tracking_device_very_far_away";
         };
+        Formatting color = switch (secondsDelay) {
+            case 1 -> Formatting.GREEN;
+            case 2 -> Formatting.DARK_GREEN;
+            case 3 -> Formatting.YELLOW;
+            case 4 -> Formatting.RED;
+            default -> Formatting.DARK_RED;
+        };
         player.sendMessage(Text.translatable(message_id, Math.round(this.lastDistanceToTarget))
-                .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
+                .fillStyle(Style.EMPTY.withColor(color)), true);
     }
 
     private void startUsing(World world, PlayerEntity user, Hand hand) {
