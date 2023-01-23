@@ -20,6 +20,7 @@ import java.util.List;
 public class HunterTrackingDevice extends Item {
 
     public static int cooldown = 0;
+    private static final double MAX_PITCH_SHIFT_DISTANCE = 400;
 
     PlayerEntity trackedPlayer;
     public HunterTrackingDevice(Item.Settings settings) {
@@ -28,17 +29,19 @@ public class HunterTrackingDevice extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if(world.isClient()) {
+        if (world.isClient()) {
             getTrackedPlayerFromNbt(world, user, hand);
-            if(trackedPlayer != null) {
+            if (trackedPlayer != null) {
                 setCooldown(user);
                 double distance = getDistanceToTarget(user);
-                world.playSound(null, user.getBlockPos(), ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.PLAYERS, 1f, 1f);
+
                 user.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", Math.round(distance))
                         .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
+                user.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(distance));
             } else {
-                user.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_no_player_found_error")
-                        .fillStyle(Style.EMPTY.withColor(Formatting.RED)), false);
+                user.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", 1000)
+                        .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
+                user.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(MAX_PITCH_SHIFT_DISTANCE));
             }
         }
 
@@ -63,5 +66,9 @@ public class HunterTrackingDevice extends Item {
     private void getTrackedPlayerFromNbt(World world, PlayerEntity user, Hand hand) {
         String targetUuid = user.getStackInHand(hand).getNbt().get("target").asString();
         this.trackedPlayer = world.getPlayers().stream().filter((PlayerEntity player) -> player.getUuidAsString().equals(targetUuid)).findFirst().orElse(null);
+    }
+
+    private float calculatePitch(double distance) {
+        return (float) (1f - (distance / MAX_PITCH_SHIFT_DISTANCE));
     }
 }
