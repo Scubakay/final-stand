@@ -1,6 +1,7 @@
 package scubakay.finalstand.item.custom;
 
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,11 @@ public class HunterTrackingDevice extends Item {
     public static int cooldown = 0;
     private static final double MAX_PITCH_SHIFT_DISTANCE = 400;
 
-    PlayerEntity trackedPlayer;
+    private static final int TICKS_PER_SECOND = 20;
+
+    private int usageTicksLeft = -1;
+    private double lastDistanceToTarget = -1;
+
     public HunterTrackingDevice(Item.Settings settings) {
         super(settings);
     }
@@ -30,21 +35,8 @@ public class HunterTrackingDevice extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (world.isClient()) {
-            getTrackedPlayerFromNbt(world, user, hand);
-            if (trackedPlayer != null) {
-                setCooldown(user);
-                double distance = getDistanceToTarget(user);
-
-                user.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", Math.round(distance))
-                        .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
-                user.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(distance));
-            } else {
-                user.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", 1000)
-                        .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
-                user.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(MAX_PITCH_SHIFT_DISTANCE));
-            }
+            startUsing(world, user, hand);
         }
-
         return super.use(world, user, hand);
     }
 
@@ -53,19 +45,43 @@ public class HunterTrackingDevice extends Item {
         tooltip.add(Text.translatable("item.finalstand.hunter_tracking_device_tooltip").formatted(Formatting.BLUE));
     }
 
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (this.usageTicksLeft < 0) {
+            return;
+        }
+        if (entity instanceof PlayerEntity player) {
+            if (--this.usageTicksLeft == 0) {
+                player.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", Math.round(this.lastDistanceToTarget))
+                        .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
+                player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(this.lastDistanceToTarget));
+            }
+        }
+    }
+
+    private void startUsing(World world, PlayerEntity user, Hand hand) {
+        setCooldown(user);
+        PlayerEntity trackedPlayer = getTrackedPlayerFromNbt(world, user, hand);
+        this.lastDistanceToTarget = getDistanceToTarget(user, trackedPlayer);
+        this.usageTicksLeft = 2 * TICKS_PER_SECOND;
+    }
+
     private void setCooldown(PlayerEntity user) {
         user.getItemCooldownManager().set(this, cooldown);
     }
 
-    private double getDistanceToTarget(PlayerEntity user) {
-        Vec3d trackedPlayerPosition = trackedPlayer.getPos();
-        Vec3d playerPosition = user.getPos();
-        return Point2D.distance(playerPosition.getX(), playerPosition.getZ(), trackedPlayerPosition.getX(), trackedPlayerPosition.getZ());
+    private double getDistanceToTarget(PlayerEntity user, PlayerEntity trackedPlayer) {
+        if (trackedPlayer != null) {
+            Vec3d trackedPlayerPosition = trackedPlayer.getPos();
+            Vec3d playerPosition = user.getPos();
+            return Point2D.distance(playerPosition.getX(), playerPosition.getZ(), trackedPlayerPosition.getX(), trackedPlayerPosition.getZ());
+        }
+        return 9999999;
     }
 
-    private void getTrackedPlayerFromNbt(World world, PlayerEntity user, Hand hand) {
+    private PlayerEntity getTrackedPlayerFromNbt(World world, PlayerEntity user, Hand hand) {
         String targetUuid = user.getStackInHand(hand).getNbt().get("target").asString();
-        this.trackedPlayer = world.getPlayers().stream().filter((PlayerEntity player) -> player.getUuidAsString().equals(targetUuid)).findFirst().orElse(null);
+        return world.getPlayers().stream().filter((PlayerEntity player) -> player.getUuidAsString().equals(targetUuid)).findFirst().orElse(null);
     }
 
     private float calculatePitch(double distance) {
