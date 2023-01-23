@@ -3,5 +3,17 @@
     "sounds": [
       "finalstand:hunter_tracking_device"
     ]
+  },
+  "tracking_device_searching": {
+    "subtitle": "subtitles.finalstand.hunter_tracking_device_searching",
+    "sounds": [
+      "finalstand:tracking_device_searching"
+    ]
+  },
+  "tracking_device_confirm": {
+    "subtitle": "subtitles.finalstand.hunter_tracking_device_confirm",
+    "sounds": [
+      "finalstand:tracking_device_confirm"
+    ]
   }
 }

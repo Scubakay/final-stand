@@ -1,7 +1,7 @@
 # Final Stand
 
-Final Stand is a mod used in the second season of the Final Stand Youtube series.
-The mod is heavily based on 3rd/Double/Last Life, but with our own twist!
+Final Stand is the mod used in the second season of the Final Stand Youtube series.
+The mod is heavily inspired by 3rd/Double/Last Life, but with our own twist!
 
 Players get a random amount of lives they start with and when they run out, it's game over!
 When you get knocked out you will be put in spectator mode, so make sure you hold on to your lives.
@@ -12,7 +12,9 @@ hunters get a tracking device that helps them find their target.
 
 ## Contributions
 
-Special thanks to TheNatter for creating the Hunter Tracking Device model!
+Special thanks to:
+- TheNatter for creating the Hunter Tracking Device model!
+- Huskarmen for creating the Hunter Tracking Device sounds!
 
 ## How to use
 
