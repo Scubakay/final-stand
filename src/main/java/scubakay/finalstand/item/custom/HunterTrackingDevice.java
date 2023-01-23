@@ -27,6 +27,7 @@ public class HunterTrackingDevice extends Item {
 
     private int usageTicksLeft = -1;
     private double lastDistanceToTarget = -1;
+    private boolean used = false;
 
     public HunterTrackingDevice(Item.Settings settings) {
         super(settings);
@@ -47,14 +48,15 @@ public class HunterTrackingDevice extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (this.usageTicksLeft < 0) {
+        if (!world.isClient() || !this.used) {
             return;
         }
         if (entity instanceof PlayerEntity player) {
-            if (--this.usageTicksLeft == 0) {
+            if (this.usageTicksLeft-- < 0) {
                 player.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", Math.round(this.lastDistanceToTarget))
                         .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
-                player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(this.lastDistanceToTarget));
+                player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, 1f);
+                this.used = false;
             }
         }
     }
@@ -63,7 +65,31 @@ public class HunterTrackingDevice extends Item {
         setCooldown(user);
         PlayerEntity trackedPlayer = getTrackedPlayerFromNbt(world, user, hand);
         this.lastDistanceToTarget = getDistanceToTarget(user, trackedPlayer);
-        this.usageTicksLeft = 2 * TICKS_PER_SECOND;
+        int secondsDelay = this.getDelayInSeconds(this.lastDistanceToTarget);
+        this.usageTicksLeft = secondsDelay * TICKS_PER_SECOND;
+        this.used = true;
+        playScanningSound(user, secondsDelay);
+    }
+
+    private void playScanningSound(PlayerEntity player, int secondsDelay) {
+        // player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(this.lastDistanceToTarget));
+        // TODO: Determine what sound file to play based on seconds delay
+    }
+
+    private int getDelayInSeconds(double distance) {
+        int seconds;
+        if (distance > 200) {
+            seconds = 5;
+        } else if (distance > 150) {
+            seconds = 4;
+        } else if (distance > 100) {
+            seconds = 3;
+        } else if (distance > 50) {
+            seconds = 2;
+        } else {
+            seconds = 1;
+        }
+        return seconds;
     }
 
     private void setCooldown(PlayerEntity user) {
@@ -82,9 +108,5 @@ public class HunterTrackingDevice extends Item {
     private PlayerEntity getTrackedPlayerFromNbt(World world, PlayerEntity user, Hand hand) {
         String targetUuid = user.getStackInHand(hand).getNbt().get("target").asString();
         return world.getPlayers().stream().filter((PlayerEntity player) -> player.getUuidAsString().equals(targetUuid)).findFirst().orElse(null);
-    }
-
-    private float calculatePitch(double distance) {
-        return (float) (1f - (distance / MAX_PITCH_SHIFT_DISTANCE));
     }
 }
