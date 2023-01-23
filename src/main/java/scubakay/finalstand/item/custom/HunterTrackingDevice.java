@@ -25,6 +25,7 @@ public class HunterTrackingDevice extends Item {
     private int usageTicksLeft = -1;
     private double lastDistanceToTarget = -1;
     private boolean used = false;
+    private float animationCycle = 0f;
 
     public HunterTrackingDevice(Item.Settings settings) {
         super(settings);
@@ -46,12 +47,25 @@ public class HunterTrackingDevice extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (world.isClient() && this.used && entity instanceof PlayerEntity player) {
+            this.animationCycle += 0.08f;
+            if (this.animationCycle > 1) {
+                this.animationCycle = 0f;
+            }
             if (this.usageTicksLeft-- < 0) {
                 sendDistanceMessage(player, lastDistanceToTarget);
                 player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, 1f);
+                this.animationCycle = 0f;
                 this.used = false;
             }
         }
+    }
+
+    public boolean wasUsed() {
+        return this.used;
+    }
+
+    public float getAnimationCycle() {
+        return this.animationCycle;
     }
 
     private void sendDistanceMessage(PlayerEntity player, double lastDistanceToTarget) {

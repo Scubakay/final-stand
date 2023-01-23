@@ -5,6 +5,56 @@
 		"0": "finalstand:item/hunter_tracking_device",
 		"particle": "finalstand:item/hunter_tracking_device"
 	},
+	"overrides": [
+		{
+			"predicate": {
+				"scanning": 1
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_0"
+		},
+		{
+			"predicate": {
+				"scanning": 1,
+				"scan": 0.3
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_1"
+		},
+		{
+			"predicate": {
+				"scanning": 1,
+				"scan": 0.5
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_2"
+		},
+		{
+			"predicate": {
+				"scanning": 1,
+				"scan": 0.6
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_3"
+		},
+		{
+			"predicate": {
+				"scanning": 1,
+				"scan": 0.7
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_4"
+		},
+		{
+			"predicate": {
+				"scanning": 1,
+				"scan": 0.8
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_5"
+		},
+		{
+			"predicate": {
+				"scanning": 1,
+				"scan": 0.9
+			},
+			"model": "finalstand:item/hunter_tracking_device_scanning_6"
+		}
+	],
 	"elements": [
 		{
 			"from": [7, 0, 7],
