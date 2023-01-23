@@ -7,6 +7,7 @@ import scubakay.finalstand.client.LivesHudOverlay;
 import scubakay.finalstand.event.ModEvents;
 import scubakay.finalstand.event.callback.HotbarRenderCallback;
 import scubakay.finalstand.networking.ModMessages;
+import scubakay.finalstand.util.ModModelPredicateProviderRegistry;
 
 @Environment(EnvType.CLIENT)
 public class FinalStandClient implements ClientModInitializer {
@@ -14,6 +15,7 @@ public class FinalStandClient implements ClientModInitializer {
     public void onInitializeClient() {
         ModMessages.registerS2CPackets();
         ModEvents.registerClientEvents();
+        ModModelPredicateProviderRegistry.registerModelPredicates();
 
         HotbarRenderCallback.EVENT.register(new LivesHudOverlay());
     }

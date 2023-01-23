@@ -1,0 +1,8 @@
+{
+	"credit": "Made by TheNatter",
+	"parent": "finalstand:item/hunter_tracking_device",
+	"textures": {
+		"0": "finalstand:item/hunter_tracking_device_scanning_5",
+		"particle": "finalstand:item/hunter_tracking_device_scanning_5"
+	}
+}
