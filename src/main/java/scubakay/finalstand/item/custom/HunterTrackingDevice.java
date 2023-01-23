@@ -47,15 +47,17 @@ public class HunterTrackingDevice extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (world.isClient() && this.used && entity instanceof PlayerEntity player) {
-            this.animationCycle += 0.08f;
-            if (this.animationCycle > 1) {
-                this.animationCycle = 0f;
-            }
             if (this.usageTicksLeft-- < 0) {
                 sendDistanceMessage(player, lastDistanceToTarget);
-                player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, 1f);
+                player.playSound(ModSounds.TRACKING_DEVICE_CONFIRM, SoundCategory.BLOCKS, 1f, 1f);
                 this.animationCycle = 0f;
                 this.used = false;
+            } else {
+                this.animationCycle += 0.045f;
+                if (this.animationCycle > 1) {
+                    this.animationCycle = 0f;
+                    player.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.BLOCKS, 1f, 1f);
+                }
             }
         }
     }
@@ -95,12 +97,7 @@ public class HunterTrackingDevice extends Item {
         int secondsDelay = this.getDelayInSeconds(this.lastDistanceToTarget);
         this.usageTicksLeft = secondsDelay * TICKS_PER_SECOND;
         this.used = true;
-        playScanningSound(user, secondsDelay);
-    }
-
-    private void playScanningSound(PlayerEntity player, int secondsDelay) {
-        // player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, calculatePitch(this.lastDistanceToTarget));
-        // TODO: Determine what sound file to play based on seconds delay
+        user.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.BLOCKS, 1f, 1f);
     }
 
     private int getDelayInSeconds(double distance) {

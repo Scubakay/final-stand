@@ -16,5 +16,7 @@
   "item.finalstand.hunter_tracking_device_far_away": "Your target is far away!",
   "item.finalstand.hunter_tracking_device_getting_closer": "Getting closer to your target!",
   "item.finalstand.hunter_tracking_device_target_is_close": "You are close to your target!",
-  "item.finalstand.hunter_tracking_device_target_is_here": "Your target is here!"
+  "item.finalstand.hunter_tracking_device_target_is_here": "Your target is here!",
+  "subtitles.finalstand.hunter_tracking_device_searching": "Searching...",
+  "subtitles.finalstand.hunter_tracking_device_confirm": "Confirmed!"
 }
