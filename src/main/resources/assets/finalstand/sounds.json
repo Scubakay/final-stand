@@ -1,9 +1,4 @@
 {
-  "hunter_tracking_device": {
-    "sounds": [
-      "finalstand:hunter_tracking_device"
-    ]
-  },
   "tracking_device_searching": {
     "subtitle": "subtitles.finalstand.hunter_tracking_device_searching",
     "sounds": [
