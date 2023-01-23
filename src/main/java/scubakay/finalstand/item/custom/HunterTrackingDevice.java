@@ -21,10 +21,7 @@ import java.util.List;
 public class HunterTrackingDevice extends Item {
 
     public static int cooldown = 0;
-    private static final double MAX_PITCH_SHIFT_DISTANCE = 400;
-
     private static final int TICKS_PER_SECOND = 20;
-
     private int usageTicksLeft = -1;
     private double lastDistanceToTarget = -1;
     private boolean used = false;
@@ -48,17 +45,26 @@ public class HunterTrackingDevice extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!world.isClient() || !this.used) {
-            return;
-        }
-        if (entity instanceof PlayerEntity player) {
+        if (world.isClient() && this.used && entity instanceof PlayerEntity player) {
             if (this.usageTicksLeft-- < 0) {
-                player.sendMessage(Text.translatable("item.finalstand.hunter_tracking_device_target_distance", Math.round(this.lastDistanceToTarget))
-                        .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
+                sendDistanceMessage(player, lastDistanceToTarget);
                 player.playSound(ModSounds.HUNTER_TRACKING_DEVICE, SoundCategory.BLOCKS, 1f, 1f);
                 this.used = false;
             }
         }
+    }
+
+    private void sendDistanceMessage(PlayerEntity player, double lastDistanceToTarget) {
+        int secondsDelay = getDelayInSeconds(lastDistanceToTarget);
+        String message_id = switch (secondsDelay) {
+            case 1 -> "item.finalstand.hunter_tracking_device_target_is_here";
+            case 2 -> "item.finalstand.hunter_tracking_device_target_is_close";
+            case 3 -> "item.finalstand.hunter_tracking_device_getting_closer";
+            case 4 -> "item.finalstand.hunter_tracking_device_far_away";
+            default -> "item.finalstand.hunter_tracking_device_very_far_away";
+        };
+        player.sendMessage(Text.translatable(message_id, Math.round(this.lastDistanceToTarget))
+                .fillStyle(Style.EMPTY.withColor(Formatting.RED)), true);
     }
 
     private void startUsing(World world, PlayerEntity user, Hand hand) {
@@ -80,11 +86,11 @@ public class HunterTrackingDevice extends Item {
         int seconds;
         if (distance > 200) {
             seconds = 5;
-        } else if (distance > 150) {
-            seconds = 4;
         } else if (distance > 100) {
-            seconds = 3;
+            seconds = 4;
         } else if (distance > 50) {
+            seconds = 3;
+        } else if (distance > 20) {
             seconds = 2;
         } else {
             seconds = 1;

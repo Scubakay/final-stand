@@ -1,7 +1,5 @@
 {
   "item.finalstand.hunter_tracking_device": "Hunter Tracking Device",
-  "item.finalstand.hunter_tracking_device_no_player_found_error": "Something went wrong, no player found to track. Contact game host to solve the problem!",
-  "item.finalstand.hunter_tracking_device_target_distance": "Target is %d blocks away!",
   "item.finalstand.amount_of_lives": "You have %d lives",
   "item.finalstand.game_over": "Game over!",
   "item.finalstand.lives_left": "You have %d lives left",
@@ -13,5 +11,10 @@
   "item.finalstand.bounty-completed": "Your bounty was completed",
   "item.finalstand.bounty-failed": "You failed to kill your target. Losing one life!",
   "item.finalstand.session_ended": "The session has ended!",
-  "item.finalstand.hunter_tracking_device_tooltip": "Use to locate your target!"
+  "item.finalstand.hunter_tracking_device_tooltip": "Use to locate your target!",
+  "item.finalstand.hunter_tracking_device_very_far_away": "Your target is very far away!",
+  "item.finalstand.hunter_tracking_device_far_away": "Your target is far away!",
+  "item.finalstand.hunter_tracking_device_getting_closer": "Getting closer to your target!",
+  "item.finalstand.hunter_tracking_device_target_is_close": "You are close to your target!",
+  "item.finalstand.hunter_tracking_device_target_is_here": "Your target is here!"
 }
