@@ -21,25 +21,29 @@ public class TeamState {
                 scoreboard.removePlayerFromTeam(player.getEntityName(), team);
             }
         } else if (lives < 2) {
-            if(scoreboard.getTeam("red") != null) {
-                scoreboard.addPlayerToTeam(player.getEntityName(), scoreboard.getTeam("red"));
-            }
+            addPlayerToTeam(scoreboard, player, lives, "red");
         } else if (lives > 2) {
-            if(scoreboard.getTeam("green") != null) {
-                scoreboard.addPlayerToTeam(player.getEntityName(), scoreboard.getTeam("green"));
-            }
+            addPlayerToTeam(scoreboard, player, lives, "green");
         } else {
-            if(scoreboard.getTeam("yellow") != null) {
-                scoreboard.addPlayerToTeam(player.getEntityName(), scoreboard.getTeam("yellow"));
-            }
+            addPlayerToTeam(scoreboard, player, lives, "yellow");
+        }
+    }
+
+    private static void addPlayerToTeam(Scoreboard scoreboard, ServerPlayerEntity player, int lives, String team) {
+        if(scoreboard.getTeam(team) != null) {
+            scoreboard.addPlayerToTeam(player.getEntityName(), scoreboard.getTeam(team));
+            System.out.printf("%s added to %s team with %d lives\n", player.getEntityName(), team, lives);
         }
     }
 
     private static void createTeam(Scoreboard scoreboard, String name, Text displayName, Formatting color) {
         if (scoreboard.getTeam(name) == null) {
+            System.out.printf("Creating %s team\n", name);
             Team team = scoreboard.addTeam(name);
             team.setDisplayName(displayName);
             team.setColor(color);
+        } else {
+            System.out.printf("Team %s already exists\n", name);
         }
     }
 }
