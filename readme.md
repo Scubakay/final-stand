@@ -1,13 +1,29 @@
 # Final Stand
 
-# Initialize game
+Final Stand is a mod used in the second season of the Final Stand Youtube series.
+The mod is heavily based on 3rd/Double/Last Life, but with our own twist!
+
+Players get a random amount of lives they start with and when they run out, it's game over!
+When you get knocked out you will be put in spectator mode, so make sure you hold on to your lives.
+
+Every session a certain amount of Bounty Hunters will get selected. Their job is to kill
+their target before the session ends, or they will lose a life themselves! Luckily, the bounty
+hunters get a tracking device that helps them find their target.
+
+## Contributions
+
+Special thanks to TheNatter for creating the Hunter Tracking Device model!
+
+## How to use
+
+### Initialize game
 ```
 /fs init
 ```
 This command initializes a new game. All players online will receive a random amount of lives,
 configurable with gamerules.
 
-# Start session
+### Start session
 ```
 /fs start
 ```
@@ -15,17 +31,17 @@ Starts a new Final Stand session. The configured number of Hunters will receive 
 with a selected target they need to hunt down before the end of the session. If the Hunter fails
 they will lose a life.
 
-# Reset session
+### Reset session
 ```
 /fs reset
 ```
 If anything goes wrong, `/fs reset` will remove all Tracking devices from the inventories.
 After running the command you can use `/fs start` again to restart the session.
 
-# Gamerules
+### Gamerules
 This mod has a bunch of gamerules allowing you to customize certain aspects of the game.
 
-## Life amounts
+#### Life amounts
 ```
 /gamerule minLives
 /gamerule maxLives
@@ -33,20 +49,20 @@ This mod has a bunch of gamerules allowing you to customize certain aspects of t
 Sets the lower and upper bounds for the randomization of lives. If minlives is higher than maxlives,
 minLives will be set to the value of maxLives.
 
-## Hunter amount
+#### Hunter amount
 ```
 /gamerule hunterAmount
 ```
 Sets the amount of hunters chosen at session start. If this is higher than the amount of players
 all players will be selected as hunters.
 
-## Tracking device cooldown
+#### Tracking device cooldown
 ```
 /gamerule hunterTrackingDeviceCooldown <cooldown>
 ```
 The cooldown for the Hunter Tracking Device. I think this is in ticks, not really sure though.
 
-## Preventing players on last heart from becoming hunter/target
+#### Preventing players on last heart from becoming hunter/target
 ```
 /gamerule preventRedLifeHunter
 /gamerule preventRedLifeTarget
