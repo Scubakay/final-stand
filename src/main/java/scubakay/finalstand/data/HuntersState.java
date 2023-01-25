@@ -5,6 +5,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.finalstand.item.ModItems;
+import scubakay.finalstand.item.custom.HunterTrackingDevice;
 import scubakay.finalstand.util.IEntityDataSaver;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class HuntersState {
 
         // Save target to device NBT
         NbtCompound nbtData = new NbtCompound();
-        nbtData.putString("target", target.getUuidAsString());
+        nbtData.putString(HunterTrackingDevice.SCAN_TARGET_KEY, target.getUuidAsString());
         itemStack.setNbt(nbtData);
 
         // Add device to hunter inventory

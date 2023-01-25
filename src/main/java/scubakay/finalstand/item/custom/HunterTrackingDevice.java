@@ -1,10 +1,11 @@
 package scubakay.finalstand.item.custom;
 
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -14,29 +15,114 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import scubakay.finalstand.sounds.ModSounds;
+import scubakay.finalstand.util.ModGameruleRegister;
 
 import java.awt.geom.Point2D;
 import java.util.List;
 
 public class HunterTrackingDevice extends Item {
-
+    private static final String SCAN_DISTANCE_KEY = "bounty-distance";
+    public static final String SCAN_TARGET_KEY = "bounty-target";
     public static int cooldown = 0;
     private static final int TICKS_PER_SECOND = 20;
-    private int usageTicksLeft = -1;
-    private double lastDistanceToTarget = -1;
-    private boolean used = false;
-    private float animationCycle = 0f;
 
     public HunterTrackingDevice(Item.Settings settings) {
         super(settings);
     }
 
+    /**
+     * Get the tracked player from NBT and set the scan distance in NBT to indicate scanning
+     */
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient()) {
-            startUsing(world, user, hand);
+        ItemStack stack = user.getStackInHand(hand);
+
+        PlayerEntity trackedPlayer = getTrackedPlayerFromNbt(world, user, hand);
+        if (trackedPlayer != null) {
+            double distance = getDistanceToTarget(user, trackedPlayer);
+            setScanDistance(stack, distance);
+            user.setCurrentHand(hand);
+            return TypedActionResult.consume(stack);
         }
-        return super.use(world, user, hand);
+        return TypedActionResult.fail(stack);
+    }
+
+    /**
+     * Play scanning sound every second of usage
+     */
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        if (!world.isClient && user instanceof PlayerEntity player && remainingUseTicks % TICKS_PER_SECOND == 0) {
+            player.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.BLOCKS, 1f, 1f);
+        }
+    }
+
+    /**
+     * Reset scan distance when player stops scanning
+     */
+    @Override
+    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        resetScanDistance(stack);
+    }
+
+    /**
+     * Play success sound and show distance on completed use
+     */
+    @Override
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        if (user instanceof PlayerEntity player) {
+            setCooldown(player);
+            double distance = getScanDistance(stack);
+            sendDistanceMessage(player, distance);
+            player.playSound(ModSounds.TRACKING_DEVICE_CONFIRM, SoundCategory.BLOCKS, 1f, 1f);
+            resetScanDistance(stack);
+        }
+        return stack;
+    }
+
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return HunterTrackingDevice.getScanTime(stack);
+    }
+
+    /**
+     * Retrieves scan distance from NBT and converts it to seconds
+     */
+    public static int getScanTime(ItemStack stack) {
+        double distance = getScanDistance(stack);
+        return getDelayInSeconds(distance) * TICKS_PER_SECOND;
+    }
+
+    /**
+     * Write scan distance to NBT
+     */
+    public static void setScanDistance(ItemStack stack, double distance) {
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        nbtCompound.putDouble(SCAN_DISTANCE_KEY, distance);
+    }
+
+    /**
+     * Get scan distance from NBT
+     */
+    public static double getScanDistance(ItemStack stack) {
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        return nbtCompound != null ? nbtCompound.getDouble(SCAN_DISTANCE_KEY) : 99999;
+    }
+
+    /**
+     * Remove scan distance from NBT
+     */
+    public static void resetScanDistance(ItemStack stack) {
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        nbtCompound.remove(SCAN_DISTANCE_KEY);
+    }
+
+    /**
+     * Check if scan distance has been set in NBT
+     */
+    public static boolean isScanning(ItemStack stack) {
+        NbtCompound nbtCompound = stack.getOrCreateNbt();
+        return nbtCompound.contains(SCAN_DISTANCE_KEY);
     }
 
     @Override
@@ -44,34 +130,11 @@ public class HunterTrackingDevice extends Item {
         tooltip.add(Text.translatable("item.finalstand.hunter_tracking_device_tooltip").formatted(Formatting.BLUE));
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (world.isClient() && this.used && entity instanceof PlayerEntity player) {
-            if (this.usageTicksLeft-- < 0) {
-                sendDistanceMessage(player, lastDistanceToTarget);
-                player.playSound(ModSounds.TRACKING_DEVICE_CONFIRM, SoundCategory.BLOCKS, 1f, 1f);
-                this.animationCycle = 0f;
-                this.used = false;
-            } else {
-                this.animationCycle += 0.045f;
-                if (this.animationCycle > 1) {
-                    this.animationCycle = 0f;
-                    player.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.BLOCKS, 1f, 1f);
-                }
-            }
-        }
-    }
-
-    public boolean wasUsed() {
-        return this.used;
-    }
-
-    public float getAnimationCycle() {
-        return this.animationCycle;
-    }
-
-    private void sendDistanceMessage(PlayerEntity player, double lastDistanceToTarget) {
-        int secondsDelay = getDelayInSeconds(lastDistanceToTarget);
+    /**
+     * Send message to player indicating how far their target approximately is.
+     */
+    private void sendDistanceMessage(PlayerEntity player, double distance) {
+        int secondsDelay = getDelayInSeconds(distance);
         String message_id = switch (secondsDelay) {
             case 1 -> "item.finalstand.hunter_tracking_device_target_is_here";
             case 2 -> "item.finalstand.hunter_tracking_device_target_is_close";
@@ -86,21 +149,14 @@ public class HunterTrackingDevice extends Item {
             case 4 -> Formatting.RED;
             default -> Formatting.DARK_RED;
         };
-        player.sendMessage(Text.translatable(message_id, Math.round(this.lastDistanceToTarget))
+        player.sendMessage(Text.translatable(message_id, Math.round(distance))
                 .fillStyle(Style.EMPTY.withColor(color)), true);
     }
 
-    private void startUsing(World world, PlayerEntity user, Hand hand) {
-        setCooldown(user);
-        PlayerEntity trackedPlayer = getTrackedPlayerFromNbt(world, user, hand);
-        this.lastDistanceToTarget = getDistanceToTarget(user, trackedPlayer);
-        int secondsDelay = this.getDelayInSeconds(this.lastDistanceToTarget);
-        this.usageTicksLeft = secondsDelay * TICKS_PER_SECOND;
-        this.used = true;
-        user.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.BLOCKS, 1f, 1f);
-    }
-
-    private int getDelayInSeconds(double distance) {
+    /**
+     * Get scan delay in seconds based on distance
+     */
+    private static int getDelayInSeconds(double distance) {
         int seconds;
         if (distance > 200) {
             seconds = 5;
@@ -117,9 +173,12 @@ public class HunterTrackingDevice extends Item {
     }
 
     private void setCooldown(PlayerEntity user) {
-        user.getItemCooldownManager().set(this, cooldown);
+        user.getItemCooldownManager().set(this, user.getWorld().getGameRules().getInt(ModGameruleRegister.HUNTER_TRACKING_DEVICE_COOLDOWN));
     }
 
+    /**
+     * Calculates distance to target
+     */
     private double getDistanceToTarget(PlayerEntity user, PlayerEntity trackedPlayer) {
         if (trackedPlayer != null) {
             Vec3d trackedPlayerPosition = trackedPlayer.getPos();
@@ -129,8 +188,15 @@ public class HunterTrackingDevice extends Item {
         return 9999999;
     }
 
+    /**
+     * Get tracked player from NBT
+     */
     private PlayerEntity getTrackedPlayerFromNbt(World world, PlayerEntity user, Hand hand) {
-        String targetUuid = user.getStackInHand(hand).getNbt().get("target").asString();
+        NbtCompound nbtCompound = user.getStackInHand(hand).getNbt();
+        if (nbtCompound == null) {
+            return null;
+        }
+        String targetUuid = nbtCompound.getString(SCAN_TARGET_KEY);
         return world.getPlayers().stream().filter((PlayerEntity player) -> player.getUuidAsString().equals(targetUuid)).findFirst().orElse(null);
     }
 }
