@@ -8,17 +8,17 @@ import scubakay.finalstand.item.custom.HunterTrackingDevice;
 
 public class ModModelPredicateProviderRegistry {
     public static void registerModelPredicates() {
-        ModelPredicateProviderRegistry.register(ModItems.HUNTER_TRACKING_DEVICE, new Identifier("scanning"), (itemStack, clientWorld, livingEntity, i) -> {
-            if (livingEntity != null && itemStack.getItem() instanceof HunterTrackingDevice item) {
-                return item.wasUsed() ? 1 : 0;
+        ModelPredicateProviderRegistry.register(ModItems.HUNTER_TRACKING_DEVICE, new Identifier("scanning"), (stack, world, entity, i) -> {
+            if (entity != null) {
+                return HunterTrackingDevice.isScanning(stack) ? 1 : 0;
             } else {
                 return 0.0F;
             }
         });
 
-        ModelPredicateProviderRegistry.register(ModItems.HUNTER_TRACKING_DEVICE, new Identifier("scan"), (itemStack, clientWorld, livingEntity, i) -> {
-            if (livingEntity != null && itemStack.getItem() instanceof HunterTrackingDevice item) {
-                return item.getAnimationCycle();
+        ModelPredicateProviderRegistry.register(ModItems.HUNTER_TRACKING_DEVICE, new Identifier("scan"), (stack, world, entity, i) -> {
+            if (entity != null && HunterTrackingDevice.isScanning(stack)) {
+                return 1 - (float) (entity.getItemUseTimeLeft() % 20) / 20;
             } else {
                 return 0.0F;
             }
