@@ -6,12 +6,13 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import scubakay.finalstand.data.HuntersState;
 
-public class CompleteBountyHunt implements ServerLivingEntityEvents.AfterDeath {
+public class CompleteBountyHunt implements ServerLivingEntityEvents.AllowDeath {
     @Override
-    public void afterDeath(LivingEntity entity, DamageSource damageSource) {
+    public boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damageAmount) {
         if(entity instanceof ServerPlayerEntity target) {
             HuntersState.removeIfPlayerWasHunter(target);
             HuntersState.removeIfPlayerWasTarget(target);
         }
+        return true;
     }
 }
