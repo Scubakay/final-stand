@@ -46,19 +46,24 @@ jobs:
       - name: Publish (CurseForge/Modrinth/Github)
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          #        curseforge-id: 123456
-          #        curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
-
-          modrinth-id: final-stand
-          modrinth-token: "${{env.MODRINTH_TOKEN}}"
-
-          github-tag: "${{env.VERSION}}"
-          github-token: "${{env.GITHUB_TOKEN}}"
-
           name: "Final Stand ${{env.VERSION}}"
           version: "${{env.VERSION}}"
           version-type: release
           changelog-file: CHANGELOG.md
+
+          github-tag: "${{env.VERSION}}"
+          github-token: "${{env.GITHUB_TOKEN}}"
+
+      - name: Publish (CurseForge/Modrinth/Github)
+        uses: Kir-Antipov/mc-publish@v2.1
+        with:
+          name: "Final Stand ${{env.VERSION}}"
+          version: "${{env.VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+
+          modrinth-id: final-stand
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
           loaders: fabric
           game-versions: "${{env.MINECRAFT_VERSION}}"
