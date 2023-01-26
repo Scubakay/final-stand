@@ -1,0 +1,1 @@
+- Now releasing automatically on Modrinth!
