@@ -15,7 +15,7 @@ public class ModEvents {
     public static void registerServerEvents() {
         ServerPlayerEvents.AFTER_RESPAWN.register(new PlayerRespawnEvent());
         ServerLivingEntityEvents.AFTER_DEATH.register(new SwitchGamemodeOnLastDeath());
-        ServerLivingEntityEvents.AFTER_DEATH.register(new CompleteBountyHunt());
+        ServerLivingEntityEvents.ALLOW_DEATH.register(new CompleteBountyHunt());
         ServerPlayConnectionEvents.INIT.register(new SyncHunterTrackingDeviceCooldownOnJoin());
         ServerLifecycleEvents.SERVER_STARTED.register(new CreateTeamsOnServerStart());
 
