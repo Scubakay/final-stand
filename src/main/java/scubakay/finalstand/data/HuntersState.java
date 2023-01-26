@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import scubakay.finalstand.item.ModItems;
 import scubakay.finalstand.item.custom.HunterTrackingDevice;
 import scubakay.finalstand.util.IEntityDataSaver;
@@ -11,7 +12,7 @@ import scubakay.finalstand.util.IEntityDataSaver;
 import java.util.List;
 
 /**
- * Keeps list of current hunters.
+ * Keeps track of current hunters using player NBT data
  */
 public class HuntersState {
     private static final String TARGET_NBT_KEY = "finalstand.target";
@@ -24,6 +25,7 @@ public class HuntersState {
     public static void removeIfPlayerWasHunter(ServerPlayerEntity player) {
         if(isHunter(player)){
             removeHunterTrackingDevice(player);
+            player.sendMessage(Text.translatable("item.finalstand.bounty-completed").formatted(Formatting.GREEN));
         }
     }
 
@@ -31,7 +33,8 @@ public class HuntersState {
         List<ServerPlayerEntity> players = player.getWorld().getPlayers();
         players.stream()
                 .filter(p -> getTarget(p).equals(player.getUuidAsString()))
-                .forEach(HuntersState::removeHunterTrackingDevice);
+                .forEach(HuntersState::removeIfPlayerWasHunter);
+        player.sendMessage(Text.translatable("item.finalstand.no-longer-being-hunted").formatted(Formatting.GREEN));
     }
 
     public static void reset(List<ServerPlayerEntity> players) {
@@ -54,7 +57,7 @@ public class HuntersState {
                 .forEach(h -> {
                     removeHunterTrackingDevice(h);
                     LivesData.removeLives((IEntityDataSaver) h, 1);
-                    h.sendMessage(Text.translatable("item.finalstand.bounty-failed"));
+                    h.sendMessage(Text.translatable("item.finalstand.bounty-failed").formatted(Formatting.RED));
                 });
     }
 
@@ -75,7 +78,7 @@ public class HuntersState {
             hunter.dropItem(itemStack, false);
         }
 
-        hunter.sendMessage(Text.translatable("item.finalstand.you_are_hunter"));
+        hunter.sendMessage(Text.translatable("item.finalstand.you_are_hunter").formatted(Formatting.DARK_RED));
     }
 
     private static void removeHunterTrackingDevice(ServerPlayerEntity hunter) {
@@ -83,7 +86,6 @@ public class HuntersState {
         while(hunter.getInventory().containsAny(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE))) {
             hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, hunter.getInventory());
         }
-        hunter.sendMessage(Text.translatable("item.finalstand.bounty-completed"));
     }
 
     private static void setTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
