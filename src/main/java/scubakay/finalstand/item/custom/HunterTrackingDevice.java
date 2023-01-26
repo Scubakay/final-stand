@@ -38,13 +38,10 @@ public class HunterTrackingDevice extends Item {
         ItemStack stack = user.getStackInHand(hand);
 
         PlayerEntity trackedPlayer = getTrackedPlayerFromNbt(world, user, hand);
-        if (trackedPlayer != null) {
-            double distance = getDistanceToTarget(user, trackedPlayer);
-            setScanDistance(stack, distance);
-            user.setCurrentHand(hand);
-            return TypedActionResult.consume(stack);
-        }
-        return TypedActionResult.fail(stack);
+        double distance = getDistanceToTarget(user, trackedPlayer);
+        setScanDistance(stack, distance);
+        user.setCurrentHand(hand);
+        return TypedActionResult.consume(stack);
     }
 
     /**
