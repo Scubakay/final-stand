@@ -7,6 +7,7 @@ import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.sounds.ModSounds;
 import scubakay.finalstand.util.ModCommandRegister;
 import scubakay.finalstand.util.ModGameruleRegister;
+import scubakay.finalstand.util.ModLootTables;
 
 public class FinalStand implements ModInitializer {
     public static final String MOD_ID = "finalstand";
@@ -23,6 +24,7 @@ public class FinalStand implements ModInitializer {
         ModCommandRegister.registerCommands();
         ModMessages.registerC2SPackets();
         ModGameruleRegister.registerGamerules();
+        ModLootTables.registerLootTables();
 
         ModEvents.registerServerEvents();
     }
