@@ -1,1 +1,1 @@
-- Now releasing automatically on Modrinth!
+- Add random chest with custom loot every session start
