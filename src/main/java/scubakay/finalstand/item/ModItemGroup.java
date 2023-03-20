@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 import scubakay.finalstand.FinalStand;
 
 public class ModItemGroup {
-    public static final ItemGroup HUNTER_TRACKING_DEVICE = FabricItemGroup.builder(new Identifier(FinalStand.MOD_ID, "hunter_tracking_device"))
+    public static final ItemGroup FINAL_STAND = FabricItemGroup.builder(new Identifier(FinalStand.MOD_ID, "final_stand"))
             .displayName(Text.literal("Final Stand"))
             .icon(() -> new ItemStack(ModItems.HUNTER_TRACKING_DEVICE))
             .entries(((enabledFeatures, entries, operatorEnabled) -> {

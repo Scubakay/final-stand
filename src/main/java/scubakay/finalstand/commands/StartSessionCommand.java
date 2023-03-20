@@ -36,6 +36,8 @@ public class StartSessionCommand {
         HuntersState.reset(players);
         selectHunters(players, hunterAmount, preventRedLifeHunter, preventRedLifeTarget);
         context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("item.finalstand.bounty_hunters_selected"), false);
+
+        ChestPlacer.placeChestRandomly(context.getSource().getWorld());
         return 1;
     }
 

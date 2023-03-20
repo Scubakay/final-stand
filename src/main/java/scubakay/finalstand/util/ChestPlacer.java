@@ -3,11 +3,6 @@ package scubakay.finalstand.util;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextType;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -32,16 +27,9 @@ public class ChestPlacer {
         BlockPos pos = new BlockPos(x, y, z);
         BlockState state = world.getBlockState(pos);
         if (state.isAir()) {
-            world.setBlockState(pos, Blocks.CHEST.getDefaultState(), 2);
+            world.setBlockState(pos, Blocks.CHEST.getDefaultState());
             ChestBlockEntity chestBlockEntity = (ChestBlockEntity) world.getBlockEntity(pos);
-            LootTable lootTable = world.getServer().getLootManager().getTable(LootTables.END_CITY_TREASURE_CHEST);
-            LootContext.Builder builder = new LootContext.Builder(world)
-                    .random(RANDOM);
-            for (ItemStack stack : lootTable.generateLoot(builder.build(LootContextType.create().build()))) {
-                if (chestBlockEntity != null) {
-                    chestBlockEntity.setStack(RANDOM.nextInt(26), stack);
-                }
-            }
+            chestBlockEntity.setLootTable(ModLootTables.FINAL_STAND_TREASURE_CHEST, world.getRandom().nextLong());
         } else {
             placeChestRandomly(world);
         }
