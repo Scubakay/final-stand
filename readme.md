@@ -10,6 +10,9 @@ Every session a certain amount of Bounty Hunters will get selected. Their job is
 their target before the session ends, or they will lose a life themselves! Luckily, the bounty
 hunters get a tracking device that helps them find their target.
 
+Also, each session start will spawn a random chest on the surface within the world borders, which 
+contains some very good loot! Go and find it to gain some extra advantage on your opponents!
+
 ## Contributions
 
 Special thanks to:
@@ -24,6 +27,8 @@ Special thanks to:
 ```
 This command initializes a new game. All players online will receive a random amount of lives,
 configurable with gamerules.
+
+You can add a player name as an argument to set the lives for that player only.
 
 ### Start session
 ```
