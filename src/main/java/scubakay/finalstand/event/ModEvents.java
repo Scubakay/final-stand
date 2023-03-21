@@ -18,6 +18,7 @@ public class ModEvents {
         ServerLivingEntityEvents.ALLOW_DEATH.register(new CompleteBountyHunt());
         ServerPlayConnectionEvents.INIT.register(new SyncHunterTrackingDeviceCooldownOnJoin());
         ServerLifecycleEvents.SERVER_STARTED.register(new CreateTeamsOnServerStart());
+        ServerPlayerEvents.COPY_FROM.register(new TotemOfKeepingHandler());
 
         System.out.printf("[%s] Registering events%n", FinalStand.MOD_ID);
     }

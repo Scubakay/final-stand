@@ -10,7 +10,8 @@
   "client": [
     "AbstractClientPlayerEntityMixin",
     "PropertiesMixin",
-    "RenderHotbarHudMixin"
+    "RenderHotbarHudMixin",
+    "PlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
