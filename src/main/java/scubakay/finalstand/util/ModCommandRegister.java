@@ -2,10 +2,7 @@ package scubakay.finalstand.util;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import scubakay.finalstand.FinalStand;
-import scubakay.finalstand.commands.EndSessionCommand;
-import scubakay.finalstand.commands.InitSessionCommand;
-import scubakay.finalstand.commands.ResetSessionCommand;
-import scubakay.finalstand.commands.StartSessionCommand;
+import scubakay.finalstand.commands.*;
 
 public class ModCommandRegister {
     public static void registerCommands() {
@@ -14,5 +11,7 @@ public class ModCommandRegister {
         CommandRegistrationCallback.EVENT.register(ResetSessionCommand::register);
         CommandRegistrationCallback.EVENT.register(EndSessionCommand::register);
         CommandRegistrationCallback.EVENT.register(InitSessionCommand::register);
+        CommandRegistrationCallback.EVENT.register(PlaceChestCommand::register);
+        CommandRegistrationCallback.EVENT.register(SelectHuntersCommand::register);
     }
 }

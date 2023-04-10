@@ -38,12 +38,26 @@ Starts a new Final Stand session. The configured number of Hunters will receive 
 with a selected target they need to hunt down before the end of the session. If the Hunter fails
 they will lose a life.
 
+This command will also place a random chest with goodies within the world borders.
+
 ### Reset session
 ```
 /fs reset
 ```
 If anything goes wrong, `/fs reset` will remove all Tracking devices from the inventories.
 After running the command you can use `/fs start` again to restart the session.
+
+### Place chest
+```
+/fs placeChest
+```
+Places a random chest with goodies within the world borders.
+
+### Select hunters
+```
+/fs selectHunters
+```
+Selects the configured amount of hunters.
 
 ### Gamerules
 This mod has a bunch of gamerules allowing you to customize certain aspects of the game.

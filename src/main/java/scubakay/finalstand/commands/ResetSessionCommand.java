@@ -23,7 +23,7 @@ public class ResetSessionCommand {
 
     public static int run(CommandContext<ServerCommandSource> context) {
         HuntersState.reset(context.getSource().getWorld().getPlayers());
-        context.getSource().sendFeedback(Text.translatable("item.finalstand.resetting_session"), true);
+        context.getSource().sendFeedback(Text.translatable("session.finalstand.resetting_session"), true);
         return 1;
     }
 }

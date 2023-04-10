@@ -37,7 +37,7 @@ public class InitSessionCommand {
         }
         players.stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).forEach(player -> {
             int lives = LivesData.randomizeLives((IEntityDataSaver) player);
-            player.sendMessage(Text.translatable("item.finalstand.amount_of_lives", lives));
+            player.sendMessage(Text.translatable("session.finalstand.amount_of_lives", lives));
         });
         return 1;
     }

@@ -23,9 +23,9 @@ public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.After
 
             if(lives == 0) {
                 setGamemodeToSpectator(target);
-                target.sendMessage(Text.translatable("item.finalstand.game_over"));
+                target.sendMessage(Text.translatable("session.finalstand.game_over"));
             } else {
-                target.sendMessage(Text.translatable("item.finalstand.lives_left", lives));
+                target.sendMessage(Text.translatable("session.finalstand.lives_left", lives));
             }
         }
     }
