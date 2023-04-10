@@ -11,6 +11,7 @@
   "session.finalstand.no-longer-being-hunted": "You are no longer being hunted",
   "session.finalstand.bounty-completed": "Your bounty was completed",
   "session.finalstand.bounty-failed": "You failed to kill your target. Losing one life!",
+  "session.finalstand.you-are-being-hunted": "You are being hunted!",
   "item.finalstand.hunter_tracking_device": "Hunter Tracking Device",
   "item.finalstand.hunter_tracking_device_tooltip": "Use to locate your target!",
   "item.finalstand.hunter_tracking_device_very_far_away": "Your target is very far away!",

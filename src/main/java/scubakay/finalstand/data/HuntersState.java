@@ -82,6 +82,8 @@ public class HuntersState {
             target = validTargets.get(targetIndex);
         }
 
+        target.sendMessage(Text.translatable("session.finalstand.you-are-being-hunted").formatted(Formatting.RED));
+
         return target;
     }
 
