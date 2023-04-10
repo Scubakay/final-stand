@@ -1,9 +1,8 @@
 package scubakay.finalstand.data;
 
-import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -26,13 +25,12 @@ public class HuntersState {
     /**
      * Select X amount of random hunters
      */
-    public static void selectHunters(CommandContext<ServerCommandSource> context) {
-        List<ServerPlayerEntity> players = context.getSource().getWorld().getPlayers(p -> ((IServerPlayerEntity) p).isSurvival());
-        reset(players);
+    public static void selectHunters(MinecraftServer server) {
+        List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).toList();
 
-        int amount = context.getSource().getWorld().getGameRules().getInt(ModGameruleRegister.HUNTER_AMOUNT);
-        boolean preventRedLifeHunter = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_HUNTER);
-        boolean preventRedLifeTarget = context.getSource().getWorld().getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_TARGET);
+        int amount = server.getGameRules().getInt(ModGameruleRegister.HUNTER_AMOUNT);
+        boolean preventRedLifeHunter = server.getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_HUNTER);
+        boolean preventRedLifeTarget = server.getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_TARGET);
 
         // Prevent red lives from being hunter if preventRedLifeHunter is true
         List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
@@ -64,7 +62,7 @@ public class HuntersState {
             }
         }
 
-        context.getSource().getServer().getPlayerManager().broadcast(Text.translatable("session.finalstand.bounty_hunters_selected"), false);
+        server.getPlayerManager().broadcast(Text.translatable("session.finalstand.bounty_hunters_selected"), false);
     }
 
     /**
@@ -107,7 +105,8 @@ public class HuntersState {
         player.sendMessage(Text.translatable("session.finalstand.no-longer-being-hunted").formatted(Formatting.GREEN));
     }
 
-    public static void reset(List<ServerPlayerEntity> players) {
+    public static void reset(MinecraftServer server) {
+        List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).toList();
         players.forEach(HuntersState::removeHunterTrackingDevice);
     }
 

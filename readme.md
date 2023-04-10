@@ -91,3 +91,17 @@ The cooldown for the Hunter Tracking Device. I think this is in ticks, not reall
 These gamerules are set to true by default, which will prevent players on their last life from
 being a hunter or a target. If you do want the game to pick targets that are on their last life,
 set these gamerules to false.
+
+#### Session times
+```
+/gamerule hunterSelectionTime
+/gamerule treasureChestTime
+/gamerule sessionTime
+```
+These gamerules set the time in minutes to wait before selecting hunters and adding treasure chests after /fs start.
+The session time game rule can be set to -1 if you don't want the session to end automatically.
+
+Defaults are:
+- hunterSelectionTime: 10 minutes
+- treasureChestTime: 15 minutes
+- sessionTime: 120 minutes
