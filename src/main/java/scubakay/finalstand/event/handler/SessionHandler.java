@@ -1,6 +1,7 @@
 package scubakay.finalstand.event.handler;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import scubakay.finalstand.data.HuntersState;
@@ -16,6 +17,18 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     private static int sessionTick = -1;
 
     private final static int TICKS_TO_MINUTES = 20*60;
+
+    public static int getHunterTicksLeft() {
+        return hunterTick - MinecraftClient.getInstance().getServer().getTicks();
+    }
+
+    public static int getChestTicksLeft() {
+        return chestTick - MinecraftClient.getInstance().getServer().getTicks();
+    }
+
+    public static int getSessionTicksLeft() {
+        return sessionTick - MinecraftClient.getInstance().getServer().getTicks();
+    }
 
     /**
      * Starts a session and timers for selecting hunters/placing chests and session end
