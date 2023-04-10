@@ -5,9 +5,9 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import scubakay.finalstand.FinalStand;
-import scubakay.finalstand.data.HuntersState;
-import scubakay.finalstand.util.*;
+import scubakay.finalstand.event.handler.SessionHandler;
 
 public class StartSessionCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess ignoredCommandRegistryAccess, CommandManager.RegistrationEnvironment ignoredRegistrationEnvironment) {
@@ -22,8 +22,8 @@ public class StartSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
-        HuntersState.selectHunters(context);
-        ChestPlacer.placeChestRandomly(context.getSource().getWorld());
+        SessionHandler.StartSession(context.getSource().getServer());
+        context.getSource().sendFeedback(Text.translatable("session.finalstand.starting_session"), true);
         return 1;
     }
 }

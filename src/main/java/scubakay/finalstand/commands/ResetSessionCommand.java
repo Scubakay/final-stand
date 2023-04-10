@@ -7,7 +7,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import scubakay.finalstand.FinalStand;
-import scubakay.finalstand.data.HuntersState;
+import scubakay.finalstand.event.handler.SessionHandler;
 
 public class ResetSessionCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess ignoredCommandRegistryAccess, CommandManager.RegistrationEnvironment ignoredRegistrationEnvironment) {
@@ -22,7 +22,7 @@ public class ResetSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
-        HuntersState.reset(context.getSource().getWorld().getPlayers());
+        SessionHandler.ResetSession(context.getSource().getServer());
         context.getSource().sendFeedback(Text.translatable("session.finalstand.resetting_session"), true);
         return 1;
     }

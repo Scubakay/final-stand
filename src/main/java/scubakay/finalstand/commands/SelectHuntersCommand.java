@@ -21,7 +21,8 @@ public class SelectHuntersCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context) {
-        HuntersState.selectHunters(context);
+        HuntersState.reset(context.getSource().getServer());
+        HuntersState.selectHunters(context.getSource().getServer());
         return 1;
     }
 }
