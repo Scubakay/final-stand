@@ -96,5 +96,12 @@ set these gamerules to false.
 ```
 /gamerule hunterSelectionTime
 /gamerule treasureChestTime
+/gamerule sessionTime
 ```
 These gamerules set the time in minutes to wait before selecting hunters and adding treasure chests after /fs start.
+The session time game rule can be set to -1 if you don't want the session to end automatically.
+
+Defaults are:
+- hunterSelectionTime: 10 minutes
+- treasureChestTime: 15 minutes
+- sessionTime: 120 minutes
