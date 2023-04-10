@@ -101,8 +101,10 @@ public class HuntersState {
         List<ServerPlayerEntity> players = player.getWorld().getPlayers();
         players.stream()
                 .filter(p -> getTarget(p).equals(player.getUuidAsString()))
-                .forEach(HuntersState::removeIfPlayerWasHunter);
-        player.sendMessage(Text.translatable("session.finalstand.no-longer-being-hunted").formatted(Formatting.GREEN));
+                .forEach(p -> {
+                    removeIfPlayerWasHunter(p);
+                    p.sendMessage(Text.translatable("session.finalstand.no-longer-being-hunted").formatted(Formatting.GREEN));
+                });
     }
 
     public static void reset(MinecraftServer server) {
