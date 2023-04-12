@@ -44,6 +44,8 @@ public class HuntersState {
             validTargets = validTargets.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
         }
 
+        server.getPlayerManager().broadcast(Text.translatable("session.finalstand.bounty_hunters_selected").formatted(Formatting.DARK_RED), false);
+
         // Select hunters
         Random rand = new Random();
         while(amount > 0 && possibleHunters.size() > 0 && validTargets.size() > 0) {
@@ -61,8 +63,6 @@ public class HuntersState {
                 break;
             }
         }
-
-        server.getPlayerManager().broadcast(Text.translatable("session.finalstand.bounty_hunters_selected"), false);
     }
 
     /**
@@ -80,7 +80,7 @@ public class HuntersState {
             target = validTargets.get(targetIndex);
         }
 
-        target.sendMessage(Text.translatable("session.finalstand.you-are-being-hunted").formatted(Formatting.RED));
+        target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
 
         return target;
     }
@@ -93,7 +93,7 @@ public class HuntersState {
     public static void removeIfPlayerWasHunter(ServerPlayerEntity player) {
         if(isHunter(player)){
             removeHunterTrackingDevice(player);
-            player.sendMessage(Text.translatable("session.finalstand.bounty-completed").formatted(Formatting.GREEN));
+            player.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
         }
     }
 
@@ -103,7 +103,7 @@ public class HuntersState {
                 .filter(p -> getTarget(p).equals(player.getUuidAsString()))
                 .forEach(p -> {
                     removeIfPlayerWasHunter(p);
-                    p.sendMessage(Text.translatable("session.finalstand.no-longer-being-hunted").formatted(Formatting.GREEN));
+                    p.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
                 });
     }
 
@@ -128,7 +128,7 @@ public class HuntersState {
                 .forEach(h -> {
                     removeHunterTrackingDevice(h);
                     LivesData.removeLives((IEntityDataSaver) h, 1);
-                    h.sendMessage(Text.translatable("session.finalstand.bounty-failed").formatted(Formatting.RED));
+                    h.sendMessage(Text.translatable("session.finalstand.bounty_failed").formatted(Formatting.RED));
                 });
     }
 
@@ -149,7 +149,7 @@ public class HuntersState {
             hunter.dropItem(itemStack, false);
         }
 
-        hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.DARK_RED));
+        hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.RED));
     }
 
     private static void removeHunterTrackingDevice(ServerPlayerEntity hunter) {

@@ -68,16 +68,16 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     @Override
     public void onStartTick(MinecraftServer server) {
         int currentTick = server.getTicks();
-        handleHunterSelection(server, currentTick);
         handleChestPlacement(server, currentTick);
         handleSessionTime(server, currentTick);
+        handleHunterSelection(server, currentTick);
     }
 
     private static void handleHunterSelection(MinecraftServer server, int currentTick) {
         // Select hunters after x minutes
         if (!huntersAnnounced && hunterTick != -1 && currentTick > hunterTick - TICKS_TO_MINUTES) {
             huntersAnnounced = true;
-            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.hunter_chosen_in_one_minute").formatted(Formatting.RED), false);
+            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.hunter_chosen_in_one_minute").formatted(Formatting.DARK_RED), false);
         }
         if (hunterTick != -1 && currentTick > hunterTick) {
             HuntersState.selectHunters(server);
