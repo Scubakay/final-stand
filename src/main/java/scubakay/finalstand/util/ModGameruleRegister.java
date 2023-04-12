@@ -14,8 +14,8 @@ import scubakay.finalstand.networking.ModMessages;
 import java.util.Iterator;
 
 public class ModGameruleRegister {
-    public static final GameRules.Key<GameRules.IntRule> HUNTER_AMOUNT = GameRuleRegistry.register("hunterAmount", Category.MISC, GameRuleFactory.createIntRule(1, 1));
-    public static final GameRules.Key<GameRules.IntRule> HUNTER_TRACKING_DEVICE_COOLDOWN = GameRuleRegistry.register("hunterTrackingDeviceCooldown", Category.MISC, GameRuleFactory.createIntRule(1000, 1, (server, rule) -> {
+    public static final GameRules.Key<GameRules.IntRule> HUNTER_AMOUNT = GameRuleRegistry.register("fs_hunterAmount", Category.MISC, GameRuleFactory.createIntRule(1, 1));
+    public static final GameRules.Key<GameRules.IntRule> HUNTER_TRACKING_DEVICE_COOLDOWN = GameRuleRegistry.register("fs_hunterTrackingDeviceCooldown", Category.MISC, GameRuleFactory.createIntRule(1000, 1, (server, rule) -> {
         Iterator<ServerPlayerEntity> var2 = server.getPlayerManager().getPlayerList().iterator();
         int hunterTrackingDeviceCooldown = rule.get();
 
@@ -26,14 +26,14 @@ public class ModGameruleRegister {
             ServerPlayNetworking.send(serverPlayerEntity, ModMessages.SYNC_HUNTER_TRACKING_DEVICE_COOLDOWN, buffer);
         }
     }));
-    public static final GameRules.Key<GameRules.IntRule> MAX_LIVES = GameRuleRegistry.register("maxLives", Category.MISC, GameRuleFactory.createIntRule(6, 1));
-    public static final GameRules.Key<GameRules.IntRule> MIN_LIVES = GameRuleRegistry.register("minLives", Category.MISC, GameRuleFactory.createIntRule(3, 1));
-    public static final GameRules.Key<GameRules.BooleanRule> PREVENT_RED_LIFE_TARGET = GameRuleRegistry.register("preventRedLifeTarget", Category.MISC, GameRuleFactory.createBooleanRule(true));
-    public static final GameRules.Key<GameRules.BooleanRule> PREVENT_RED_LIFE_HUNTER = GameRuleRegistry.register("preventRedLifeHunter", Category.MISC, GameRuleFactory.createBooleanRule(true));
-    public static final GameRules.Key<GameRules.BooleanRule> BOUNTY_REWARD = GameRuleRegistry.register("bountyReward", Category.MISC, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.IntRule> SESSION_HUNTER_SELECTION_TIME = GameRuleRegistry.register("hunterSelectionTime", Category.MISC, GameRuleFactory.createIntRule(10, 0));
-    public static final GameRules.Key<GameRules.IntRule> SESSION_TREASURE_CHEST_TIME = GameRuleRegistry.register("treasureChestTime", Category.MISC, GameRuleFactory.createIntRule(15, 0));
-    public static final GameRules.Key<GameRules.IntRule> SESSION_TIME = GameRuleRegistry.register("sessionTime", Category.MISC, GameRuleFactory.createIntRule(120, -1));
+    public static final GameRules.Key<GameRules.IntRule> MAX_LIVES = GameRuleRegistry.register("fs_maxLives", Category.MISC, GameRuleFactory.createIntRule(6, 1));
+    public static final GameRules.Key<GameRules.IntRule> MIN_LIVES = GameRuleRegistry.register("fs_minLives", Category.MISC, GameRuleFactory.createIntRule(3, 1));
+    public static final GameRules.Key<GameRules.BooleanRule> PREVENT_RED_LIFE_TARGET = GameRuleRegistry.register("fs_preventRedLifeTarget", Category.MISC, GameRuleFactory.createBooleanRule(true));
+    public static final GameRules.Key<GameRules.BooleanRule> PREVENT_RED_LIFE_HUNTER = GameRuleRegistry.register("fs_preventRedLifeHunter", Category.MISC, GameRuleFactory.createBooleanRule(true));
+    public static final GameRules.Key<GameRules.BooleanRule> BOUNTY_REWARD = GameRuleRegistry.register("fs_bountyReward", Category.MISC, GameRuleFactory.createBooleanRule(false));
+    public static final GameRules.Key<GameRules.IntRule> SESSION_HUNTER_SELECTION_TIME = GameRuleRegistry.register("fs_hunterSelectionTime", Category.MISC, GameRuleFactory.createIntRule(10, 0));
+    public static final GameRules.Key<GameRules.IntRule> SESSION_TREASURE_CHEST_TIME = GameRuleRegistry.register("fs_treasureChestTime", Category.MISC, GameRuleFactory.createIntRule(15, 0));
+    public static final GameRules.Key<GameRules.IntRule> SESSION_TIME = GameRuleRegistry.register("fs_sessionTime", Category.MISC, GameRuleFactory.createIntRule(120, -1));
 
     public static void registerGamerules() {
         System.out.printf("[%s] Registering gamerules", FinalStand.MOD_ID);

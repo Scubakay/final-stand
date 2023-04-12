@@ -61,32 +61,33 @@ Selects the configured amount of hunters.
 
 ### Gamerules
 This mod has a bunch of gamerules allowing you to customize certain aspects of the game.
+All gamerules are prefixed with `fs_`
 
 #### Life amounts
 ```
-/gamerule minLives
-/gamerule maxLives
+/gamerule fs_minLives
+/gamerule fs_maxLives
 ```
 Sets the lower and upper bounds for the randomization of lives. If minlives is higher than maxlives,
 minLives will be set to the value of maxLives.
 
 #### Hunter amount
 ```
-/gamerule hunterAmount
+/gamerule fs_hunterAmount
 ```
 Sets the amount of hunters chosen at session start. If this is higher than the amount of players
 all players will be selected as hunters.
 
 #### Tracking device cooldown
 ```
-/gamerule hunterTrackingDeviceCooldown <cooldown>
+/gamerule fs_hunterTrackingDeviceCooldown <cooldown>
 ```
 The cooldown for the Hunter Tracking Device. I think this is in ticks, not really sure though.
 
 #### Preventing players on last heart from becoming hunter/target
 ```
-/gamerule preventRedLifeHunter
-/gamerule preventRedLifeTarget
+/gamerule fs_preventRedLifeHunter
+/gamerule fs_preventRedLifeTarget
 ```
 These gamerules are set to true by default, which will prevent players on their last life from
 being a hunter or a target. If you do want the game to pick targets that are on their last life,
@@ -94,9 +95,9 @@ set these gamerules to false.
 
 #### Session times
 ```
-/gamerule hunterSelectionTime
-/gamerule treasureChestTime
-/gamerule sessionTime
+/gamerule fs_hunterSelectionTime
+/gamerule fs_treasureChestTime
+/gamerule fs_sessionTime
 ```
 These gamerules set the time in minutes to wait before selecting hunters and adding treasure chests after /fs start.
 The session time game rule can be set to -1 if you don't want the session to end automatically.
