@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.util.ChestPlacer;
 import scubakay.finalstand.util.ModGameruleRegister;
@@ -13,8 +14,11 @@ import scubakay.finalstand.util.ModGameruleRegister;
  */
 public class SessionHandler implements ServerTickEvents.StartTick {
     private static int hunterTick = -1;
+    private static boolean huntersAnnounced = false;
     private static int chestTick = -1;
+    private static boolean chestAnnounced = false;
     private static int sessionTick = -1;
+    private static boolean sessionEndAnnounced = false;
 
     private final static int TICKS_TO_MINUTES = 20*60;
 
@@ -39,6 +43,7 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         hunterTick = currentTick + server.getGameRules().getInt(ModGameruleRegister.SESSION_HUNTER_SELECTION_TIME) * TICKS_TO_MINUTES;
         chestTick = currentTick + server.getGameRules().getInt(ModGameruleRegister.SESSION_TREASURE_CHEST_TIME) * TICKS_TO_MINUTES;
         sessionTick = currentTick + server.getGameRules().getInt(ModGameruleRegister.SESSION_TIME) * TICKS_TO_MINUTES;
+        resetAnnouncements();
     }
 
     /**
@@ -46,16 +51,14 @@ public class SessionHandler implements ServerTickEvents.StartTick {
      */
     public static void ResetSession(MinecraftServer server) {
         HuntersState.reset(server);
-        hunterTick = -1;
-        chestTick = -1;
-        sessionTick = -1;
+        resetTicks();
+        resetAnnouncements();
     }
 
     public static void EndSession(MinecraftServer server) {
         HuntersState.punishHunters(server.getPlayerManager().getPlayerList());
-        hunterTick = -1;
-        chestTick = -1;
-        sessionTick = -1;
+        resetTicks();
+        resetAnnouncements();
         server.getPlayerManager().broadcast(Text.translatable("session.finalstand.session_ended"), false);
     }
 
@@ -65,19 +68,55 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     @Override
     public void onStartTick(MinecraftServer server) {
         int currentTick = server.getTicks();
+        handleHunterSelection(server, currentTick);
+        handleChestPlacement(server, currentTick);
+        handleSessionTime(server, currentTick);
+    }
+
+    private static void handleHunterSelection(MinecraftServer server, int currentTick) {
         // Select hunters after x minutes
+        if (!huntersAnnounced && hunterTick != -1 && currentTick > hunterTick - TICKS_TO_MINUTES) {
+            huntersAnnounced = true;
+            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.hunter_chosen_in_one_minute").formatted(Formatting.RED), false);
+        }
         if (hunterTick != -1 && currentTick > hunterTick) {
             HuntersState.selectHunters(server);
             hunterTick = -1;
         }
+    }
+
+    private static void handleChestPlacement(MinecraftServer server, int currentTick) {
         // Place chest after x minutes
+        if (!chestAnnounced && chestTick != -1 && currentTick > chestTick - TICKS_TO_MINUTES) {
+            chestAnnounced = true;
+            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.chest_placed_in_one_minute").formatted(Formatting.BLUE), false);
+        }
         if (chestTick != -1 && currentTick > chestTick) {
             ChestPlacer.placeChestRandomly(server.getOverworld());
             chestTick = -1;
         }
+    }
+
+    private static void handleSessionTime(MinecraftServer server, int currentTick) {
         // End session after x minutes
+        if (!sessionEndAnnounced && sessionTick != -1 && currentTick > sessionTick - TICKS_TO_MINUTES) {
+            sessionEndAnnounced = true;
+            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.session_ending_in_one_minute").formatted(Formatting.GREEN), false);
+        }
         if (sessionTick != -1 && currentTick > sessionTick) {
             SessionHandler.EndSession(server);
         }
+    }
+
+    private static void resetTicks() {
+        hunterTick = -1;
+        chestTick = -1;
+        sessionTick = -1;
+    }
+
+    private static void resetAnnouncements() {
+        huntersAnnounced = false;
+        chestAnnounced = false;
+        sessionEndAnnounced = false;
     }
 }

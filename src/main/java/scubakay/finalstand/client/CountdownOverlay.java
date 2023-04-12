@@ -15,20 +15,9 @@ import scubakay.finalstand.event.handler.SessionHandler;
 public class CountdownOverlay implements HotbarRenderCallback {
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
-        int y = 10;
         int sessionTicksLeft = SessionHandler.getSessionTicksLeft();
         if (sessionTicksLeft > 0) {
-            drawCountdownText(matrixStack, y, "Time left: " + ticksToFormattedTime(sessionTicksLeft));
-            y += 10;
-        }
-        int hunterTicksLeft = SessionHandler.getHunterTicksLeft();
-        if (hunterTicksLeft > 0) {
-            drawCountdownText(matrixStack, y, "Hunter selection: " + ticksToFormattedTime(hunterTicksLeft));
-            y += 10;
-        }
-        int chestTicksLeft = SessionHandler.getChestTicksLeft();
-        if (chestTicksLeft > 0) {
-            drawCountdownText(matrixStack, y, "Treasure chest: " + ticksToFormattedTime(chestTicksLeft));
+            drawCountdownText(matrixStack, ticksToFormattedTime(sessionTicksLeft));
         }
     }
 
@@ -37,10 +26,14 @@ public class CountdownOverlay implements HotbarRenderCallback {
         return DurationFormatUtils.formatDuration(milliseconds, "HH:mm:ss").replace("00:","");
     }
 
-    private static void drawCountdownText(MatrixStack matrixStack, int y, String inputString) {
-        int x = 10;
-        Text text = Text.literal(inputString).formatted(Formatting.BOLD);
-        TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+    private static void drawCountdownText(MatrixStack matrixStack, String inputString) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        TextRenderer renderer = client.textRenderer;
+
+        Text text = Text.literal(inputString).formatted(Formatting.BOLD, Formatting.GREEN);
+        int x = client.getWindow().getScaledWidth() - 20 - renderer.getWidth(text);
+        int y = client.getWindow().getScaledHeight() - 20;
+
         renderer.drawWithShadow(matrixStack, text, x, y, 0xffffff);
     }
 }
