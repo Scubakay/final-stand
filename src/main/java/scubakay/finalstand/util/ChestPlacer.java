@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +32,7 @@ public class ChestPlacer {
             world.setBlockState(pos, Blocks.CHEST.getDefaultState());
             ChestBlockEntity chestBlockEntity = (ChestBlockEntity) world.getBlockEntity(pos);
             chestBlockEntity.setLootTable(ModLootTables.FINAL_STAND_TREASURE_CHEST, world.getRandom().nextLong());
-            world.getServer().getPlayerManager().broadcast(Text.translatable("session.finalstand.treasure_chest_placed"), false);
+            world.getServer().getPlayerManager().broadcast(Text.translatable("session.finalstand.treasure_chest_placed").formatted(Formatting.BLUE), false);
         } else {
             placeChestRandomly(world);
         }

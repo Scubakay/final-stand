@@ -3,6 +3,7 @@ package scubakay.finalstand;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import scubakay.finalstand.client.CountdownOverlay;
 import scubakay.finalstand.client.LivesHudOverlay;
 import scubakay.finalstand.event.ModEvents;
 import scubakay.finalstand.event.callback.HotbarRenderCallback;
@@ -18,5 +19,6 @@ public class FinalStandClient implements ClientModInitializer {
         ModModelPredicateProviderRegistry.registerModelPredicates();
 
         HotbarRenderCallback.EVENT.register(new LivesHudOverlay());
+        HotbarRenderCallback.EVENT.register(new CountdownOverlay());
     }
 }
