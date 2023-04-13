@@ -14,6 +14,7 @@ import scubakay.finalstand.util.ModGameruleRegister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -91,20 +92,23 @@ public class HuntersState {
     }
 
     public static void removeIfPlayerWasHunter(ServerPlayerEntity player) {
-        if(isHunter(player)){
+        ServerPlayerEntity target = getTarget(player);
+        if(target != null){
             removeHunterTrackingDevice(player);
             player.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
+            target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
         }
     }
 
     public static void removeIfPlayerWasTarget(ServerPlayerEntity player) {
-        List<ServerPlayerEntity> players = player.getWorld().getPlayers();
-        players.stream()
-                .filter(p -> getTarget(p).equals(player.getUuidAsString()))
-                .forEach(p -> {
-                    removeIfPlayerWasHunter(p);
-                    p.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
-                });
+        List<ServerPlayerEntity> hunters = getHunters(player);
+        if (!hunters.isEmpty()) {
+            player.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
+            hunters.forEach(h -> {
+                removeHunterTrackingDevice(h);
+                h.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
+            });
+        }
     }
 
     public static void reset(MinecraftServer server) {
@@ -159,12 +163,26 @@ public class HuntersState {
         }
     }
 
+    private static List<ServerPlayerEntity> getHunters(ServerPlayerEntity target) {
+        List<ServerPlayerEntity> players = target.getServer().getPlayerManager().getPlayerList();
+        return players.stream()
+                .filter(p -> getTargetUUID(p).equals(target.getUuidAsString()))
+                .toList();
+    }
+
     private static void setTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         ((IEntityDataSaver) hunter).getPersistentData().putString(TARGET_NBT_KEY, target.getUuidAsString());
     }
 
-    private static String getTarget(ServerPlayerEntity hunter) {
+    private static String getTargetUUID(ServerPlayerEntity hunter) {
         return ((IEntityDataSaver) hunter).getPersistentData().getString(TARGET_NBT_KEY);
+    }
+
+    private static ServerPlayerEntity getTarget(ServerPlayerEntity player) {
+        String targetUUID = getTargetUUID(player);
+        Optional<ServerPlayerEntity> target = player.getServer().getPlayerManager().getPlayerList().stream()
+                .filter(p -> p.getUuidAsString().equals(targetUUID)).findFirst();
+        return target.orElse(null);
     }
 
     private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
