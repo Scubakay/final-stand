@@ -28,7 +28,8 @@ public class ChestPlacer {
         int y = world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z);
         BlockPos pos = new BlockPos(x, y, z);
         BlockState state = world.getBlockState(pos);
-        if (state.isAir()) {
+        BlockState blockUnderneath = world.getBlockState(new BlockPos(x, y-1, z));
+        if (state.isAir() && blockUnderneath.getBlock() != Blocks.WATER) {
             world.setBlockState(pos, Blocks.CHEST.getDefaultState());
             ChestBlockEntity chestBlockEntity = (ChestBlockEntity) world.getBlockEntity(pos);
             chestBlockEntity.setLootTable(ModLootTables.FINAL_STAND_TREASURE_CHEST, world.getRandom().nextLong());
