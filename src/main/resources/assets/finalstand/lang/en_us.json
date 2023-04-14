@@ -23,6 +23,8 @@
   "item.finalstand.hunter_tracking_device_getting_closer": "Getting closer to your target!",
   "item.finalstand.hunter_tracking_device_target_is_close": "You are close to your target!",
   "item.finalstand.hunter_tracking_device_target_is_here": "Your target is here!",
+  "item.finalstand.totem_of_keeping": "Totem of Keeping",
+  "item.finalstand.totem_of_keeping_tooltip": "Keep in your hand to keep inventory!",
   "subtitles.finalstand.hunter_tracking_device_searching": "Searching...",
   "subtitles.finalstand.hunter_tracking_device_confirm": "Confirmed!"
 }

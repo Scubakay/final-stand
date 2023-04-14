@@ -50,6 +50,12 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "weight": 1,
+          "name": "finalstand:totem_of_keeping"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 4,
           "name": "minecraft:totem_of_undying"
         }
       ],
@@ -61,7 +67,11 @@
       ]
     },
     {
-      "rolls": 3,
+      "rolls": {
+        "min": 2,
+        "max": 4
+      },
+      "bonus_rolls": 2,
       "entries": [
         {
           "type": "minecraft:item",
@@ -74,12 +84,6 @@
                 "max": 30
               },
               "treasure": true
-            }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.4
             }
           ]
         },
@@ -95,12 +99,6 @@
               },
               "treasure": true
             }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.4
-            }
           ]
         },
         {
@@ -114,12 +112,6 @@
                 "max": 30
               },
               "treasure": true
-            }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.4
             }
           ]
         },
@@ -135,12 +127,6 @@
               },
               "treasure": true
             }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.4
-            }
           ]
         },
         {
@@ -155,12 +141,6 @@
               },
               "treasure": true
             }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.4
-            }
           ]
         },
         {
@@ -174,12 +154,6 @@
                 "max": 30
               },
               "treasure": true
-            }
-          ],
-          "conditions": [
-            {
-              "condition": "minecraft:random_chance",
-              "chance": 0.4
             }
           ]
         }
@@ -267,12 +241,62 @@
               "id": "minecraft:strong_healing"
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:long_slow_falling"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:healing"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lingering_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:harming"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:strong_harming"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:splash_potion",
+          "functions": [
+            {
+              "function": "minecraft:set_potion",
+              "id": "minecraft:long_invisibility"
+            }
+          ]
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.2
+          "chance": 0.4
         }
       ]
     }
