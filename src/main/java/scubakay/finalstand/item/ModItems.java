@@ -7,10 +7,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
 import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.item.custom.HunterTrackingDevice;
+import scubakay.finalstand.item.custom.TotemOfKeeping;
 
 public class ModItems {
     public static final Item HUNTER_TRACKING_DEVICE =
             registerItem("hunter_tracking_device", new HunterTrackingDevice(
+                    new FabricItemSettings()
+                            .maxCount(1)
+            ));
+    public static final Item TOTEM_OF_KEEPING =
+            registerItem("totem_of_keeping", new TotemOfKeeping(
                     new FabricItemSettings()
                             .maxCount(1)
             ));
