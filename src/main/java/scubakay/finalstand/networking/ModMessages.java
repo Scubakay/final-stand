@@ -6,12 +6,14 @@ import net.minecraft.util.Identifier;
 import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.networking.packet.LivesSyncDataS2CPacket;
 import scubakay.finalstand.networking.packet.RequestLivesSyncS2CPacket;
+import scubakay.finalstand.networking.packet.SessionTimeSync;
 import scubakay.finalstand.networking.packet.SyncHunterTrackingDeviceCooldownS2CPacket;
 
 public class ModMessages {
     public static final Identifier LIVES_SYNC = new Identifier(FinalStand.MOD_ID, "finalstand.lives_sync");
     public static final Identifier REQUEST_LIVES_SYNC = new Identifier(FinalStand.MOD_ID, "finalstand.reqeust_lives_sync");
     public static final Identifier SYNC_HUNTER_TRACKING_DEVICE_COOLDOWN = new Identifier(FinalStand.MOD_ID, "finalstand.sync_hunter_tracking_device_cooldown");
+    public static final Identifier SESSION_TIME_SYNC = new Identifier(FinalStand.MOD_ID, "finalstand.session_time_sync");
 
     public static void registerC2SPackets() {
         System.out.printf("[%s] Registering C2S packets", FinalStand.MOD_ID);
@@ -22,5 +24,6 @@ public class ModMessages {
         System.out.printf("[%s] Registering S2C packets", FinalStand.MOD_ID);
         ClientPlayNetworking.registerGlobalReceiver(LIVES_SYNC, LivesSyncDataS2CPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(SYNC_HUNTER_TRACKING_DEVICE_COOLDOWN, SyncHunterTrackingDeviceCooldownS2CPacket::receive);
+        ClientPlayNetworking.registerGlobalReceiver(SESSION_TIME_SYNC, SessionTimeSync::receive);
     }
 }

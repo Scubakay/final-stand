@@ -9,13 +9,17 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import scubakay.finalstand.event.callback.HotbarRenderCallback;
-import scubakay.finalstand.event.handler.SessionHandler;
 
 @Environment(EnvType.CLIENT)
 public class CountdownOverlay implements HotbarRenderCallback {
+    private static int sessionTicksLeft = -1;
+
+    public static void setSessionTicksLeft(int ticks) {
+        sessionTicksLeft = ticks;
+    }
+
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
-        int sessionTicksLeft = SessionHandler.getSessionTicksLeft();
         if (sessionTicksLeft > 0) {
             drawCountdownText(matrixStack, ticksToFormattedTime(sessionTicksLeft));
         }
