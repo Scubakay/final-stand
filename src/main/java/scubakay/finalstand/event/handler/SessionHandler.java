@@ -1,11 +1,14 @@
 package scubakay.finalstand.event.handler;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.client.MinecraftClient;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import scubakay.finalstand.data.HuntersState;
+import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.ChestPlacer;
 import scubakay.finalstand.util.ModGameruleRegister;
 
@@ -22,16 +25,16 @@ public class SessionHandler implements ServerTickEvents.StartTick {
 
     private final static int TICKS_TO_MINUTES = 20*60;
 
-    public static int getHunterTicksLeft() {
-        return hunterTick - MinecraftClient.getInstance().getServer().getTicks();
+    public static int getHunterTicksLeft(MinecraftServer server) {
+        return hunterTick - server.getTicks();
     }
 
-    public static int getChestTicksLeft() {
-        return chestTick - MinecraftClient.getInstance().getServer().getTicks();
+    public static int getChestTicksLeft(MinecraftServer server) {
+        return chestTick - server.getTicks();
     }
 
-    public static int getSessionTicksLeft() {
-        return sessionTick - MinecraftClient.getInstance().getServer().getTicks();
+    public static int getSessionTicksLeft(MinecraftServer server) {
+        return sessionTick - server.getTicks();
     }
 
     /**
@@ -106,6 +109,14 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         if (sessionTick != -1 && currentTick > sessionTick) {
             SessionHandler.EndSession(server);
         }
+        syncSessionTime(server);
+    }
+
+    private static void syncSessionTime(MinecraftServer server) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeInt(getSessionTicksLeft(server));
+        server.getPlayerManager().getPlayerList().forEach(p -> ServerPlayNetworking.send(p, ModMessages.SESSION_TIME_SYNC, buffer));
+
     }
 
     private static void resetTicks() {
