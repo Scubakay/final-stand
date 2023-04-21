@@ -13,6 +13,11 @@ import scubakay.finalstand.util.ModGameruleRegister;
 import java.util.Random;
 
 public class LivesData {
+    public static int getLives(IEntityDataSaver player) {
+        NbtCompound nbt = player.getPersistentData();
+        return nbt.getInt("lives");
+    }
+
     public static int addLives(IEntityDataSaver player, int amount) {
         NbtCompound nbt = player.getPersistentData();
         int lives = nbt.getInt("lives");
