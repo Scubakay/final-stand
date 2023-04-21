@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ModEntityDataSaverMixin",
-    "ServerPlayerEntityMixin",
-    "PlayerEntityMixin"
+    "ServerPlayerEntityMixin"
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
