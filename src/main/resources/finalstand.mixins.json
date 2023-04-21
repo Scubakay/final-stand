@@ -5,13 +5,13 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ModEntityDataSaverMixin",
-    "ServerPlayerEntityMixin"
+    "ServerPlayerEntityMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
     "PropertiesMixin",
-    "RenderHotbarHudMixin",
-    "PlayerEntityMixin"
+    "RenderHotbarHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
