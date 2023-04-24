@@ -146,7 +146,8 @@ public class HunterTrackingDevice extends Item {
             case 4 -> Formatting.RED;
             default -> Formatting.DARK_RED;
         };
-        player.sendMessage(Text.translatable(message_id, Math.round(distance))
+        int roundedDistance = (int) Math.floor(distance / 10) * 10;
+        player.sendMessage(Text.translatable(message_id, roundedDistance)
                 .fillStyle(Style.EMPTY.withColor(color)), true);
     }
 
