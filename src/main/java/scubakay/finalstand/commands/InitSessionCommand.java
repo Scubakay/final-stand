@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.player.HungerManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,14 +32,37 @@ public class InitSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
+        resetWorld(context);
         if (players.size() == 0) {
             // If no players are provided in the argument, get all players in the world.
-            players = context.getSource().getWorld().getPlayers();
+            players = context.getSource().getServer().getPlayerManager().getPlayerList();
         }
         players.stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).forEach(player -> {
+            resetPlayer(player);
             int lives = LivesData.randomizeLives((IEntityDataSaver) player);
             player.sendMessage(Text.translatable("session.finalstand.amount_of_lives", lives));
         });
         return 1;
+    }
+
+    private static void resetWorld(CommandContext<ServerCommandSource> context) {
+        // Reset time of day
+        context.getSource().getWorld().setTimeOfDay(0L);
+    }
+
+    /**
+     * Resets health/hunger/inventory
+     */
+    private static void resetPlayer(ServerPlayerEntity player) {
+        // Reset health
+        player.setHealth(player.getMaxHealth());
+
+        // Reset hunger
+        HungerManager hungerManager = player.getHungerManager();
+        hungerManager.setFoodLevel(20);
+        hungerManager.setSaturationLevel(5.0f);
+
+        // Clear inventory
+        player.getInventory().clear();
     }
 }
