@@ -59,6 +59,14 @@ public class HuntersState {
             if(target != null) {
                 amount--;
                 addHunter(hunter, target);
+
+                // Send messages
+                System.out.printf("%s is hunting %s\n", hunter.getEntityName(), target.getEntityName());
+                hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.RED));
+                target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
+
+                // Remove target and hunter from valid picks lists
+                validTargets = validTargets.stream().filter(h -> !h.equals(target)).toList();
                 possibleHunters = possibleHunters.stream().filter(h -> !h.equals(hunter)).toList();
             } else {
                 break;
@@ -72,18 +80,14 @@ public class HuntersState {
     private static ServerPlayerEntity selectTarget(List<ServerPlayerEntity> players, ServerPlayerEntity hunter) {
         List<ServerPlayerEntity> validTargets = new ArrayList<>(players);
         validTargets.remove(hunter);
+        if (validTargets.isEmpty()) {
+            return null;
+        }
 
         // Select a target from valid targets
         Random rand = new Random();
-        ServerPlayerEntity target = null;
-        while(target == null && validTargets.size() > 0) {
-            int targetIndex = rand.nextInt(validTargets.size());
-            target = validTargets.get(targetIndex);
-        }
-
-        target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
-
-        return target;
+        int targetIndex = rand.nextInt(validTargets.size());
+        return validTargets.get(targetIndex);
     }
 
     public static void addHunter(ServerPlayerEntity hunter, ServerPlayerEntity target) {
@@ -152,8 +156,6 @@ public class HuntersState {
         } else {
             hunter.dropItem(itemStack, false);
         }
-
-        hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.RED));
     }
 
     private static void removeHunterTrackingDevice(ServerPlayerEntity hunter) {
