@@ -51,11 +51,6 @@
         {
           "type": "minecraft:item",
           "weight": 1,
-          "name": "finalstand:totem_of_keeping"
-        },
-        {
-          "type": "minecraft:item",
-          "weight": 1,
           "name": "minecraft:totem_of_undying"
         }
       ],
