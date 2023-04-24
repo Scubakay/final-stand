@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public class ModGameruleRegister {
     public static final GameRules.Key<GameRules.IntRule> HUNTER_AMOUNT = GameRuleRegistry.register("fs_hunterAmount", Category.MISC, GameRuleFactory.createIntRule(1, 1));
-    public static final GameRules.Key<GameRules.IntRule> HUNTER_TRACKING_DEVICE_COOLDOWN = GameRuleRegistry.register("fs_hunterTrackingDeviceCooldown", Category.MISC, GameRuleFactory.createIntRule(1000, 1, (server, rule) -> {
+    public static final GameRules.Key<GameRules.IntRule> HUNTER_TRACKING_DEVICE_COOLDOWN = GameRuleRegistry.register("fs_hunterTrackingDeviceCooldown", Category.MISC, GameRuleFactory.createIntRule(600, 1, (server, rule) -> {
         Iterator<ServerPlayerEntity> var2 = server.getPlayerManager().getPlayerList().iterator();
         int hunterTrackingDeviceCooldown = rule.get();
 
