@@ -22,9 +22,12 @@ public class ModConfig extends Config {
     private static int maxLives = 6;
 
     // Hunter settings
-    @ConfigEntry(comment = "Amount of hunters chosen each session")
+    @ConfigEntry(comment = "Minimum of hunters chosen each session")
     @ConfigEntry.BoundedInteger(min = 1)
-    private static int hunterAmount = 1;
+    private static int minHunterAmount = 1;
+    @ConfigEntry(comment = "Maximum amount of hunters chosen each session")
+    @ConfigEntry.BoundedInteger(min = 1)
+    private static int maxHunterAmount = 3;
     @ConfigEntry(comment = "Prevent red lives from becoming target")
     private static boolean preventRedLifeTarget = true;
     @ConfigEntry(comment = "Prevent red lives from becoming hunter")
@@ -54,8 +57,12 @@ public class ModConfig extends Config {
         return maxLives;
     }
 
-    public static int getHunterAmount() {
-        return hunterAmount;
+    public static int getMinHunterAmount() {
+        return minHunterAmount;
+    }
+
+    public static int getMaxHunterAmount() {
+        return maxHunterAmount;
     }
 
     public static boolean isPreventRedLifeTarget() {
