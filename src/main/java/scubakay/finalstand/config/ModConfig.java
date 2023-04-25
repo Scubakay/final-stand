@@ -46,8 +46,7 @@ public class ModConfig extends Config {
     @ConfigEntry.BoundedInteger(min = 0)
     private static int sessionHunterSelectionTime = 10;
     @ConfigEntry(comment = "The time in minutes after which a treasure chest will be placed after session start")
-    @ConfigEntry.BoundedInteger(min = 0)
-    private static int sessionTreasureChestTime = 15;
+    private static int[] sessionTreasureChestTimes = {15, 60};
 
     public static int getMinLives() {
         return minLives;
@@ -89,7 +88,7 @@ public class ModConfig extends Config {
         return sessionHunterSelectionTime;
     }
 
-    public static int getSessionTreasureChestTime() {
-        return sessionTreasureChestTime;
+    public static int[] getSessionTreasureChestTimes() {
+        return sessionTreasureChestTimes;
     }
 }

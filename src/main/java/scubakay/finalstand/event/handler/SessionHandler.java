@@ -12,14 +12,17 @@ import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.ChestPlacer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Used to automate sessions based on ticks
  */
 public class SessionHandler implements ServerTickEvents.StartTick {
     private static int hunterTick = -1;
     private static boolean huntersAnnounced = false;
-    private static int chestTick = -1;
-    private static boolean chestAnnounced = false;
+    private final static List<Integer> chestTicks = new ArrayList<>();
+    private final static List<Integer> announcedChests = new ArrayList<>();
     private static int sessionTick = -1;
     private static boolean sessionEndAnnounced = false;
 
@@ -36,7 +39,9 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         HuntersState.reset(server);
         int currentTick = server.getTicks();
         hunterTick = currentTick + ModConfig.getSessionHunterSelectionTime() * TICKS_TO_MINUTES;
-        chestTick = currentTick + ModConfig.getSessionTreasureChestTime() * TICKS_TO_MINUTES;
+        for(int i : ModConfig.getSessionTreasureChestTimes()) {
+            chestTicks.add(currentTick + i * TICKS_TO_MINUTES);
+        }
         sessionTick = currentTick + ModConfig.getSessionTime() * TICKS_TO_MINUTES;
         resetAnnouncements();
     }
@@ -81,14 +86,21 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     }
 
     private static void handleChestPlacement(MinecraftServer server, int currentTick) {
-        // Place chest after x minutes
-        if (!chestAnnounced && chestTick != -1 && currentTick > chestTick - TICKS_TO_MINUTES) {
-            chestAnnounced = true;
-            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.chest_placed_in_one_minute").formatted(Formatting.BLUE), false);
+        // Handle announcements
+        for(int i = chestTicks.size() - 1; i >= 0; i--) {
+            if (currentTick > chestTicks.get(i) - TICKS_TO_MINUTES) {
+                announcedChests.add(chestTicks.get(i));
+                chestTicks.remove(i);
+                server.getPlayerManager().broadcast(Text.translatable("session.finalstand.chest_placed_in_one_minute").formatted(Formatting.BLUE), false);
+            }
         }
-        if (chestTick != -1 && currentTick > chestTick) {
-            ChestPlacer.placeChestRandomly(server.getOverworld());
-            chestTick = -1;
+
+        // Handle placements
+        for (int i = announcedChests.size() - 1; i >= 0; i--) {
+            if (currentTick > announcedChests.get(i)) {
+                ChestPlacer.placeChestRandomly(server.getOverworld());
+                announcedChests.remove(i);
+            }
         }
     }
 
@@ -113,13 +125,13 @@ public class SessionHandler implements ServerTickEvents.StartTick {
 
     private static void resetTicks() {
         hunterTick = -1;
-        chestTick = -1;
+        chestTicks.clear();
         sessionTick = -1;
     }
 
     private static void resetAnnouncements() {
         huntersAnnounced = false;
-        chestAnnounced = false;
+        announcedChests.clear();
         sessionEndAnnounced = false;
     }
 }
