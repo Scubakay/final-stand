@@ -36,8 +36,8 @@ public class ModConfig extends Config {
     private static int hunterTrackingDeviceCooldown = 600;
 
     // Session settings
-    @ConfigEntry(comment = "The duration of a session in minutes")
-    @ConfigEntry.BoundedInteger(min = 1)
+    @ConfigEntry(comment = "The duration of a session in minutes. To have manual session ending, set this to -1")
+    @ConfigEntry.BoundedInteger(min = -1)
     private static int sessionTime = 120;
     @ConfigEntry(comment = "The time in minutes after which the hunters will be chosen after session start")
     @ConfigEntry.BoundedInteger(min = 0)
