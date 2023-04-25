@@ -6,11 +6,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.item.ModItems;
 import scubakay.finalstand.item.custom.HunterTrackingDevice;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.util.IServerPlayerEntity;
-import scubakay.finalstand.util.ModGameruleRegister;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +29,19 @@ public class HuntersState {
     public static void selectHunters(MinecraftServer server) {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).toList();
 
-        int amount = server.getGameRules().getInt(ModGameruleRegister.HUNTER_AMOUNT);
-        boolean preventRedLifeHunter = server.getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_HUNTER);
-        boolean preventRedLifeTarget = server.getGameRules().getBoolean(ModGameruleRegister.PREVENT_RED_LIFE_TARGET);
+        Random randHunterAmount = new Random();
+        int amount = randHunterAmount.nextInt(ModConfig.getMaxHunterAmount() + 1 - ModConfig.getMinHunterAmount()) + ModConfig.getMinHunterAmount();
+        System.out.printf("Picking %d hunters\n", amount);
 
         // Prevent red lives from being hunter if preventRedLifeHunter is true
         List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
-        if(preventRedLifeHunter) {
+        if(ModConfig.isPreventRedLifeHunter()) {
             possibleHunters = possibleHunters.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
         }
 
         // Prevent red life targets if preventRedLifeTarget is true
         List<ServerPlayerEntity> validTargets = new ArrayList<>(players);
-        if(preventRedLifeTarget) {
+        if(ModConfig.isPreventRedLifeTarget()) {
             validTargets = validTargets.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
         }
 

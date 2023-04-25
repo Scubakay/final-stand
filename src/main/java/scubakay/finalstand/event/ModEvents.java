@@ -14,6 +14,7 @@ import scubakay.finalstand.data.SessionState;
 import scubakay.finalstand.event.handler.*;
 import scubakay.finalstand.networking.ModMessages;
 
+
 public class ModEvents {
     public static void registerClientEvents() {
         ClientPlayConnectionEvents.JOIN.register(new ClientPlayConnectionJoin());
@@ -36,6 +37,6 @@ public class ModEvents {
             ServerPlayNetworking.send(handler.player, ModMessages.SESSION_TIME_SYNC, data);
         });
 
-        System.out.printf("[%s] Registering events%n", FinalStand.MOD_ID);
+        System.out.printf("[%s] Registering events\n", FinalStand.MOD_ID);
     }
 }

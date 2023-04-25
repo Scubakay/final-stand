@@ -6,18 +6,17 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.data.LivesData;
-import scubakay.finalstand.util.ModGameruleRegister;
 
 public class SwitchGamemodeOnLastDeath implements ServerLivingEntityEvents.AfterDeath {
     @Override
     public void afterDeath(LivingEntity entity, DamageSource damageSource) {
         if(entity instanceof ServerPlayerEntity target) {
             int lives = LivesData.removeLives((IEntityDataSaver) target, 1);
-            if(entity.getWorld().getGameRules().getBoolean(ModGameruleRegister.BOUNTY_REWARD)
-                    && damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
+            if(ModConfig.isBountyReward() && damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
                 HuntersState.rewardHunter(hunter, target);
             }
 
