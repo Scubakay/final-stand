@@ -32,10 +32,10 @@ public class InitSessionCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
-        resetWorld(context);
         if (players.size() == 0) {
             // If no players are provided in the argument, get all players in the world.
             players = context.getSource().getServer().getPlayerManager().getPlayerList();
+            resetWorld(context);
         }
         players.stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).forEach(player -> {
             resetPlayer(player);
