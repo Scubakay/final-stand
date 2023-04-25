@@ -21,6 +21,6 @@ public class ModEvents {
         ServerLifecycleEvents.SERVER_STARTED.register(new CreateTeamsOnServerStart());
         ServerTickEvents.START_SERVER_TICK.register(new SessionHandler());
 
-        System.out.printf("[%s] Registering events%n", FinalStand.MOD_ID);
+        System.out.printf("[%s] Registering events\n", FinalStand.MOD_ID);
     }
 }

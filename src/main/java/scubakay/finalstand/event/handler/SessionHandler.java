@@ -7,10 +7,10 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.ChestPlacer;
-import scubakay.finalstand.util.ModGameruleRegister;
 
 /**
  * Used to automate sessions based on ticks
@@ -25,14 +25,6 @@ public class SessionHandler implements ServerTickEvents.StartTick {
 
     private final static int TICKS_TO_MINUTES = 20*60;
 
-    public static int getHunterTicksLeft(MinecraftServer server) {
-        return hunterTick - server.getTicks();
-    }
-
-    public static int getChestTicksLeft(MinecraftServer server) {
-        return chestTick - server.getTicks();
-    }
-
     public static int getSessionTicksLeft(MinecraftServer server) {
         return sessionTick - server.getTicks();
     }
@@ -43,9 +35,9 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     public static void StartSession(MinecraftServer server) {
         HuntersState.reset(server);
         int currentTick = server.getTicks();
-        hunterTick = currentTick + server.getGameRules().getInt(ModGameruleRegister.SESSION_HUNTER_SELECTION_TIME) * TICKS_TO_MINUTES;
-        chestTick = currentTick + server.getGameRules().getInt(ModGameruleRegister.SESSION_TREASURE_CHEST_TIME) * TICKS_TO_MINUTES;
-        sessionTick = currentTick + server.getGameRules().getInt(ModGameruleRegister.SESSION_TIME) * TICKS_TO_MINUTES;
+        hunterTick = currentTick + ModConfig.getSessionHunterSelectionTime() * TICKS_TO_MINUTES;
+        chestTick = currentTick + ModConfig.getSessionTreasureChestTime() * TICKS_TO_MINUTES;
+        sessionTick = currentTick + ModConfig.getSessionTime() * TICKS_TO_MINUTES;
         resetAnnouncements();
     }
 

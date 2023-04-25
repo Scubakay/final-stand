@@ -25,20 +25,19 @@ Special thanks to:
 ```
 /fs init
 ```
-This command initializes a new game. All players online will receive a random amount of lives,
-configurable with gamerules.
+This command initializes a new game. All players online will receive a random amount of lives.
 
-You can add a player name as an argument to set the lives for that player only.
+You can add a player name as an argument to set the lives for that player only. Initialized players will have their health, hunger, saturation and inventory reset!
 
 ### Start session
 ```
 /fs start
 ```
-Starts a new Final Stand session. The configured number of Hunters will receive a Hunter Tracking Device
+Starts a new Final Stand session. After a configured amount of time the configured number of Hunters will receive a Hunter Tracking Device
 with a selected target they need to hunt down before the end of the session. If the Hunter fails
 they will lose a life.
 
-This command will also place a random chest with goodies within the world borders.
+This command will also place a random chest with goodies within the world borders after a configured amount of time.
 
 ### Reset session
 ```
@@ -46,6 +45,12 @@ This command will also place a random chest with goodies within the world border
 ```
 If anything goes wrong, `/fs reset` will remove all Tracking devices from the inventories.
 After running the command you can use `/fs start` again to restart the session.
+
+### End session
+```
+/fs end
+```
+End a session manually.
 
 ### Place chest
 ```
@@ -59,50 +64,6 @@ Places a random chest with goodies within the world borders.
 ```
 Selects the configured amount of hunters.
 
-### Gamerules
-This mod has a bunch of gamerules allowing you to customize certain aspects of the game.
-All gamerules are prefixed with `fs_`
-
-#### Life amounts
-```
-/gamerule fs_minLives
-/gamerule fs_maxLives
-```
-Sets the lower and upper bounds for the randomization of lives. If minlives is higher than maxlives,
-minLives will be set to the value of maxLives.
-
-#### Hunter amount
-```
-/gamerule fs_hunterAmount
-```
-Sets the amount of hunters chosen at session start. If this is higher than the amount of players
-all players will be selected as hunters.
-
-#### Tracking device cooldown
-```
-/gamerule fs_hunterTrackingDeviceCooldown <cooldown>
-```
-The cooldown for the Hunter Tracking Device. I think this is in ticks, not really sure though.
-
-#### Preventing players on last heart from becoming hunter/target
-```
-/gamerule fs_preventRedLifeHunter
-/gamerule fs_preventRedLifeTarget
-```
-These gamerules are set to true by default, which will prevent players on their last life from
-being a hunter or a target. If you do want the game to pick targets that are on their last life,
-set these gamerules to false.
-
-#### Session times
-```
-/gamerule fs_hunterSelectionTime
-/gamerule fs_treasureChestTime
-/gamerule fs_sessionTime
-```
-These gamerules set the time in minutes to wait before selecting hunters and adding treasure chests after /fs start.
-The session time game rule can be set to -1 if you don't want the session to end automatically.
-
-Defaults are:
-- hunterSelectionTime: 10 minutes
-- treasureChestTime: 15 minutes
-- sessionTime: 120 minutes
+### Configuration
+This mod has a bunch of configuration options allowing you to customize certain aspects of the game.
+These options can be found in `./config/finalstand.conf`.

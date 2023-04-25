@@ -11,6 +11,6 @@ public class ModLootTables {
     }
 
     public static void registerLootTables() {
-        System.out.printf("[%s] Registering loot tables", FinalStand.MOD_ID);
+        System.out.printf("[%s] Registering loot tables\n", FinalStand.MOD_ID);
     }
 }

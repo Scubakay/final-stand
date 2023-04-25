@@ -15,7 +15,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import scubakay.finalstand.sounds.ModSounds;
-import scubakay.finalstand.util.ModGameruleRegister;
 
 import java.util.List;
 
@@ -170,7 +169,7 @@ public class HunterTrackingDevice extends Item {
     }
 
     private void setCooldown(PlayerEntity user) {
-        user.getItemCooldownManager().set(this, user.getWorld().getGameRules().getInt(ModGameruleRegister.HUNTER_TRACKING_DEVICE_COOLDOWN));
+        user.getItemCooldownManager().set(this, cooldown);
     }
 
     /**
