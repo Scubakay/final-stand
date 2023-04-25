@@ -24,7 +24,7 @@ public class ModConfig extends Config {
     // Hunter settings
     @ConfigEntry(comment = "Amount of hunters chosen each session")
     @ConfigEntry.BoundedInteger(min = 1)
-    private static int hunterAmount = 3;
+    private static int hunterAmount = 1;
     @ConfigEntry(comment = "Prevent red lives from becoming target")
     private static boolean preventRedLifeTarget = true;
     @ConfigEntry(comment = "Prevent red lives from becoming hunter")
