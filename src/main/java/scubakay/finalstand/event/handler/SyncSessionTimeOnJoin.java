@@ -6,15 +6,14 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
-import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.networking.ModMessages;
 
-public class SyncHunterTrackingDeviceCooldownOnJoin implements ServerPlayConnectionEvents.Init {
+public class SyncSessionTimeOnJoin implements ServerPlayConnectionEvents.Init {
     @Override
     public void onPlayInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        int hunterTrackingDeviceCooldown = ModConfig.getHunterTrackingDeviceCooldown();
+        int sessionTicksLeft = SessionHandler.getSessionTicksLeft(server);
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(hunterTrackingDeviceCooldown);
-        ServerPlayNetworking.send(handler.getPlayer(), ModMessages.HUNTER_TRACKING_DEVICE_COOLDOWN_SYNC, buffer);
+        buffer.writeInt(sessionTicksLeft);
+        ServerPlayNetworking.send(handler.getPlayer(), ModMessages.SESSION_TIME_SYNC, buffer);
     }
 }
