@@ -29,7 +29,9 @@ public class HuntersState {
     public static void selectHunters(MinecraftServer server) {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).toList();
 
-        int amount = ModConfig.getHunterAmount();
+        Random randHunterAmount = new Random();
+        int amount = randHunterAmount.nextInt(ModConfig.getMaxHunterAmount() + 1 - ModConfig.getMinHunterAmount()) + ModConfig.getMinHunterAmount();
+        System.out.printf("Picking %d hunters\n", amount);
 
         // Prevent red lives from being hunter if preventRedLifeHunter is true
         List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
