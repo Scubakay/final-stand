@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import scubakay.finalstand.sounds.ModSounds;
 import scubakay.finalstand.util.ModGameruleRegister;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
 public class HunterTrackingDevice extends Item {
@@ -181,7 +180,7 @@ public class HunterTrackingDevice extends Item {
         if (trackedPlayer != null) {
             Vec3d trackedPlayerPosition = trackedPlayer.getPos();
             Vec3d playerPosition = user.getPos();
-            return Point2D.distance(playerPosition.getX(), playerPosition.getZ(), trackedPlayerPosition.getX(), trackedPlayerPosition.getZ());
+            return distance(playerPosition.getX(), playerPosition.getZ(), trackedPlayerPosition.getX(), trackedPlayerPosition.getZ());
         }
         return 9999999;
     }
@@ -196,5 +195,9 @@ public class HunterTrackingDevice extends Item {
         }
         String targetUuid = nbtCompound.getString(SCAN_TARGET_KEY);
         return world.getPlayers().stream().filter((PlayerEntity player) -> player.getUuidAsString().equals(targetUuid)).findFirst().orElse(null);
+    }
+
+    private double distance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
     }
 }
