@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.event.handler.*;
+import scubakay.finalstand.event.handler.SyncSessionTimeOnJoin;
+
 
 public class ModEvents {
     public static void registerClientEvents() {
@@ -18,6 +20,7 @@ public class ModEvents {
         ServerLivingEntityEvents.AFTER_DEATH.register(new SwitchGamemodeOnLastDeath());
         ServerLivingEntityEvents.ALLOW_DEATH.register(new CompleteBountyHunt());
         ServerPlayConnectionEvents.INIT.register(new SyncHunterTrackingDeviceCooldownOnJoin());
+        ServerPlayConnectionEvents.INIT.register(new SyncSessionTimeOnJoin());
         ServerLifecycleEvents.SERVER_STARTED.register(new CreateTeamsOnServerStart());
         ServerTickEvents.START_SERVER_TICK.register(new SessionHandler());
 

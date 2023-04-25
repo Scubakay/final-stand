@@ -6,7 +6,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import scubakay.finalstand.client.CountdownOverlay;
 
-public class SessionTimeSync {
+public class SessionTimeSyncS2CPacket {
     public static void receive(MinecraftClient ignoredClient, ClientPlayNetworkHandler ignoredHandler, PacketByteBuf buf, PacketSender ignoredResponseSender) {
         CountdownOverlay.setSessionTicksLeft(buf.readInt());
     }
