@@ -1,6 +1,7 @@
 package scubakay.finalstand;
 
 import net.fabricmc.api.ModInitializer;
+import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.event.ModEvents;
 import scubakay.finalstand.item.ModItems;
 import scubakay.finalstand.networking.ModMessages;
@@ -16,7 +17,10 @@ public class FinalStand implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        System.out.println("Initializing Final Stand");
+        System.out.println("Initializing Final Stand\n");
+
+        ModConfig config = new ModConfig();
+        config.load();
 
         ModItems.registerModItems();
         ModSounds.registerSounds();

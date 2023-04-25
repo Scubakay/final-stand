@@ -5,24 +5,18 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.IEntityDataSaver;
-import scubakay.finalstand.util.ModGameruleRegister;
 
 import java.util.Random;
 
 public class LivesData {
-    public static int getLives(IEntityDataSaver player) {
-        NbtCompound nbt = player.getPersistentData();
-        return nbt.getInt("lives");
-    }
-
-    public static int addLives(IEntityDataSaver player, int amount) {
+    public static void addLives(IEntityDataSaver player, int amount) {
         NbtCompound nbt = player.getPersistentData();
         int lives = nbt.getInt("lives");
 
-        int maxLives = ((ServerPlayerEntity) player).getWorld().getGameRules().getInt(ModGameruleRegister.MAX_LIVES);
+        int maxLives = ModConfig.getMaxLives();
         if(lives + amount >= maxLives) {
             lives = maxLives;
         } else {
@@ -31,7 +25,6 @@ public class LivesData {
 
         nbt.putInt("lives", lives);
         syncLives(lives, (ServerPlayerEntity) player);
-        return lives;
     }
 
     public static int removeLives(IEntityDataSaver player, int amount) {
@@ -52,7 +45,7 @@ public class LivesData {
     public static int randomizeLives(IEntityDataSaver player) {
         NbtCompound nbt = player.getPersistentData();
 
-        int lives = determineRandomLives(((ServerPlayerEntity) player).getWorld());
+        int lives = determineRandomLives();
 
         nbt.putInt("lives", lives);
         syncLives(lives, (ServerPlayerEntity) player);
@@ -73,9 +66,9 @@ public class LivesData {
         ServerPlayNetworking.send(player, ModMessages.LIVES_SYNC, buffer);
     }
 
-    private static int determineRandomLives(World world) {
-        int minLives = world.getGameRules().getInt(ModGameruleRegister.MIN_LIVES);
-        int maxLives = world.getGameRules().getInt(ModGameruleRegister.MAX_LIVES);
+    private static int determineRandomLives() {
+        int minLives = ModConfig.getMinLives();
+        int maxLives = ModConfig.getMaxLives();
 
         if(minLives > maxLives) {
             minLives = maxLives;

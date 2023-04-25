@@ -20,6 +20,6 @@ public class ModItems {
     }
 
     public static void registerModItems() {
-        System.out.printf("[%s] Registering items", FinalStand.MOD_ID);
+        System.out.printf("[%s] Registering items\n", FinalStand.MOD_ID);
     }
 }
