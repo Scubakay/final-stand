@@ -14,9 +14,7 @@ import scubakay.finalstand.data.SessionState;
 import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.ChestPlacer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Used to automate sessions based on ticks
@@ -31,14 +29,12 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     public static void StartSession(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
         HuntersState.reset(server);
-        int currentTick = server.getTicks();
-        serverState.hunterTick = currentTick + ModConfig.getSessionHunterSelectionTime() * TICKS_TO_MINUTES;
-        List<Integer> chestTicks = new ArrayList<>();
-        for(int i : ModConfig.getSessionTreasureChestTimes()) {
-            chestTicks.add(currentTick + i * TICKS_TO_MINUTES);
-        }
-        serverState.chestTicks = chestTicks.stream().mapToInt(Integer::intValue).toArray();
-        serverState.sessionTicksLeft = currentTick + ModConfig.getSessionTime() * TICKS_TO_MINUTES;
+        reset(server);
+        serverState.hunterTicksLeft = ModConfig.getSessionHunterSelectionTime() * TICKS_TO_MINUTES;
+        serverState.shouldSelectHunters = true;
+        serverState.chestTicksLeft = Arrays.stream(ModConfig.getSessionTreasureChestTimes()).map(ct -> ct * TICKS_TO_MINUTES).toArray();
+        serverState.sessionTicksLeft = ModConfig.getSessionTime() * TICKS_TO_MINUTES;
+        lastTick = server.getTicks();
         serverState.inSession = true;
         serverState.markDirty();
     }
@@ -64,40 +60,40 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     public void onStartTick(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
 
-        if (serverState.inSession) {
-            int currentTick = server.getTicks();
-            int ticksPassed = currentTick - lastTick;
-            lastTick = currentTick;
+        int currentTick = server.getTicks();
+        int ticksPassed = currentTick - lastTick;
+        lastTick = currentTick;
 
-            handleSessionTime(server, ticksPassed);
-            handleChestPlacement(server, currentTick);
-            handleHunterSelection(server, currentTick);
+        handleSessionTime(server, ticksPassed);
+        handleChestPlacement(server, ticksPassed);
+        handleHunterSelection(server, ticksPassed);
 
-            serverState.markDirty();
-        }
+        serverState.markDirty();
     }
 
-    private static void handleHunterSelection(MinecraftServer server, int currentTick) {
+    private static void handleHunterSelection(MinecraftServer server, int ticksPassed) {
         SessionState serverState = SessionState.getServerState(server);
+        serverState.hunterTicksLeft = serverState.hunterTicksLeft - ticksPassed;
 
         // Select hunters after x minutes
-        if (!serverState.huntersAnnounced && serverState.hunterTick != -1 && currentTick > serverState.hunterTick - TICKS_TO_MINUTES) {
+        if (serverState.shouldSelectHunters && !serverState.huntersAnnounced && serverState.hunterTicksLeft < TICKS_TO_MINUTES) {
             serverState.huntersAnnounced = true;
             server.getPlayerManager().broadcast(Text.translatable("session.finalstand.hunter_chosen_in_one_minute").formatted(Formatting.DARK_RED), false);
         }
-        if (serverState.hunterTick != -1 && currentTick > serverState.hunterTick) {
+        if (serverState.shouldSelectHunters && serverState.hunterTicksLeft < 0) {
+            serverState.shouldSelectHunters = false;
             HuntersState.selectHunters(server);
-            serverState.hunterTick = -1;
         }
     }
 
-    private static void handleChestPlacement(MinecraftServer server, int currentTick) {
+    private static void handleChestPlacement(MinecraftServer server, int ticksPassed) {
         SessionState serverState = SessionState.getServerState(server);
-        List<Integer> newChestTicks = new ArrayList<>(Arrays.asList(ArrayUtils.toObject(serverState.chestTicks)));
+        List<Integer> newChestTicks = new ArrayList<>(Arrays.asList(ArrayUtils.toObject(serverState.chestTicksLeft)));
         List<Integer> newAnnouncedChests = new ArrayList<>(Arrays.asList(ArrayUtils.toObject(serverState.announcedChests)));
         // Handle announcements
         for(int i = newChestTicks.size() - 1; i >= 0; i--) {
-            if (currentTick > newChestTicks.get(i) - TICKS_TO_MINUTES) {
+            newChestTicks.set(i, newChestTicks.get(i) - ticksPassed);
+            if (newChestTicks.get(i) < TICKS_TO_MINUTES) {
                 newAnnouncedChests.add(newChestTicks.get(i));
                 newChestTicks.remove(i);
                 server.getPlayerManager().broadcast(Text.translatable("session.finalstand.chest_placed_in_one_minute").formatted(Formatting.BLUE), false);
@@ -106,12 +102,13 @@ public class SessionHandler implements ServerTickEvents.StartTick {
 
         // Handle placements
         for (int i = newAnnouncedChests.size() - 1; i >= 0; i--) {
-            if (currentTick > newAnnouncedChests.get(i)) {
+            newAnnouncedChests.set(i, newAnnouncedChests.get(i) - ticksPassed);
+            if (newAnnouncedChests.get(i) < 0) {
                 ChestPlacer.placeChestRandomly(server.getOverworld());
                 newAnnouncedChests.remove(i);
             }
         }
-        serverState.chestTicks = newChestTicks.stream().mapToInt(Integer::intValue).toArray();
+        serverState.chestTicksLeft = newChestTicks.stream().mapToInt(Integer::intValue).toArray();
         serverState.announcedChests = newAnnouncedChests.stream().mapToInt(Integer::intValue).toArray();
     }
 
@@ -139,12 +136,13 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     private static void reset(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
         serverState.inSession = false;
-        serverState.hunterTick = -1;
-        serverState.chestTicks = new int[]{};
         serverState.sessionTicksLeft = -1;
-        serverState.huntersAnnounced = false;
-        serverState.announcedChests = new int[]{};
         serverState.sessionEndAnnounced = false;
+        serverState.hunterTicksLeft = -1;
+        serverState.shouldSelectHunters = false;
+        serverState.huntersAnnounced = false;
+        serverState.chestTicksLeft = new int[]{};
+        serverState.announcedChests = new int[]{};
         serverState.markDirty();
     }
 }
