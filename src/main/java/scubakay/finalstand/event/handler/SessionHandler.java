@@ -22,12 +22,8 @@ import java.util.List;
  * Used to automate sessions based on ticks
  */
 public class SessionHandler implements ServerTickEvents.StartTick {
+    private static int lastTick = 0;
     private final static int TICKS_TO_MINUTES = 20*60;
-
-    public static int getSessionTicksLeft(MinecraftServer server) {
-        SessionState serverState = SessionState.getServerState(server);
-        return serverState.sessionTick - server.getTicks();
-    }
 
     /**
      * Starts a session and timers for selecting hunters/placing chests and session end
@@ -42,7 +38,8 @@ public class SessionHandler implements ServerTickEvents.StartTick {
             chestTicks.add(currentTick + i * TICKS_TO_MINUTES);
         }
         serverState.chestTicks = chestTicks.stream().mapToInt(Integer::intValue).toArray();
-        serverState.sessionTick = currentTick + ModConfig.getSessionTime() * TICKS_TO_MINUTES;
+        serverState.sessionTicksLeft = currentTick + ModConfig.getSessionTime() * TICKS_TO_MINUTES;
+        serverState.inSession = true;
         serverState.markDirty();
     }
 
@@ -65,16 +62,24 @@ public class SessionHandler implements ServerTickEvents.StartTick {
      */
     @Override
     public void onStartTick(MinecraftServer server) {
-        int currentTick = server.getTicks();
         SessionState serverState = SessionState.getServerState(server);
-        handleChestPlacement(server, currentTick);
-        handleSessionTime(server, currentTick);
-        handleHunterSelection(server, currentTick);
-        serverState.markDirty();
+
+        if (serverState.inSession) {
+            int currentTick = server.getTicks();
+            int ticksPassed = currentTick - lastTick;
+            lastTick = currentTick;
+
+            handleSessionTime(server, ticksPassed);
+            handleChestPlacement(server, currentTick);
+            handleHunterSelection(server, currentTick);
+
+            serverState.markDirty();
+        }
     }
 
     private static void handleHunterSelection(MinecraftServer server, int currentTick) {
         SessionState serverState = SessionState.getServerState(server);
+
         // Select hunters after x minutes
         if (!serverState.huntersAnnounced && serverState.hunterTick != -1 && currentTick > serverState.hunterTick - TICKS_TO_MINUTES) {
             serverState.huntersAnnounced = true;
@@ -110,31 +115,33 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         serverState.announcedChests = newAnnouncedChests.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private static void handleSessionTime(MinecraftServer server, int currentTick) {
+    private static void handleSessionTime(MinecraftServer server, int ticksPassed) {
         SessionState serverState = SessionState.getServerState(server);
         // End session after x minutes
-        if (!serverState.sessionEndAnnounced && serverState.sessionTick != -1 && currentTick > serverState.sessionTick - TICKS_TO_MINUTES) {
+        serverState.sessionTicksLeft = serverState.sessionTicksLeft - ticksPassed;
+        if (!serverState.sessionEndAnnounced && serverState.inSession && serverState.sessionTicksLeft < TICKS_TO_MINUTES) {
             serverState.sessionEndAnnounced = true;
             server.getPlayerManager().broadcast(Text.translatable("session.finalstand.session_ending_in_one_minute").formatted(Formatting.GREEN), false);
         }
-        if (serverState.sessionTick != -1 && currentTick > serverState.sessionTick) {
+        if (serverState.inSession && serverState.sessionTicksLeft < 0) {
             SessionHandler.EndSession(server);
         }
         syncSessionTime(server);
     }
 
     private static void syncSessionTime(MinecraftServer server) {
+        SessionState serverState = SessionState.getServerState(server);
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(getSessionTicksLeft(server));
+        buffer.writeInt(serverState.sessionTicksLeft);
         server.getPlayerManager().getPlayerList().forEach(p -> ServerPlayNetworking.send(p, ModMessages.SESSION_TIME_SYNC, buffer));
-
     }
 
     private static void reset(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
+        serverState.inSession = false;
         serverState.hunterTick = -1;
         serverState.chestTicks = new int[]{};
-        serverState.sessionTick = -1;
+        serverState.sessionTicksLeft = -1;
         serverState.huntersAnnounced = false;
         serverState.announcedChests = new int[]{};
         serverState.sessionEndAnnounced = false;

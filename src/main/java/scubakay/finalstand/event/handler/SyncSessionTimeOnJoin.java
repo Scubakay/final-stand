@@ -6,14 +6,15 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
+import scubakay.finalstand.data.SessionState;
 import scubakay.finalstand.networking.ModMessages;
 
 public class SyncSessionTimeOnJoin implements ServerPlayConnectionEvents.Init {
     @Override
     public void onPlayInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        int sessionTicksLeft = SessionHandler.getSessionTicksLeft(server);
+        SessionState serverState = SessionState.getServerState(server);
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(sessionTicksLeft);
+        buffer.writeInt(serverState.sessionTicksLeft);
         ServerPlayNetworking.send(handler.getPlayer(), ModMessages.SESSION_TIME_SYNC, buffer);
     }
 }

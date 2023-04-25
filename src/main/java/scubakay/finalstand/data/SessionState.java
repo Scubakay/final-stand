@@ -11,6 +11,7 @@ import scubakay.finalstand.FinalStand;
  * <a href="https://fabricmc.net/wiki/tutorial:persistent_states">...</a>
  */
 public class SessionState extends PersistentState {
+    public static final String IN_SESSION_NBT = "inSession";
     public static final String HUNTER_TICK_NBT = "hunterTick";
     public static final String HUNTERS_ANNOUNCED_NBT = "huntersAnnounced";
     public static final String CHEST_TICK_NBT = "chestTick";
@@ -18,31 +19,34 @@ public class SessionState extends PersistentState {
     public static final String SESSION_TICK_NBT = "sessionTick";
     public static final String SESSION_END_ANNOUNCED_NBT = "sessionEndAccounced";
 
+    public boolean inSession = false;
     public int hunterTick = -1;
     public boolean huntersAnnounced = false;
     public int[] chestTicks = {};
     public int[] announcedChests = {};
-    public int sessionTick = -1;
+    public int sessionTicksLeft = -1;
     public boolean sessionEndAnnounced = false;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        nbt.putBoolean(IN_SESSION_NBT, inSession);
         nbt.putInt(HUNTER_TICK_NBT, hunterTick);
         nbt.putBoolean(HUNTERS_ANNOUNCED_NBT, huntersAnnounced);
         nbt.putIntArray(CHEST_TICK_NBT, chestTicks);
         nbt.putIntArray(CHEST_ANNOUNCED_NBT, announcedChests);
-        nbt.putInt(SESSION_TICK_NBT, sessionTick);
+        nbt.putInt(SESSION_TICK_NBT, sessionTicksLeft);
         nbt.putBoolean(SESSION_END_ANNOUNCED_NBT, sessionEndAnnounced);
         return nbt;
     }
 
     public static SessionState createFromNbt(NbtCompound tag) {
         SessionState sessionState = new SessionState();
+        sessionState.inSession = tag.getBoolean(IN_SESSION_NBT);
         sessionState.hunterTick = tag.getInt(HUNTER_TICK_NBT);
         sessionState.huntersAnnounced = tag.getBoolean(HUNTERS_ANNOUNCED_NBT);
         sessionState.chestTicks = tag.getIntArray(CHEST_TICK_NBT);
         sessionState.announcedChests = tag.getIntArray(CHEST_ANNOUNCED_NBT);
-        sessionState.sessionTick = tag.getInt(SESSION_TICK_NBT);
+        sessionState.sessionTicksLeft = tag.getInt(SESSION_TICK_NBT);
         sessionState.sessionEndAnnounced = tag.getBoolean(SESSION_END_ANNOUNCED_NBT);
         return sessionState;
     }
