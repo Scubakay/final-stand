@@ -43,6 +43,7 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         }
         serverState.chestTicks = chestTicks.stream().mapToInt(Integer::intValue).toArray();
         serverState.sessionTick = currentTick + ModConfig.getSessionTime() * TICKS_TO_MINUTES;
+        serverState.markDirty();
     }
 
     /**
@@ -65,9 +66,11 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     @Override
     public void onStartTick(MinecraftServer server) {
         int currentTick = server.getTicks();
+        SessionState serverState = SessionState.getServerState(server);
         handleChestPlacement(server, currentTick);
         handleSessionTime(server, currentTick);
         handleHunterSelection(server, currentTick);
+        serverState.markDirty();
     }
 
     private static void handleHunterSelection(MinecraftServer server, int currentTick) {
@@ -135,5 +138,6 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         serverState.huntersAnnounced = false;
         serverState.announcedChests = new int[]{};
         serverState.sessionEndAnnounced = false;
+        serverState.markDirty();
     }
 }

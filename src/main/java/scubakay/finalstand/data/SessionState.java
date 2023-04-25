@@ -33,7 +33,7 @@ public class SessionState extends PersistentState {
         nbt.putIntArray(CHEST_ANNOUNCED_NBT, announcedChests);
         nbt.putInt(SESSION_TICK_NBT, sessionTick);
         nbt.putBoolean(SESSION_END_ANNOUNCED_NBT, sessionEndAnnounced);
-        return null;
+        return nbt;
     }
 
     public static SessionState createFromNbt(NbtCompound tag) {
