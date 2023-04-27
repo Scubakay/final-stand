@@ -1,1 +1,10 @@
-- Add random chest with custom loot every session start
+- Add config library
+- Move gamerules to config
+- Support multiple times to place treasure chests during session
+- Pick random amount of hunters with configurable min/max
+- Reset player health/hunger/saturation/inventory on `/fs init`
+- Reset world time on `/fs init` (except when initializing with player argument)
+- Remove use of java.awt to prevent problems on certain systems
+- Change default Tracking Device cooldown to 15 seconds
+- Remove Totem of Keeping in favor of playing with keepInventory on
+- Add persistence for session times to continue playing after server crash/restart
