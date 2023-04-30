@@ -29,7 +29,7 @@ public class ChestPlacer {
         BlockPos pos = new BlockPos(x, y, z);
         BlockState state = world.getBlockState(pos);
         BlockState blockUnderneath = world.getBlockState(new BlockPos(x, y-1, z));
-        if (state.isAir() && blockUnderneath.getBlock() != Blocks.WATER) {
+        if (canChestSpawn(state, blockUnderneath)) {
             world.setBlockState(pos, Blocks.CHEST.getDefaultState());
             ChestBlockEntity chestBlockEntity = (ChestBlockEntity) world.getBlockEntity(pos);
             chestBlockEntity.setLootTable(ModLootTables.FINAL_STAND_TREASURE_CHEST, world.getRandom().nextLong());
@@ -37,5 +37,20 @@ public class ChestPlacer {
         } else {
             placeChestRandomly(world);
         }
+    }
+
+    private static boolean canChestSpawn(BlockState state, BlockState blockUnderneath) {
+        return state.isAir() &&
+                blockUnderneath.getBlock() != Blocks.WATER &&
+                blockUnderneath.getBlock() != Blocks.ACACIA_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.BIRCH_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.JUNGLE_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.OAK_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.JUNGLE_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.MANGROVE_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.AZALEA_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.FLOWERING_AZALEA_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.DARK_OAK_LEAVES &&
+                blockUnderneath.getBlock() != Blocks.SPRUCE_LEAVES;
     }
 }
