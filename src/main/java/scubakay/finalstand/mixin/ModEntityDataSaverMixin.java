@@ -14,7 +14,7 @@ public class ModEntityDataSaverMixin implements IEntityDataSaver {
     private final static String NBT_KEY = "finalstand.data";
     private NbtCompound persistentData;
     @Override
-    public NbtCompound getPersistentData() {
+    public NbtCompound fs_getPersistentData() {
         if(this.persistentData == null) {
             this.persistentData = new NbtCompound();
         }

@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class LivesData {
     public static void addLives(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.fs_getPersistentData();
         int lives = nbt.getInt("lives");
 
         int maxLives = ModConfig.getMaxLives();
@@ -28,7 +28,7 @@ public class LivesData {
     }
 
     public static int removeLives(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.fs_getPersistentData();
         int lives = nbt.getInt("lives");
 
         lives -= amount;
@@ -43,7 +43,7 @@ public class LivesData {
     }
 
     public static int randomizeLives(IEntityDataSaver player) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.fs_getPersistentData();
 
         int lives = determineRandomLives();
 
@@ -53,7 +53,7 @@ public class LivesData {
     }
 
     public static void setLives(IEntityDataSaver player, int lives) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.fs_getPersistentData();
         nbt.putInt("lives", lives);
         syncLives(lives, (ServerPlayerEntity) player);
     }

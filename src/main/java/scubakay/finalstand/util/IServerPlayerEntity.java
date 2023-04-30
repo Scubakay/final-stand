@@ -1,5 +1,5 @@
 package scubakay.finalstand.util;
 
 public interface IServerPlayerEntity {
-    boolean isSurvival();
+    boolean fs_isSurvival();
 }

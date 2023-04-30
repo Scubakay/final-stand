@@ -26,7 +26,7 @@ public class LivesHudOverlay implements HotbarRenderCallback {
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if(player == null || !((IAbstractClientPlayerEntityMixin) player).isSurvival()){
+        if(player == null || !((IAbstractClientPlayerEntityMixin) player).fs_isSurvival()){
             return;
         }
 
@@ -41,7 +41,7 @@ public class LivesHudOverlay implements HotbarRenderCallback {
             y = height;
         }
 
-        int lives = ((IEntityDataSaver) player).getPersistentData().getInt("lives");
+        int lives = ((IEntityDataSaver) player).fs_getPersistentData().getInt("lives");
         if (lives > 0) {
             drawHeart(matrixStack, x, y, lives);
             drawAmount(matrixStack, x, y, lives);

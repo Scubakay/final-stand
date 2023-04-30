@@ -13,7 +13,7 @@ public abstract class AbstractClientPlayerEntityMixin implements IAbstractClient
     protected abstract PlayerListEntry getPlayerListEntry();
 
     @Override
-    public boolean isSurvival() {
+    public boolean fs_isSurvival() {
         PlayerListEntry playerListEntry = this.getPlayerListEntry();
         return playerListEntry != null && playerListEntry.getGameMode() == GameMode.SURVIVAL;
     }

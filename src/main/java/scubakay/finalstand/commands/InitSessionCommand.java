@@ -37,7 +37,7 @@ public class InitSessionCommand {
             players = context.getSource().getServer().getPlayerManager().getPlayerList();
             resetWorld(context);
         }
-        players.stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).forEach(player -> {
+        players.stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).forEach(player -> {
             resetPlayer(player);
             int lives = LivesData.randomizeLives((IEntityDataSaver) player);
             player.sendMessage(Text.translatable("session.finalstand.amount_of_lives", lives));
