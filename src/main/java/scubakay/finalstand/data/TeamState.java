@@ -5,6 +5,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import scubakay.finalstand.FinalStand;
 
 public class TeamState {
     public static void createTeams(Scoreboard scoreboard) {
@@ -32,18 +33,18 @@ public class TeamState {
     private static void addPlayerToTeam(Scoreboard scoreboard, ServerPlayerEntity player, int lives, String team) {
         if(scoreboard.getTeam(team) != null) {
             scoreboard.addPlayerToTeam(player.getEntityName(), scoreboard.getTeam(team));
-            System.out.printf("%s added to %s team with %d lives\n", player.getEntityName(), team, lives);
+            FinalStand.LOGGER.info(String.format("%s added to %s team with %d lives", player.getEntityName(), team, lives));
         }
     }
 
     private static void createTeam(Scoreboard scoreboard, String name, Text displayName, Formatting color) {
         if (scoreboard.getTeam(name) == null) {
-            System.out.printf("Creating %s team\n", name);
+            FinalStand.LOGGER.info(String.format("Creating %s team", name));
             Team team = scoreboard.addTeam(name);
             team.setDisplayName(displayName);
             team.setColor(color);
         } else {
-            System.out.printf("Team %s already exists\n", name);
+            FinalStand.LOGGER.info(String.format("Team %s already exists", name));
         }
     }
 }

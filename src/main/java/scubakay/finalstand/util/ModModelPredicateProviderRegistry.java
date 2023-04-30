@@ -24,6 +24,6 @@ public class ModModelPredicateProviderRegistry {
             }
         });
 
-        System.out.printf("[%s] Registering gamerules", FinalStand.MOD_ID);
+        FinalStand.LOGGER.info("Registering gamerules");
     }
 }

@@ -6,7 +6,7 @@ import scubakay.finalstand.commands.*;
 
 public class ModCommandRegister {
     public static void registerCommands() {
-        System.out.printf("[%s] Registering commands\n", FinalStand.MOD_ID);
+        FinalStand.LOGGER.info("Registering commands");
         CommandRegistrationCallback.EVENT.register(StartSessionCommand::register);
         CommandRegistrationCallback.EVENT.register(ResetSessionCommand::register);
         CommandRegistrationCallback.EVENT.register(EndSessionCommand::register);
