@@ -1,2 +1,3 @@
 - Fix bug where game would show hardcore without lives hud when traveling to nether
 - Fix session time formatting
+- Treasure chests can't spawn on trees anymore
