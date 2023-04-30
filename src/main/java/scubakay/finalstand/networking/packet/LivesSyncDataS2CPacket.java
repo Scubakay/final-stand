@@ -9,7 +9,7 @@ import scubakay.finalstand.util.IEntityDataSaver;
 public class LivesSyncDataS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler ignoredHandler, PacketByteBuf buf, PacketSender ignoredResponseSender) {
         if (client.player != null) {
-            ((IEntityDataSaver) client.player).getPersistentData().putInt("lives", buf.readInt());
+            ((IEntityDataSaver) client.player).fs_getPersistentData().putInt("lives", buf.readInt());
         }
     }
 }

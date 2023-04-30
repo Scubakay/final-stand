@@ -12,7 +12,7 @@ public class PlayerRespawnEvent implements ServerPlayerEvents.AfterRespawn {
     }
 
     private static void persistLives(IEntityDataSaver oldPlayer, IEntityDataSaver newPlayer) {
-        int lives = oldPlayer.getPersistentData().getInt("lives");
+        int lives = oldPlayer.fs_getPersistentData().getInt("lives");
         LivesData.setLives(newPlayer, lives);
     }
 }

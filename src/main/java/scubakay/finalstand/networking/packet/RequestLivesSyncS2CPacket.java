@@ -10,6 +10,6 @@ import scubakay.finalstand.data.LivesData;
 
 public class RequestLivesSyncS2CPacket {
     public static void receive(MinecraftServer ignoredServer, ServerPlayerEntity player, ServerPlayNetworkHandler ignoredHandler, PacketByteBuf ignoredBuf, PacketSender ignoredResponseSender) {
-        LivesData.syncLives(((IEntityDataSaver) player).getPersistentData().getInt("lives"), player);
+        LivesData.syncLives(((IEntityDataSaver) player).fs_getPersistentData().getInt("lives"), player);
     }
 }

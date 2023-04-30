@@ -27,7 +27,7 @@ public class HuntersState {
      * Select X amount of random hunters
      */
     public static void selectHunters(MinecraftServer server) {
-        List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).toList();
+        List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).toList();
 
         Random randHunterAmount = new Random();
         int amount = randHunterAmount.nextInt(ModConfig.getMaxHunterAmount() + 1 - ModConfig.getMinHunterAmount()) + ModConfig.getMinHunterAmount();
@@ -36,13 +36,13 @@ public class HuntersState {
         // Prevent red lives from being hunter if preventRedLifeHunter is true
         List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
         if(ModConfig.isPreventRedLifeHunter()) {
-            possibleHunters = possibleHunters.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
+            possibleHunters = possibleHunters.stream().filter(player -> ((IEntityDataSaver) player).fs_getPersistentData().getInt("lives") > 1).toList();
         }
 
         // Prevent red life targets if preventRedLifeTarget is true
         List<ServerPlayerEntity> validTargets = new ArrayList<>(players);
         if(ModConfig.isPreventRedLifeTarget()) {
-            validTargets = validTargets.stream().filter(player -> ((IEntityDataSaver) player).getPersistentData().getInt("lives") > 1).toList();
+            validTargets = validTargets.stream().filter(player -> ((IEntityDataSaver) player).fs_getPersistentData().getInt("lives") > 1).toList();
         }
 
         server.getPlayerManager().broadcast(Text.translatable("session.finalstand.bounty_hunters_selected").formatted(Formatting.DARK_RED), false);
@@ -116,7 +116,7 @@ public class HuntersState {
     }
 
     public static void reset(MinecraftServer server) {
-        List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).isSurvival()).toList();
+        List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).toList();
         players.forEach(HuntersState::removeHunterTrackingDevice);
     }
 
@@ -173,11 +173,11 @@ public class HuntersState {
     }
 
     private static void setTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
-        ((IEntityDataSaver) hunter).getPersistentData().putString(TARGET_NBT_KEY, target.getUuidAsString());
+        ((IEntityDataSaver) hunter).fs_getPersistentData().putString(TARGET_NBT_KEY, target.getUuidAsString());
     }
 
     private static String getTargetUUID(ServerPlayerEntity hunter) {
-        return ((IEntityDataSaver) hunter).getPersistentData().getString(TARGET_NBT_KEY);
+        return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY);
     }
 
     private static ServerPlayerEntity getTarget(ServerPlayerEntity player) {
@@ -188,13 +188,13 @@ public class HuntersState {
     }
 
     private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
-        return ((IEntityDataSaver) hunter).getPersistentData().getString(TARGET_NBT_KEY).equals(target.getUuidAsString());
+        return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY).equals(target.getUuidAsString());
     }
 
     private static void removeTarget(ServerPlayerEntity hunter) {
-        ((IEntityDataSaver) hunter).getPersistentData().remove(TARGET_NBT_KEY);
+        ((IEntityDataSaver) hunter).fs_getPersistentData().remove(TARGET_NBT_KEY);
     }
     private static boolean isHunter(ServerPlayerEntity hunter) {
-        return ((IEntityDataSaver) hunter).getPersistentData().contains(TARGET_NBT_KEY);
+        return ((IEntityDataSaver) hunter).fs_getPersistentData().contains(TARGET_NBT_KEY);
     }
 }

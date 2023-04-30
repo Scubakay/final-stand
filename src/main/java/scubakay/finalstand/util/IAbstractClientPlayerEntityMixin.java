@@ -1,5 +1,5 @@
 package scubakay.finalstand.util;
 
 public interface IAbstractClientPlayerEntityMixin {
-    boolean isSurvival();
+    boolean fs_isSurvival();
 }

@@ -11,7 +11,7 @@ import scubakay.finalstand.event.callback.HotbarRenderCallback;
 @Mixin(InGameHud.class)
 public class RenderHotbarHudMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(FLnet/minecraft/client/util/math/MatrixStack;)V"))
-    public void render(MatrixStack matrixStack, float tickDelta, CallbackInfo callbackInfo) {
+    public void injectRender(MatrixStack matrixStack, float tickDelta, CallbackInfo callbackInfo) {
         HotbarRenderCallback.EVENT.invoker().onHudRender(matrixStack, tickDelta);
     }
 }

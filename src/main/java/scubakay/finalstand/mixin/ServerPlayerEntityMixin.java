@@ -14,7 +14,7 @@ public abstract class ServerPlayerEntityMixin implements IServerPlayerEntity {
     @Final()
     public ServerPlayerInteractionManager interactionManager;
 
-    public boolean isSurvival() {
+    public boolean fs_isSurvival() {
         return this.interactionManager.getGameMode() == GameMode.SURVIVAL;
     }
 }
