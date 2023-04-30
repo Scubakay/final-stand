@@ -1,1 +1,2 @@
 - Fix bug where game would show hardcore without lives hud when traveling to nether
+- Fix session time formatting
