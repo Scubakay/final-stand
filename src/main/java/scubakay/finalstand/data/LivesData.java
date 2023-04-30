@@ -13,59 +13,51 @@ import java.util.Random;
 
 public class LivesData {
     public static void addLives(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.fs_getPersistentData();
-        int lives = nbt.getInt("lives");
+        int lives = getLives(player) + amount;
 
-        int maxLives = ModConfig.getMaxLives();
-        if(lives + amount >= maxLives) {
-            lives = maxLives;
-        } else {
-            lives += amount;
+        if (lives > ModConfig.getMaxLives()) {
+            lives = ModConfig.getMaxLives();
         }
 
-        nbt.putInt("lives", lives);
-        syncLives((ServerPlayerEntity) player);
+        setLives(player, lives);
     }
 
     public static int removeLives(IEntityDataSaver player, int amount) {
-        NbtCompound nbt = player.fs_getPersistentData();
-        int lives = nbt.getInt("lives");
-
-        lives -= amount;
+        int lives = getLives(player) - amount;
 
         if(lives < 0) {
             lives = 0;
         }
 
-        nbt.putInt("lives", lives);
-        syncLives((ServerPlayerEntity) player);
+        setLives(player, lives);
         return lives;
     }
 
     public static int randomizeLives(IEntityDataSaver player) {
-        NbtCompound nbt = player.fs_getPersistentData();
-
         int lives = determineRandomLives();
-
-        nbt.putInt("lives", lives);
-        syncLives((ServerPlayerEntity) player);
+        setLives(player, lives);
         return lives;
     }
 
     public static void setLives(IEntityDataSaver player, int lives) {
         NbtCompound nbt = player.fs_getPersistentData();
         nbt.putInt("lives", lives);
+        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
         syncLives((ServerPlayerEntity) player);
     }
 
     public static void syncLives(ServerPlayerEntity player) {
         NbtCompound nbt = ((IEntityDataSaver) player).fs_getPersistentData();
         int lives = nbt.getInt("lives");
-        TeamState.setPlayerTeam(lives, player);
 
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeInt(lives);
         ServerPlayNetworking.send(player, ModMessages.LIVES_SYNC, buffer);
+    }
+
+    private static int getLives(IEntityDataSaver player) {
+        NbtCompound nbt = player.fs_getPersistentData();
+        return nbt.getInt("lives");
     }
 
     private static int determineRandomLives() {
