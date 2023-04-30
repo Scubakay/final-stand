@@ -16,12 +16,12 @@ public class ModMessages {
     public static final Identifier SESSION_TIME_SYNC = new Identifier(FinalStand.MOD_ID, "finalstand.session_time_sync");
 
     public static void registerC2SPackets() {
-        System.out.printf("[%s] Registering C2S packets\n", FinalStand.MOD_ID);
+        FinalStand.LOGGER.info("Registering C2S packets");
         ServerPlayNetworking.registerGlobalReceiver(REQUEST_LIVES_SYNC, RequestLivesSyncS2CPacket::receive);
     }
 
     public static void registerS2CPackets() {
-        System.out.printf("[%s] Registering S2C packets\n", FinalStand.MOD_ID);
+        FinalStand.LOGGER.info("Registering S2C packets");
         ClientPlayNetworking.registerGlobalReceiver(LIVES_SYNC, LivesSyncDataS2CPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(HUNTER_TRACKING_DEVICE_COOLDOWN_SYNC, HunterTrackingDeviceCooldownSyncS2CPacket::receive);
         ClientPlayNetworking.registerGlobalReceiver(SESSION_TIME_SYNC, SessionTimeSyncS2CPacket::receive);

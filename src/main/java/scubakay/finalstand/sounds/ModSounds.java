@@ -16,6 +16,6 @@ public class ModSounds {
     }
 
     public static void registerSounds() {
-        System.out.printf("[%s] Registering sounds\n", FinalStand.MOD_ID);
+        FinalStand.LOGGER.info("Registering sounds");
     }
 }

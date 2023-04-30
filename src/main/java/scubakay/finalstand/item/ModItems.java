@@ -20,6 +20,6 @@ public class ModItems {
     }
 
     public static void registerModItems() {
-        System.out.printf("[%s] Registering items\n", FinalStand.MOD_ID);
+        FinalStand.LOGGER.info("Registering items");
     }
 }

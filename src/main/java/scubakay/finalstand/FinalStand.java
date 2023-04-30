@@ -1,6 +1,8 @@
 package scubakay.finalstand;
 
 import net.fabricmc.api.ModInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.event.ModEvents;
 import scubakay.finalstand.item.ModItems;
@@ -15,9 +17,11 @@ public class FinalStand implements ModInitializer {
 
     public static final String COMMAND_ROOT = "fs";
 
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
     @Override
     public void onInitialize() {
-        System.out.println("Initializing Final Stand\n");
+        LOGGER.info("Initializing Final Stand");
 
         ModConfig config = new ModConfig();
         config.load();

@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.item.ModItems;
 import scubakay.finalstand.item.custom.HunterTrackingDevice;
@@ -31,7 +32,7 @@ public class HuntersState {
 
         Random randHunterAmount = new Random();
         int amount = randHunterAmount.nextInt(ModConfig.getMaxHunterAmount() + 1 - ModConfig.getMinHunterAmount()) + ModConfig.getMinHunterAmount();
-        System.out.printf("Picking %d hunters\n", amount);
+        FinalStand.LOGGER.info(String.format("Picking %d hunters", amount));
 
         // Prevent red lives from being hunter if preventRedLifeHunter is true
         List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
@@ -61,7 +62,7 @@ public class HuntersState {
                 addHunter(hunter, target);
 
                 // Send messages
-                System.out.printf("%s is hunting %s\n", hunter.getEntityName(), target.getEntityName());
+                FinalStand.LOGGER.info(String.format("%s is hunting %s", hunter.getEntityName(), target.getEntityName()));
                 hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.RED));
                 target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
 
