@@ -13,7 +13,6 @@ import net.minecraft.util.Identifier;
 import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.event.callback.HotbarRenderCallback;
 import scubakay.finalstand.util.IAbstractClientPlayerEntityMixin;
-import scubakay.finalstand.util.IEntityDataSaver;
 
 /**
  * Draws HUD overlay for lives
@@ -22,6 +21,16 @@ public class LivesHudOverlay implements HotbarRenderCallback {
     private static final Identifier LIFE_GREEN = new Identifier(FinalStand.MOD_ID, "textures/lives/life-green.png");
     private static final Identifier LIFE_YELLOW = new Identifier(FinalStand.MOD_ID, "textures/lives/life-yellow.png");
     private static final Identifier LIFE_RED = new Identifier(FinalStand.MOD_ID, "textures/lives/life-red.png");
+
+    private static int lives = -1;
+
+    public static void setLives(int amount) {
+        lives = amount;
+    }
+
+    public static int getLives() {
+        return lives;
+    }
 
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
@@ -41,7 +50,6 @@ public class LivesHudOverlay implements HotbarRenderCallback {
             y = height;
         }
 
-        int lives = ((IEntityDataSaver) player).fs_getPersistentData().getInt("lives");
         if (lives > 0) {
             drawHeart(matrixStack, x, y, lives);
             drawAmount(matrixStack, x, y, lives);
