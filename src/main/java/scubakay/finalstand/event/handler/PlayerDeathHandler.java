@@ -23,11 +23,16 @@ public class PlayerDeathHandler implements ServerLivingEntityEvents.AfterDeath {
 
     private static void handleLastLive(ServerPlayerEntity target, int lives) {
         if(lives == 0) {
+            dropEverything(target);
             setGamemodeToSpectator(target);
             target.sendMessage(Text.translatable("session.finalstand.game_over"));
         } else {
             target.sendMessage(Text.translatable("session.finalstand.lives_left", lives));
         }
+    }
+
+    private static void dropEverything(ServerPlayerEntity target) {
+        target.getInventory().dropAll();
     }
 
     private static void handleBounties(ServerPlayerEntity target, DamageSource damageSource) {
