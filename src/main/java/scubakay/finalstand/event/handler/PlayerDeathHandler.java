@@ -31,7 +31,7 @@ public class PlayerDeathHandler implements ServerLivingEntityEvents.AfterDeath {
     }
 
     private static void handleBounties(ServerPlayerEntity target, DamageSource damageSource) {
-        if(ModConfig.isBountyReward() && damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
+        if(ModConfig.Hunters.bountyReward && damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
             HuntersState.rewardHunter(hunter, target);
         }
         HuntersState.removeIfPlayerWasHunter(target);

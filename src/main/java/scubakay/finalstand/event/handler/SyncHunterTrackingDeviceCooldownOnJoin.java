@@ -12,7 +12,7 @@ import scubakay.finalstand.networking.ModMessages;
 public class SyncHunterTrackingDeviceCooldownOnJoin implements ServerPlayConnectionEvents.Init {
     @Override
     public void onPlayInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        int hunterTrackingDeviceCooldown = ModConfig.getHunterTrackingDeviceCooldown();
+        int hunterTrackingDeviceCooldown = ModConfig.Hunters.hunterTrackingDeviceCooldown;
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeInt(hunterTrackingDeviceCooldown);
         ServerPlayNetworking.send(handler.getPlayer(), ModMessages.HUNTER_TRACKING_DEVICE_COOLDOWN_SYNC, buffer);

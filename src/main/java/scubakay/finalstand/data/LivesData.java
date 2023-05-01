@@ -15,8 +15,8 @@ public class LivesData {
     public static void addLives(IEntityDataSaver player, int amount) {
         int lives = getLives(player) + amount;
 
-        if (lives > ModConfig.getMaxLives()) {
-            lives = ModConfig.getMaxLives();
+        if (lives > ModConfig.Lives.max) {
+            lives = ModConfig.Lives.max;
         }
 
         setLives(player, lives);
@@ -61,8 +61,8 @@ public class LivesData {
     }
 
     private static int determineRandomLives() {
-        int minLives = ModConfig.getMinLives();
-        int maxLives = ModConfig.getMaxLives();
+        int minLives = ModConfig.Lives.min;
+        int maxLives = ModConfig.Lives.max;
 
         if(minLives > maxLives) {
             minLives = maxLives;
