@@ -31,18 +31,18 @@ public class HuntersState {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).toList();
 
         Random randHunterAmount = new Random();
-        int amount = randHunterAmount.nextInt(ModConfig.getMaxHunterAmount() + 1 - ModConfig.getMinHunterAmount()) + ModConfig.getMinHunterAmount();
+        int amount = randHunterAmount.nextInt(ModConfig.Hunters.max + 1 - ModConfig.Hunters.min) + ModConfig.Hunters.min;
         FinalStand.LOGGER.info(String.format("Picking %d hunters", amount));
 
         // Prevent red lives from being hunter if preventRedLifeHunter is true
         List<ServerPlayerEntity> possibleHunters = new ArrayList<>(players);
-        if(ModConfig.isPreventRedLifeHunter()) {
+        if(ModConfig.Hunters.preventRedLifeHunter) {
             possibleHunters = possibleHunters.stream().filter(player -> ((IEntityDataSaver) player).fs_getPersistentData().getInt("lives") > 1).toList();
         }
 
         // Prevent red life targets if preventRedLifeTarget is true
         List<ServerPlayerEntity> validTargets = new ArrayList<>(players);
-        if(ModConfig.isPreventRedLifeTarget()) {
+        if(ModConfig.Hunters.preventRedLifeTarget) {
             validTargets = validTargets.stream().filter(player -> ((IEntityDataSaver) player).fs_getPersistentData().getInt("lives") > 1).toList();
         }
 

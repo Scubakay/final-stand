@@ -30,10 +30,10 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         SessionState serverState = SessionState.getServerState(server);
         HuntersState.reset(server);
         reset(server);
-        serverState.hunterTicksLeft = ModConfig.getSessionHunterSelectionTime() * TICKS_TO_MINUTES;
+        serverState.hunterTicksLeft = ModConfig.Session.hunterSelectionTime * TICKS_TO_MINUTES;
         serverState.shouldSelectHunters = true;
-        serverState.chestTicksLeft = Arrays.stream(ModConfig.getSessionTreasureChestTimes()).map(ct -> ct * TICKS_TO_MINUTES).toArray();
-        serverState.sessionTicksLeft = ModConfig.getSessionTime() * TICKS_TO_MINUTES;
+        serverState.chestTicksLeft = Arrays.stream(ModConfig.Session.treasureChestTimes).map(ct -> ct * TICKS_TO_MINUTES).toArray();
+        serverState.sessionTicksLeft = ModConfig.Session.duration * TICKS_TO_MINUTES;
         lastTick = server.getTicks();
         serverState.inSession = true;
         serverState.markDirty();
