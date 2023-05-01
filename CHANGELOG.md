@@ -2,3 +2,4 @@
 - Fix session time formatting
 - Treasure chests can't spawn on trees anymore
 - Config is now grouped in a logical way
+- Drop all items on last death, even with keepInventory on
