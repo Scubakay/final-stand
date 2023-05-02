@@ -64,6 +64,12 @@ Places a random chest with goodies within the world borders.
 ```
 Selects the configured amount of hunters.
 
+### Complete bounty
+```
+/fs completeBounty <players>
+```
+If a hunter kills a target in a way that is not counted by the game, this command can be used to reward the hunter with the bounty completion.
+
 ### Configuration
 This mod has a bunch of configuration options allowing you to customize certain aspects of the game.
 These options can be found in `./config/finalstand.conf`.
