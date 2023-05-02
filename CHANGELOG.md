@@ -4,3 +4,4 @@
 - Config is now grouped in a logical way
 - Drop all items on last death, even with keepInventory on
 - Bounties now only complete when the hunter kills the target
+- Added command to set bounties as completed

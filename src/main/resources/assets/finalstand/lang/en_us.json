@@ -16,6 +16,7 @@
   "session.finalstand.hunter_chosen_in_one_minute": "The bounty hunters will be chosen in one minute!",
   "session.finalstand.chest_placed_in_one_minute": "A treasure chest will be placed in one minute!",
   "session.finalstand.session_ending_in_one_minute": "The session is ending in one minute!",
+  "session.finalstand.completed_players_bounty": "Bounty for %s set as completed!",
   "item.finalstand.hunter_tracking_device": "Hunter Tracking Device",
   "item.finalstand.hunter_tracking_device_tooltip": "Use to locate your target!",
   "item.finalstand.hunter_tracking_device_very_far_away": "Your target is over %d blocks away!",
