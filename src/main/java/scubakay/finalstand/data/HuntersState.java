@@ -91,14 +91,20 @@ public class HuntersState {
         return validTargets.get(targetIndex);
     }
 
+    /**
+     * Add a hunter
+     */
     public static void addHunter(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         setTarget(hunter, target);
         addHunterTrackingDevice(hunter, target);
     }
 
+    /**
+     * Remove the bounty if a hunter killed their target
+     */
     public static void removeIfBountyCompleted(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         if (isPlayerTarget(hunter, target)) {
-            removeHunterTrackingDevice(hunter);
+            completeBounty(hunter);
             hunter.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
             target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
             if(ModConfig.Hunters.bountyReward) {
@@ -107,21 +113,30 @@ public class HuntersState {
         }
     }
 
+    /**
+     * Reset all bounties
+     */
     public static void reset(MinecraftServer server) {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).toList();
-        players.forEach(HuntersState::removeHunterTrackingDevice);
+        players.forEach(HuntersState::completeBounty);
     }
 
+    /**
+     * Remove a life for all hunters that failed to complete their bounty
+     */
     public static void punishHunters(List<ServerPlayerEntity> players) {
         players.stream()
                 .filter(HuntersState::isHunter)
                 .forEach(h -> {
-                    removeHunterTrackingDevice(h);
+                    completeBounty(h);
                     LivesData.removeLives((IEntityDataSaver) h, 1);
                     h.sendMessage(Text.translatable("session.finalstand.bounty_failed").formatted(Formatting.RED));
                 });
     }
 
+    /**
+     * Give a player a hunter tracking device
+     */
     private static void addHunterTrackingDevice(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         // Create device
         ItemStack itemStack = new ItemStack(ModItems.HUNTER_TRACKING_DEVICE);
@@ -140,21 +155,33 @@ public class HuntersState {
         }
     }
 
-    private static void removeHunterTrackingDevice(ServerPlayerEntity hunter) {
+    /**
+     * Remove the target UUID and tracking device from a hunter
+     */
+    public static void completeBounty(ServerPlayerEntity hunter) {
         removeTarget(hunter);
         while(hunter.getInventory().containsAny(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE))) {
             hunter.getInventory().remove(stack -> stack.isOf(ModItems.HUNTER_TRACKING_DEVICE), 1, hunter.getInventory());
         }
     }
 
+    /**
+     * Check if a certain player is the hunter's target
+     */
     private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         return target.getUuidAsString().equals(getTarget(hunter).getUuidAsString());
     }
 
+    /**
+     * Set a hunter's target
+     */
     private static void setTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         ((IEntityDataSaver) hunter).fs_getPersistentData().putString(TARGET_NBT_KEY, target.getUuidAsString());
     }
 
+    /**
+     * Get the ServerPlayerEntity of a hunter's target
+     */
     private static ServerPlayerEntity getTarget(ServerPlayerEntity player) {
         String targetUUID = getTargetUUID(player);
         Optional<ServerPlayerEntity> target = player.getServer().getPlayerManager().getPlayerList().stream()
@@ -162,13 +189,23 @@ public class HuntersState {
         return target.orElse(null);
     }
 
+    /**
+     * Get the UUID of a hunter's target
+     */
     private static String getTargetUUID(ServerPlayerEntity hunter) {
         return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY);
     }
 
+    /**
+     * Removes target NBT from hunter
+     */
     private static void removeTarget(ServerPlayerEntity hunter) {
         ((IEntityDataSaver) hunter).fs_getPersistentData().remove(TARGET_NBT_KEY);
     }
+
+    /**
+     * If this player is a hunter
+     */
     private static boolean isHunter(ServerPlayerEntity hunter) {
         return ((IEntityDataSaver) hunter).fs_getPersistentData().contains(TARGET_NBT_KEY);
     }

@@ -13,5 +13,6 @@ public class ModCommandRegister {
         CommandRegistrationCallback.EVENT.register(InitSessionCommand::register);
         CommandRegistrationCallback.EVENT.register(PlaceChestCommand::register);
         CommandRegistrationCallback.EVENT.register(SelectHuntersCommand::register);
+        CommandRegistrationCallback.EVENT.register(CompleteBountyCommand::register);
     }
 }
