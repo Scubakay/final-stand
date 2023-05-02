@@ -96,39 +96,20 @@ public class HuntersState {
         addHunterTrackingDevice(hunter, target);
     }
 
-    public static void removeIfPlayerWasHunter(ServerPlayerEntity player) {
-        ServerPlayerEntity target = getTarget(player);
-        if(target != null){
-            removeHunterTrackingDevice(player);
-            player.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
+    public static void removeIfBountyCompleted(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+        if (isPlayerTarget(hunter, target)) {
+            removeHunterTrackingDevice(hunter);
+            hunter.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
             target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
-        }
-    }
-
-    public static void removeIfPlayerWasTarget(ServerPlayerEntity player) {
-        List<ServerPlayerEntity> hunters = getHunters(player);
-        if (!hunters.isEmpty()) {
-            player.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
-            hunters.forEach(h -> {
-                removeHunterTrackingDevice(h);
-                h.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
-            });
+            if(ModConfig.Hunters.bountyReward) {
+                LivesData.addLives((IEntityDataSaver) hunter, 1);
+            }
         }
     }
 
     public static void reset(MinecraftServer server) {
         List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList().stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).toList();
         players.forEach(HuntersState::removeHunterTrackingDevice);
-    }
-
-    /**
-     * Reward a bounty hunter with a life if they successfully kill their target
-     */
-    public static void rewardHunter(ServerPlayerEntity hunter, ServerPlayerEntity target) {
-        if(isPlayerTarget(hunter, target)) {
-            removeHunterTrackingDevice(hunter);
-            LivesData.addLives((IEntityDataSaver) hunter, 1);
-        }
     }
 
     public static void punishHunters(List<ServerPlayerEntity> players) {
@@ -166,19 +147,12 @@ public class HuntersState {
         }
     }
 
-    private static List<ServerPlayerEntity> getHunters(ServerPlayerEntity target) {
-        List<ServerPlayerEntity> players = target.getServer().getPlayerManager().getPlayerList();
-        return players.stream()
-                .filter(p -> getTargetUUID(p).equals(target.getUuidAsString()))
-                .toList();
+    private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+        return target.getUuidAsString().equals(getTarget(hunter).getUuidAsString());
     }
 
     private static void setTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         ((IEntityDataSaver) hunter).fs_getPersistentData().putString(TARGET_NBT_KEY, target.getUuidAsString());
-    }
-
-    private static String getTargetUUID(ServerPlayerEntity hunter) {
-        return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY);
     }
 
     private static ServerPlayerEntity getTarget(ServerPlayerEntity player) {
@@ -188,8 +162,8 @@ public class HuntersState {
         return target.orElse(null);
     }
 
-    private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
-        return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY).equals(target.getUuidAsString());
+    private static String getTargetUUID(ServerPlayerEntity hunter) {
+        return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY);
     }
 
     private static void removeTarget(ServerPlayerEntity hunter) {

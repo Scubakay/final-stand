@@ -6,7 +6,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.data.LivesData;
@@ -36,11 +35,9 @@ public class PlayerDeathHandler implements ServerLivingEntityEvents.AfterDeath {
     }
 
     private static void handleBounties(ServerPlayerEntity target, DamageSource damageSource) {
-        if(ModConfig.Hunters.bountyReward && damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
-            HuntersState.rewardHunter(hunter, target);
+        if (damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
+            HuntersState.removeIfBountyCompleted(hunter, target);
         }
-        HuntersState.removeIfPlayerWasHunter(target);
-        HuntersState.removeIfPlayerWasTarget(target);
     }
 
     private static void setGamemodeToSpectator(ServerPlayerEntity player) {

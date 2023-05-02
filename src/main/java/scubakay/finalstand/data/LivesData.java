@@ -20,6 +20,7 @@ public class LivesData {
         }
 
         setLives(player, lives);
+        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
     }
 
     public static int removeLives(IEntityDataSaver player, int amount) {
@@ -30,19 +31,20 @@ public class LivesData {
         }
 
         setLives(player, lives);
+        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
         return lives;
     }
 
     public static int randomizeLives(IEntityDataSaver player) {
         int lives = determineRandomLives();
         setLives(player, lives);
+        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
         return lives;
     }
 
     public static void setLives(IEntityDataSaver player, int lives) {
         NbtCompound nbt = player.fs_getPersistentData();
         nbt.putInt("lives", lives);
-        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
         syncLives((ServerPlayerEntity) player);
     }
 
