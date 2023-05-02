@@ -49,6 +49,8 @@ public class ModConfig extends Config {
         @ConfigEntry(comment = "The cooldown in ticks for the hunter tracking device")
         @ConfigEntry.BoundedInteger(min = 1)
         public static int hunterTrackingDeviceCooldown = 600;
+        @ConfigEntry(comment = "Announce to targets that they are being hunted")
+        public static boolean announceBeingHunted = false;
     }
 
     @Transitive

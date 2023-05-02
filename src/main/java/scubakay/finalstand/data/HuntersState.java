@@ -64,7 +64,9 @@ public class HuntersState {
                 // Send messages
                 FinalStand.LOGGER.info(String.format("%s is hunting %s", hunter.getEntityName(), target.getEntityName()));
                 hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.RED));
-                target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
+                if (ModConfig.Hunters.announceBeingHunted) {
+                    target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
+                }
 
                 // Remove target and hunter from valid picks lists
                 validTargets = validTargets.stream().filter(h -> !h.equals(target)).toList();
