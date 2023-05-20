@@ -52,6 +52,13 @@ After running the command you can use `/fs start` again to restart the session.
 ```
 End a session manually.
 
+### Pause and resume session
+```
+/fs pause
+/fs resume
+```
+These commands can be used to pause your session.
+
 ### Place chest
 ```
 /fs placeChest

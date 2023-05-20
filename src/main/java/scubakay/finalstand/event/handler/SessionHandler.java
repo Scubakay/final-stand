@@ -53,6 +53,19 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         server.getPlayerManager().broadcast(Text.translatable("session.finalstand.session_ended"), false);
     }
 
+    public static void PauseSession(MinecraftServer server) {
+        SessionState serverState = SessionState.getServerState(server);
+        serverState.sessionPaused = true;
+        serverState.markDirty();
+    }
+
+    public static void ResumeSession(MinecraftServer server) {
+        SessionState serverState = SessionState.getServerState(server);
+        lastTick = server.getTicks();
+        serverState.sessionPaused = false;
+        serverState.markDirty();
+    }
+
     /**
      * Execute selecting hunters/placing chests and ending session after given amount of ticks
      */
@@ -60,15 +73,17 @@ public class SessionHandler implements ServerTickEvents.StartTick {
     public void onStartTick(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
 
-        int currentTick = server.getTicks();
-        int ticksPassed = currentTick - lastTick;
-        lastTick = currentTick;
+        if (!serverState.sessionPaused) {
+            int currentTick = server.getTicks();
+            int ticksPassed = currentTick - lastTick;
+            lastTick = currentTick;
 
-        handleSessionTime(server, ticksPassed);
-        handleChestPlacement(server, ticksPassed);
-        handleHunterSelection(server, ticksPassed);
+            handleSessionTime(server, ticksPassed);
+            handleChestPlacement(server, ticksPassed);
+            handleHunterSelection(server, ticksPassed);
 
-        serverState.markDirty();
+            serverState.markDirty();
+        }
     }
 
     private static void handleHunterSelection(MinecraftServer server, int ticksPassed) {
