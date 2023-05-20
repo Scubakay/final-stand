@@ -1,7 +1,1 @@
-- Fix bug where game would show hardcore without lives hud when traveling to nether
-- Fix session time formatting
-- Treasure chests can't spawn on trees anymore
-- Config is now grouped in a logical way
-- Drop all items on last death, even with keepInventory on
-- Bounties now only complete when the hunter kills the target
-- Added command to set bounties as completed
+- Add `/fs pause` and `/fs resume` commands
