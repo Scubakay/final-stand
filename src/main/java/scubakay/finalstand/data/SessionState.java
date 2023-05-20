@@ -19,6 +19,7 @@ public class SessionState extends PersistentState {
     public static final String CHEST_ANNOUNCED_NBT = "chestAnnounced";
     public static final String SESSION_TICK_NBT = "sessionTick";
     public static final String SESSION_END_ANNOUNCED_NBT = "sessionEndAccounced";
+    public static final String IS_SESSION_PAUSED = "isSessionPaused";
 
     public boolean inSession = false;
     public int hunterTicksLeft = -1;
@@ -28,6 +29,7 @@ public class SessionState extends PersistentState {
     public int[] announcedChests = {};
     public int sessionTicksLeft = -1;
     public boolean sessionEndAnnounced = false;
+    public boolean sessionPaused = false;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -39,6 +41,7 @@ public class SessionState extends PersistentState {
         nbt.putIntArray(CHEST_ANNOUNCED_NBT, announcedChests);
         nbt.putInt(SESSION_TICK_NBT, sessionTicksLeft);
         nbt.putBoolean(SESSION_END_ANNOUNCED_NBT, sessionEndAnnounced);
+        nbt.putBoolean(IS_SESSION_PAUSED, sessionPaused);
         return nbt;
     }
 
@@ -52,6 +55,7 @@ public class SessionState extends PersistentState {
         sessionState.announcedChests = tag.getIntArray(CHEST_ANNOUNCED_NBT);
         sessionState.sessionTicksLeft = tag.getInt(SESSION_TICK_NBT);
         sessionState.sessionEndAnnounced = tag.getBoolean(SESSION_END_ANNOUNCED_NBT);
+        sessionState.sessionPaused = tag.getBoolean(IS_SESSION_PAUSED);
         return sessionState;
     }
 
