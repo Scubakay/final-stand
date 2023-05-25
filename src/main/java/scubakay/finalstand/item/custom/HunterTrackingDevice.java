@@ -34,7 +34,7 @@ public class HunterTrackingDevice extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-
+        setCooldown(user);
         PlayerEntity trackedPlayer = getTrackedPlayerFromNbt(world, user, hand);
         double distance = getDistanceToTarget(user, trackedPlayer);
         setScanDistance(stack, distance);
@@ -48,7 +48,7 @@ public class HunterTrackingDevice extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (!world.isClient && user instanceof PlayerEntity player && remainingUseTicks % TICKS_PER_SECOND == 0) {
-            player.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.BLOCKS, 1f, 1f);
+            player.playSound(ModSounds.TRACKING_DEVICE_SEARCHING, SoundCategory.PLAYERS, 1f, 1f);
         }
     }
 
@@ -66,7 +66,6 @@ public class HunterTrackingDevice extends Item {
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         if (user instanceof PlayerEntity player) {
-            setCooldown(player);
             double distance = getScanDistance(stack);
             sendDistanceMessage(player, distance);
             player.playSound(ModSounds.TRACKING_DEVICE_CONFIRM, SoundCategory.BLOCKS, 1f, 1f);

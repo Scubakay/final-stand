@@ -208,4 +208,8 @@ public class HuntersState {
     private static boolean isHunter(ServerPlayerEntity hunter) {
         return ((IEntityDataSaver) hunter).fs_getPersistentData().contains(TARGET_NBT_KEY);
     }
+
+    public static void persistTarget(IEntityDataSaver oldPlayer, IEntityDataSaver newPlayer) {
+        newPlayer.fs_getPersistentData().putString(TARGET_NBT_KEY, oldPlayer.fs_getPersistentData().getString(TARGET_NBT_KEY));
+    }
 }
