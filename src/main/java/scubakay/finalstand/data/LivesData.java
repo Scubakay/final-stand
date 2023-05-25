@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.IEntityDataSaver;
@@ -23,7 +24,7 @@ public class LivesData {
         TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
     }
 
-    public static int removeLives(IEntityDataSaver player, int amount) {
+    public static void removeLives(IEntityDataSaver player, int amount) {
         int lives = getLives(player) - amount;
 
         if(lives < 0) {
@@ -32,7 +33,7 @@ public class LivesData {
 
         setLives(player, lives);
         TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
-        return lives;
+        handleLastLive((ServerPlayerEntity) player, lives);
     }
 
     public static int randomizeLives(IEntityDataSaver player) {
@@ -75,5 +76,25 @@ public class LivesData {
         lives += minLives;
 
         return lives;
+    }
+
+    private static void handleLastLive(ServerPlayerEntity player, int lives) {
+        if(lives == 0) {
+            dropEverything(player);
+            setGamemodeToSpectator(player);
+            player.sendMessage(Text.translatable("session.finalstand.game_over"));
+        } else {
+            player.sendMessage(Text.translatable("session.finalstand.lives_left", lives));
+        }
+    }
+
+    private static void dropEverything(ServerPlayerEntity target) {
+        target.getInventory().dropAll();
+    }
+
+    private static void setGamemodeToSpectator(ServerPlayerEntity player) {
+        NbtCompound nbt = new NbtCompound();
+        nbt.putInt("playerGameType", 3);
+        player.setGameMode(nbt);
     }
 }

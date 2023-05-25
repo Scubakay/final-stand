@@ -109,9 +109,6 @@ public class HuntersState {
             completeBounty(hunter);
             hunter.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
             target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
-            if(ModConfig.Hunters.bountyReward) {
-                LivesData.addLives((IEntityDataSaver) hunter, 1);
-            }
         }
     }
 
