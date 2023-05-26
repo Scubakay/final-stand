@@ -14,6 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.sounds.ModSounds;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class HunterTrackingDevice extends Item {
 
     public HunterTrackingDevice(Item.Settings settings) {
         super(settings);
+        cooldown = ModConfig.Hunters.hunterTrackingDeviceCooldown;
     }
 
     /**
