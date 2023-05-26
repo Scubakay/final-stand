@@ -13,6 +13,7 @@ public class ModItems {
             registerItem("hunter_tracking_device", new HunterTrackingDevice(
                     new FabricItemSettings()
                             .maxCount(1)
+                            .fireproof()
             ));
 
     public static Item registerItem(String name, Item item) {
