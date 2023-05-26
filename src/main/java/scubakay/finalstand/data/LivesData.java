@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.GameMode;
 import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.networking.ModMessages;
 import scubakay.finalstand.util.IEntityDataSaver;
@@ -93,8 +94,6 @@ public class LivesData {
     }
 
     private static void setGamemodeToSpectator(ServerPlayerEntity player) {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putInt("playerGameType", 3);
-        player.setGameMode(nbt);
+        player.changeGameMode(GameMode.SPECTATOR);
     }
 }
