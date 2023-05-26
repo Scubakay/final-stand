@@ -168,7 +168,11 @@ public class HuntersState {
      * Check if a certain player is the hunter's target
      */
     private static boolean isPlayerTarget(ServerPlayerEntity hunter, ServerPlayerEntity target) {
-        return target.getUuidAsString().equals(getTarget(hunter).getUuidAsString());
+        ServerPlayerEntity hunterTarget = getTarget(hunter);
+        if (hunterTarget == null) {
+            return false;
+        }
+        return target.getUuidAsString().equals(hunterTarget.getUuidAsString());
     }
 
     /**
