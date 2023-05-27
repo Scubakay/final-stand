@@ -1,1 +1,5 @@
 - #168 Fix a bug where players would get punished for a failed bounty if they were killed during the session, even when they were not a bounty hunter
+- #167 Add `/fs lives add <Player>` command to add a life to a player
+- #167 Add `/fs lives remove <Player>` command to remove a life from a player
+- #167 Add `/fs lives set <Player> <amount>` command to set a players lives
+- All session related commands now reside under `/fs session`

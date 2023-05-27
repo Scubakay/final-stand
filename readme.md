@@ -1,6 +1,6 @@
 # Final Stand
 
-Final Stand is the mod used in the second season of the Final Stand Youtube series.
+Final Stand is the mod used in the second season of the Final Stand YouTube series.
 The mod is heavily inspired by 3rd/Double/Last Life, but with our own twist!
 
 Players get a random amount of lives they start with and when they run out, it's game over!
@@ -21,17 +21,19 @@ Special thanks to:
 
 ## How to use
 
-### Initialize game
+### Sessions
+
+#### Initialize game
 ```
-/fs init
+/fs session init
 ```
 This command initializes a new game. All players online will receive a random amount of lives.
 
 You can add a player name as an argument to set the lives for that player only. Initialized players will have their health, hunger, saturation and inventory reset!
 
-### Start session
+#### Start session
 ```
-/fs start
+/fs session start
 ```
 Starts a new Final Stand session. After a configured amount of time the configured number of Hunters will receive a Hunter Tracking Device
 with a selected target they need to hunt down before the end of the session. If the Hunter fails
@@ -39,25 +41,40 @@ they will lose a life.
 
 This command will also place a random chest with goodies within the world borders after a configured amount of time.
 
-### Reset session
+#### Reset session
 ```
-/fs reset
+/fs session reset
 ```
 If anything goes wrong, `/fs reset` will remove all Tracking devices from the inventories.
 After running the command you can use `/fs start` again to restart the session.
 
-### End session
+#### End session
 ```
-/fs end
+/fs session end
 ```
 End a session manually.
 
-### Pause and resume session
+#### Pause and resume session
 ```
-/fs pause
-/fs resume
+/fs session pause
+/fs session resume
 ```
 These commands can be used to pause your session.
+
+### Lives
+
+#### Add and remove lives
+```
+/fs lives add <Player>
+/fs lives remove <Player>
+```
+Adds/removes one life to/from a player.
+
+#### Set lives
+```
+/fs lives set <Player> <amount>
+```
+Sets the lives of a player to a specific amount.
 
 ### Place chest
 ```

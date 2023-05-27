@@ -14,7 +14,7 @@ import scubakay.finalstand.util.IEntityDataSaver;
 import java.util.Random;
 
 public class LivesData {
-    public static void addLives(IEntityDataSaver player, int amount) {
+    public static int addLives(IEntityDataSaver player, int amount) {
         int lives = getLives(player) + amount;
 
         if (lives > ModConfig.Lives.max) {
@@ -23,9 +23,10 @@ public class LivesData {
 
         setLives(player, lives);
         TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
+        return lives;
     }
 
-    public static void removeLives(IEntityDataSaver player, int amount) {
+    public static int removeLives(IEntityDataSaver player, int amount) {
         int lives = getLives(player) - amount;
 
         if(lives < 0) {
@@ -35,6 +36,7 @@ public class LivesData {
         setLives(player, lives);
         TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
         handleLastLive((ServerPlayerEntity) player, lives);
+        return lives;
     }
 
     public static int randomizeLives(IEntityDataSaver player) {
@@ -44,10 +46,11 @@ public class LivesData {
         return lives;
     }
 
-    public static void setLives(IEntityDataSaver player, int lives) {
+    public static int setLives(IEntityDataSaver player, int lives) {
         NbtCompound nbt = player.fs_getPersistentData();
         nbt.putInt("lives", lives);
         syncLives((ServerPlayerEntity) player);
+        return lives;
     }
 
     public static void syncLives(ServerPlayerEntity player) {
