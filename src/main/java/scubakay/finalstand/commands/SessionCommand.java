@@ -24,32 +24,35 @@ public class SessionCommand {
             .literal(FinalStand.COMMAND_ROOT)
             .requires(source -> source.hasPermissionLevel(4)) // Must be OP to execute
             .then(CommandManager
-                .literal("init")
+                .literal("session")
                 .then(CommandManager
-                    .argument("players", EntityArgumentType.players())
-                    .executes(ctx -> init(ctx, EntityArgumentType.getPlayers(ctx, "players")))
+                    .literal("init")
+                    .then(CommandManager
+                        .argument("players", EntityArgumentType.players())
+                        .executes(ctx -> init(ctx, EntityArgumentType.getPlayers(ctx, "players")))
+                    )
+                    .executes(ctx -> init(ctx, new ArrayList<>()))
                 )
-                .executes(ctx -> init(ctx, new ArrayList<>()))
-            )
-            .then(CommandManager
-                .literal("start")
-                .executes(SessionCommand::start)
-            )
-            .then(CommandManager
-                .literal("pause")
-                .executes(SessionCommand::pause)
-            )
-            .then(CommandManager
-                .literal("resume")
-                .executes(SessionCommand::resume)
-            )
-            .then(CommandManager
-                .literal("reset")
-                .executes(SessionCommand::reset)
-            )
-            .then(CommandManager
-                .literal("end")
-                .executes(SessionCommand::end)
+                .then(CommandManager
+                    .literal("start")
+                    .executes(SessionCommand::start)
+                )
+                .then(CommandManager
+                    .literal("pause")
+                    .executes(SessionCommand::pause)
+                )
+                .then(CommandManager
+                    .literal("resume")
+                    .executes(SessionCommand::resume)
+                )
+                .then(CommandManager
+                    .literal("reset")
+                    .executes(SessionCommand::reset)
+                )
+                .then(CommandManager
+                    .literal("end")
+                    .executes(SessionCommand::end)
+                )
             )
         );
     }
