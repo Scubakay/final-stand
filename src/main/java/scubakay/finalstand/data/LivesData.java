@@ -50,6 +50,7 @@ public class LivesData {
         NbtCompound nbt = player.fs_getPersistentData();
         nbt.putInt("lives", lives);
         syncLives((ServerPlayerEntity) player);
+        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
         return lives;
     }
 
