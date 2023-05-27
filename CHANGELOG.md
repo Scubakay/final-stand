@@ -1,1 +1,1 @@
-- Add `/fs pause` and `/fs resume` commands
+- #168 Fix a bug where players would get punished for a failed bounty if they were killed during the session, even when they were not a bounty hunter
