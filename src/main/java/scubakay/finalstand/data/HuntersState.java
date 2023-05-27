@@ -13,10 +13,7 @@ import scubakay.finalstand.item.custom.HunterTrackingDevice;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.util.IServerPlayerEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Keeps track of current hunters using player NBT data
@@ -186,17 +183,22 @@ public class HuntersState {
      * Get the ServerPlayerEntity of a hunter's target
      */
     private static ServerPlayerEntity getTarget(ServerPlayerEntity player) {
-        String targetUUID = getTargetUUID(player);
+        UUID targetUUID = getTargetUUID(player);
         Optional<ServerPlayerEntity> target = player.getServer().getPlayerManager().getPlayerList().stream()
-                .filter(p -> p.getUuidAsString().equals(targetUUID)).findFirst();
+                .filter(p -> p.getUuid().equals(targetUUID)).findFirst();
         return target.orElse(null);
     }
 
     /**
      * Get the UUID of a hunter's target
      */
-    private static String getTargetUUID(ServerPlayerEntity hunter) {
-        return ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY);
+    private static UUID getTargetUUID(ServerPlayerEntity hunter) {
+        try {
+            String targetString = ((IEntityDataSaver) hunter).fs_getPersistentData().getString(TARGET_NBT_KEY);
+            return UUID.fromString(targetString);
+        } catch(IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /**
@@ -210,10 +212,16 @@ public class HuntersState {
      * If this player is a hunter
      */
     private static boolean isHunter(ServerPlayerEntity hunter) {
-        return ((IEntityDataSaver) hunter).fs_getPersistentData().contains(TARGET_NBT_KEY);
+        return getTarget(hunter) != null;
     }
 
-    public static void persistTarget(IEntityDataSaver oldPlayer, IEntityDataSaver newPlayer) {
-        newPlayer.fs_getPersistentData().putString(TARGET_NBT_KEY, oldPlayer.fs_getPersistentData().getString(TARGET_NBT_KEY));
+    /**
+     * Persists the players target after respawning
+     */
+    public static void persistTarget(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer) {
+        UUID target = getTargetUUID(oldPlayer);
+        if (target != null) {
+            ((IEntityDataSaver) newPlayer).fs_getPersistentData().putString(TARGET_NBT_KEY, target.toString());
+        }
     }
 }
