@@ -19,6 +19,7 @@
   "session.finalstand.completed_players_bounty": "Bounty for %s set as completed!",
   "session.finalstand.pausing": "Session has paused!",
   "session.finalstand.resuming": "Session is resuming!",
+  "session.finalstand.killed_wrong_player": "Woops! That was not your target!",
   "item.finalstand.hunter_tracking_device": "Hunter Tracking Device",
   "item.finalstand.hunter_tracking_device_tooltip": "Use to locate your target!",
   "item.finalstand.hunter_tracking_device_very_far_away": "Your target is over %d blocks away!",
