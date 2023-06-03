@@ -101,11 +101,14 @@ public class HuntersState {
     /**
      * Remove the bounty if a hunter killed their target
      */
-    public static void removeIfBountyCompleted(ServerPlayerEntity hunter, ServerPlayerEntity target) {
+    public static boolean removeIfBountyCompleted(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         if (isPlayerTarget(hunter, target)) {
             completeBounty(hunter);
             hunter.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
             target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
+            return true;
+        } else {
+            return false;
         }
     }
 

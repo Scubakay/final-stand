@@ -90,9 +90,10 @@ Selects the configured amount of hunters.
 
 ### Complete bounty
 ```
-/fs completeBounty <players>
+/fs checkBounty <hunter> <target>
 ```
-If a hunter kills a target in a way that is not counted by the game, this command can be used to reward the hunter with the bounty completion.
+Will check if `<target>` was the actual target of `<hunter>`. If the target was correct, the bounty will be completed. If not, the hunter will get a message
+explaining they had the wrong player!
 
 ### Configuration
 This mod has a bunch of configuration options allowing you to customize certain aspects of the game.
