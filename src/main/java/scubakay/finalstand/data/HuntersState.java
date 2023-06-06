@@ -104,6 +104,7 @@ public class HuntersState {
     public static boolean removeIfBountyCompleted(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         if (isPlayerTarget(hunter, target)) {
             completeBounty(hunter);
+            FinalStand.LOGGER.info(String.format("%s completed their bounty by killing %s", hunter.getEntityName(), target.getEntityName()));
             hunter.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
             target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
             return true;

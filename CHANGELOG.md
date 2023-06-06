@@ -1,1 +1,2 @@
 - #175 Changed the completeBounty command to `/fs checkBounty <hunter> <target>`. This will complete the bounty if the player filled in at <target> was the actual target.
+- #174 Bounties now also complete when a player was "trying to escape" another player.

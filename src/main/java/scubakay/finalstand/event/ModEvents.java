@@ -1,7 +1,6 @@
 package scubakay.finalstand.event;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -11,7 +10,6 @@ import scubakay.finalstand.client.CountdownOverlay;
 import scubakay.finalstand.client.LivesHudOverlay;
 import scubakay.finalstand.event.callback.HotbarRenderCallback;
 import scubakay.finalstand.event.handler.*;
-
 
 public class ModEvents {
     public static void registerClientEvents() {
@@ -23,7 +21,7 @@ public class ModEvents {
     }
     public static void registerServerEvents() {
         ServerPlayerEvents.AFTER_RESPAWN.register(new PlayerRespawnEvent());
-        ServerLivingEntityEvents.AFTER_DEATH.register(new PlayerDeathHandler());
+        ServerLivingEntityEvents.START_AFTER_DEATH.register(new PlayerDeathHandlerAfterDeath());
         ServerPlayConnectionEvents.INIT.register(new SyncHunterTrackingDeviceCooldownOnJoin());
         ServerPlayConnectionEvents.INIT.register(new SyncSessionTimeOnJoin());
         ServerLifecycleEvents.SERVER_STARTED.register(new CreateTeamsOnServerStart());

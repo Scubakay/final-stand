@@ -1,6 +1,6 @@
 package scubakay.finalstand.event.handler;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import scubakay.finalstand.event.ServerLivingEntityEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -8,9 +8,9 @@ import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.data.LivesData;
 
-public class PlayerDeathHandler implements ServerLivingEntityEvents.AfterDeath {
+public class PlayerDeathHandlerAfterDeath implements ServerLivingEntityEvents.StartAfterDeath {
     @Override
-    public void afterDeath(LivingEntity entity, DamageSource damageSource) {
+    public void startAfterDeath(LivingEntity entity, DamageSource damageSource) {
         if(entity instanceof ServerPlayerEntity target) {
             LivesData.removeLives((IEntityDataSaver) target, 1);
             handleBounties(target, damageSource);
@@ -19,6 +19,8 @@ public class PlayerDeathHandler implements ServerLivingEntityEvents.AfterDeath {
 
     private static void handleBounties(ServerPlayerEntity target, DamageSource damageSource) {
         if (damageSource.getAttacker() instanceof ServerPlayerEntity hunter) {
+            HuntersState.removeIfBountyCompleted(hunter, target);
+        } else if (target.getPrimeAdversary() instanceof ServerPlayerEntity hunter) {
             HuntersState.removeIfBountyCompleted(hunter, target);
         }
     }
