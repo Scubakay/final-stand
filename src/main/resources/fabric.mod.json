@@ -21,9 +21,8 @@
     "finalstand.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.17",
+    "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "1.19.4",
-    "completeconfig": "2.3.1"
+    "minecraft": "${minecraft_version}"
   }
 }

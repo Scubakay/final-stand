@@ -73,7 +73,7 @@ public class SessionCommand {
 
     public static int start(CommandContext<ServerCommandSource> context) {
         SessionHandler.StartSession(context.getSource().getServer());
-        context.getSource().sendFeedback(Text.translatable("session.finalstand.starting_session"), true);
+        context.getSource().sendFeedback(() -> Text.translatable("session.finalstand.starting_session"), true);
         return 1;
     }
 
@@ -91,7 +91,7 @@ public class SessionCommand {
 
     public static int reset(CommandContext<ServerCommandSource> context) {
         SessionHandler.ResetSession(context.getSource().getServer());
-        context.getSource().sendFeedback(Text.translatable("session.finalstand.resetting_session"), true);
+        context.getSource().sendFeedback(() -> Text.translatable("session.finalstand.resetting_session"), true);
         return 1;
     }
 

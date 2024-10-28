@@ -23,8 +23,8 @@ public class FinalStand implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Initializing Final Stand");
 
-        ModConfig config = new ModConfig();
-        config.load();
+//        ModConfig config = new ModConfig();
+//        config.load();
 
         ModItems.registerModItems();
         ModSounds.registerSounds();

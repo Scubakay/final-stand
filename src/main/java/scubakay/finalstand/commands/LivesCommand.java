@@ -53,7 +53,7 @@ public class LivesCommand {
     public static int add(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
         players.forEach(p -> {
             int lives = LivesData.addLives((IEntityDataSaver) p, 1);
-            context.getSource().sendFeedback(Text.translatable("lives.finalstand.player_has_x_lives", p.getDisplayName(), lives), true);
+            context.getSource().sendFeedback(() -> Text.translatable("lives.finalstand.player_has_x_lives", p.getDisplayName(), lives), true);
         });
         return 1;
     }
@@ -61,7 +61,7 @@ public class LivesCommand {
     public static int remove(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
         players.forEach(p -> {
             int lives = LivesData.removeLives((IEntityDataSaver) p, 1);
-            context.getSource().sendFeedback(Text.translatable("lives.finalstand.player_has_x_lives", p.getDisplayName(), lives), true);
+            context.getSource().sendFeedback(() -> Text.translatable("lives.finalstand.player_has_x_lives", p.getDisplayName(), lives), true);
         });
         return 1;
     }
@@ -69,7 +69,7 @@ public class LivesCommand {
     public static int set(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players, int amount) {
         players.forEach(p -> {
             int lives = LivesData.setLives((IEntityDataSaver) p, amount);
-            context.getSource().sendFeedback(Text.translatable("lives.finalstand.player_has_x_lives", p.getDisplayName(), lives), true);
+            context.getSource().sendFeedback(() -> Text.translatable("lives.finalstand.player_has_x_lives", p.getDisplayName(), lives), true);
         });
         return 1;
     }

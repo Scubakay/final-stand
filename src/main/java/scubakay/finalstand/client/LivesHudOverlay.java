@@ -3,10 +3,9 @@ package scubakay.finalstand.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -33,7 +32,7 @@ public class LivesHudOverlay implements HotbarRenderCallback {
     }
 
     @Override
-    public void onHudRender(MatrixStack matrixStack, float tickDelta) {
+    public void onHudRender(DrawContext context, float tickDelta) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if(player == null || !((IAbstractClientPlayerEntityMixin) player).fs_isSurvival()){
             return;
@@ -51,30 +50,32 @@ public class LivesHudOverlay implements HotbarRenderCallback {
         }
 
         if (lives > 0) {
-            drawHeart(matrixStack, x, y, lives);
-            drawAmount(matrixStack, x, y, lives);
+            drawHeart(context, x, y, lives);
+            drawAmount(context, x, y, lives);
         }
     }
 
-    private static void drawAmount(MatrixStack matrixStack, int x, int y, int lives) {
+    private static void drawAmount(DrawContext context, int x, int y, int lives) {
         Text text = Text.literal("" + lives).formatted(Formatting.BOLD);
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
         int width = renderer.getWidth(text) / 2;
-        renderer.drawWithShadow(matrixStack, text, x - width, y - 56, 0xffffff);
+        context.drawTextWithShadow(renderer, text, x, y, 0xffffff);
     }
 
-    private static void drawHeart(MatrixStack matrixStack, int x, int y, int lives) {
+    private static void drawHeart(DrawContext context, int x, int y, int lives) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (lives > 2) {
-            RenderSystem.setShaderTexture(0, LIFE_GREEN);
-        } else if (lives < 2) {
-            RenderSystem.setShaderTexture(0, LIFE_RED);
-        } else {
-            RenderSystem.setShaderTexture(0, LIFE_YELLOW);
-        }
         int zOffset = -90;
-        DrawableHelper.drawTexture(matrixStack, x - 12, y - 64, zOffset, 0, 0, 24, 24, 24, 24);
+        Identifier texture;
+        if (lives > 2) {
+            texture = LIFE_GREEN;
+        } else if (lives < 2) {
+            texture = LIFE_RED;
+        } else {
+            texture = LIFE_YELLOW;
+        }
+
+        context.drawTexture(texture, x - 12, y - 64, zOffset, 0, 0, 24, 24, 24, 24);
     }
 }

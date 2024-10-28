@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -19,9 +19,9 @@ public class CountdownOverlay implements HotbarRenderCallback {
     }
 
     @Override
-    public void onHudRender(MatrixStack matrixStack, float tickDelta) {
+    public void onHudRender(DrawContext context, float tickDelta) {
         if (sessionTicksLeft > 0) {
-            drawCountdownText(matrixStack, ticksToFormattedTime(sessionTicksLeft));
+            drawCountdownText(context, ticksToFormattedTime(sessionTicksLeft));
         }
     }
 
@@ -40,7 +40,7 @@ public class CountdownOverlay implements HotbarRenderCallback {
         return time;
     }
 
-    private static void drawCountdownText(MatrixStack matrixStack, String inputString) {
+    private static void drawCountdownText(DrawContext context, String inputString) {
         MinecraftClient client = MinecraftClient.getInstance();
         TextRenderer renderer = client.textRenderer;
 
@@ -48,6 +48,6 @@ public class CountdownOverlay implements HotbarRenderCallback {
         int x = client.getWindow().getScaledWidth() - 20 - renderer.getWidth(text);
         int y = client.getWindow().getScaledHeight() - 20;
 
-        renderer.drawWithShadow(matrixStack, text, x, y, 0xffffff);
+        context.drawTextWithShadow(renderer, text, x, y, 0xffffff);
     }
 }
