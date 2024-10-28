@@ -17,9 +17,9 @@ public class TeamState {
     public static void setPlayerTeam(int lives, ServerPlayerEntity player) {
         Scoreboard scoreboard = player.getWorld().getScoreboard();
         if (lives == 0) {
-            Team team = scoreboard.getPlayerTeam(player.getEntityName());
+            Team team = player.getScoreboardTeam();
             if (team != null) {
-                scoreboard.removePlayerFromTeam(player.getEntityName(), team);
+                scoreboard.removeScoreHolderFromTeam(player.getDisplayName().toString(), team);
             }
         } else if (lives < 2) {
             addPlayerToTeam(scoreboard, player, lives, "red");
@@ -32,8 +32,8 @@ public class TeamState {
 
     private static void addPlayerToTeam(Scoreboard scoreboard, ServerPlayerEntity player, int lives, String team) {
         if(scoreboard.getTeam(team) != null) {
-            scoreboard.addPlayerToTeam(player.getEntityName(), scoreboard.getTeam(team));
-            FinalStand.LOGGER.info(String.format("%s added to %s team with %d lives", player.getEntityName(), team, lives));
+            scoreboard.addScoreHolderToTeam(player.getDisplayName().toString(), scoreboard.getTeam(team));
+            FinalStand.LOGGER.info(String.format("%s added to %s team with %d lives", player.getDisplayName(), team, lives));
         }
     }
 

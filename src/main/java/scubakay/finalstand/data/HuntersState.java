@@ -59,7 +59,7 @@ public class HuntersState {
                 addHunter(hunter, target);
 
                 // Send messages
-                FinalStand.LOGGER.info(String.format("%s is hunting %s", hunter.getEntityName(), target.getEntityName()));
+                FinalStand.LOGGER.info(String.format("%s is hunting %s", hunter.getDisplayName(), target.getDisplayName()));
                 hunter.sendMessage(Text.translatable("session.finalstand.you_are_hunter").formatted(Formatting.RED));
                 if (ModConfig.Hunters.announceBeingHunted) {
                     target.sendMessage(Text.translatable("session.finalstand.you_are_being_hunted").formatted(Formatting.RED));
@@ -104,7 +104,7 @@ public class HuntersState {
     public static boolean removeIfBountyCompleted(ServerPlayerEntity hunter, ServerPlayerEntity target) {
         if (isPlayerTarget(hunter, target)) {
             completeBounty(hunter);
-            FinalStand.LOGGER.info(String.format("%s completed their bounty by killing %s", hunter.getEntityName(), target.getEntityName()));
+            FinalStand.LOGGER.info(String.format("%s completed their bounty by killing %s", hunter.getDisplayName(), target.getDisplayName()));
             hunter.sendMessage(Text.translatable("session.finalstand.bounty_completed").formatted(Formatting.GREEN));
             target.sendMessage(Text.translatable("session.finalstand.no_longer_being_hunted").formatted(Formatting.GREEN));
             return true;
