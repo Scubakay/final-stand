@@ -1,9 +1,11 @@
 package scubakay.finalstand.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -62,8 +64,12 @@ public class LivesHudOverlay implements HotbarRenderCallback {
     }
 
     private static void drawHeart(DrawContext context, int x, int y, int lives) {
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
         int xOffset = -12;
         int yOffset = -64;
+        int zOffset = -90;
 
         Identifier texture;
         if (lives > 2) {
@@ -73,7 +79,7 @@ public class LivesHudOverlay implements HotbarRenderCallback {
         } else {
             texture = LIFE_YELLOW;
         }
-
-        context.drawTexture(RenderLayer::getGuiTextured, texture, x + xOffset, y + yOffset, 0, 0, 24, 24, 24, 24);
+        context.drawTexture(texture, x - 12, y - 64, zOffset, 0, 0, 24, 24, 24, 24);
+        // context.drawTexture(RenderLayer::getGuiTextured, texture, x + xOffset, y + yOffset, 0, 0, 24, 24, 24, 24);
     }
 }

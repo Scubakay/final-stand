@@ -34,8 +34,10 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-//    modImplementation "maven.modrinth:auth-me:${project.authme_version}"
-//    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+    modImplementation "maven.modrinth:auth-me:${project.authme_version}"
+    modImplementation "maven.modrinth:cloth-config:${project.clothconfig_version}"
+    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
+    modImplementation "maven.modrinth:carpet:${project.carpet_version}"
 }
 
 processResources {
