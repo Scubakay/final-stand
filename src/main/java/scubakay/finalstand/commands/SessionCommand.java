@@ -4,11 +4,15 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Box;
+import net.minecraft.world.border.WorldBorder;
 import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.data.LivesData;
 import scubakay.finalstand.data.TeamState;
@@ -60,16 +64,8 @@ public class SessionCommand {
 
     public static int init(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
         TeamState.createTeams(context.getSource().getServer().getScoreboard());
-        if (players.isEmpty()) {
-            // If no players are provided in the argument, get all players in the world.
-            players = context.getSource().getServer().getPlayerManager().getPlayerList();
-            resetWorld(context);
-        }
-        players.stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).forEach(player -> {
-            resetPlayer(player);
-            int lives = LivesData.randomizeLives((IEntityDataSaver) player);
-            player.sendMessage(Text.translatable("session.finalstand.amount_of_lives", lives));
-        });
+        resetWorld(context);
+        initPlayers(context, players);
         return 1;
     }
 
@@ -102,9 +98,23 @@ public class SessionCommand {
         return 1;
     }
 
+    private static void initPlayers(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
+        if (players.isEmpty()) {
+            // If no players are provided in the argument, get all players in the world.
+            players = context.getSource().getServer().getPlayerManager().getPlayerList();
+        }
+
+        players.stream().filter(p -> ((IServerPlayerEntity) p).fs_isSurvival()).forEach(player -> {
+            resetPlayer(player);
+            int lives = LivesData.randomizeLives((IEntityDataSaver) player);
+            player.sendMessage(Text.translatable("session.finalstand.amount_of_lives", lives));
+        });
+    }
+
     private static void resetWorld(CommandContext<ServerCommandSource> context) {
         // Reset time of day
         context.getSource().getWorld().setTimeOfDay(0L);
+        killHostiles(context.getSource().getServer().getOverworld());
     }
 
     /**
@@ -121,5 +131,22 @@ public class SessionCommand {
 
         // Clear inventory
         player.getInventory().clear();
+    }
+
+    private static void killHostiles(ServerWorld world) {
+        // Kill off all hostile entities
+        WorldBorder border = world.getWorldBorder();
+        Box box = new Box(
+                border.getBoundWest(), -64, border.getBoundNorth(),
+                border.getBoundEast(), 320, border.getBoundSouth()
+        );
+        try {
+            for (HostileEntity hostileEntity : world.getEntitiesByClass(HostileEntity.class, box, entity -> true)) {
+                hostileEntity.remove(net.minecraft.entity.Entity.RemovalReason.KILLED);
+            }
+            System.out.println("Hostile entities removed successfully.");
+        } catch (Exception e) {
+            System.out.println("Error during hostile entity removal: " + e.getMessage());
+        }
     }
 }
