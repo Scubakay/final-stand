@@ -11,6 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.data.LivesData;
+import scubakay.finalstand.data.TeamState;
 import scubakay.finalstand.event.handler.SessionHandler;
 import scubakay.finalstand.util.IEntityDataSaver;
 import scubakay.finalstand.util.IServerPlayerEntity;
@@ -58,7 +59,8 @@ public class SessionCommand {
     }
 
     public static int init(CommandContext<ServerCommandSource> context, Collection<ServerPlayerEntity> players) {
-        if (players.size() == 0) {
+        TeamState.createTeams(context.getSource().getServer().getScoreboard());
+        if (players.isEmpty()) {
             // If no players are provided in the argument, get all players in the world.
             players = context.getSource().getServer().getPlayerManager().getPlayerList();
             resetWorld(context);

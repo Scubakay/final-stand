@@ -19,7 +19,7 @@ public class TeamState {
         if (lives == 0) {
             Team team = player.getScoreboardTeam();
             if (team != null) {
-                scoreboard.removeScoreHolderFromTeam(player.getDisplayName().toString(), team);
+                scoreboard.removeScoreHolderFromTeam(player.getNameForScoreboard(), team);
             }
         } else if (lives < 2) {
             addPlayerToTeam(scoreboard, player, lives, "red");
@@ -30,9 +30,10 @@ public class TeamState {
         }
     }
 
-    private static void addPlayerToTeam(Scoreboard scoreboard, ServerPlayerEntity player, int lives, String team) {
-        if(scoreboard.getTeam(team) != null) {
-            scoreboard.addScoreHolderToTeam(player.getDisplayName().toString(), scoreboard.getTeam(team));
+    private static void addPlayerToTeam(Scoreboard scoreboard, ServerPlayerEntity player, int lives, String teamname) {
+        Team team = scoreboard.getTeam(teamname);
+        if(team != null) {
+            scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), team);
             FinalStand.LOGGER.info(String.format("%s added to %s team with %d lives", player.getDisplayName(), team, lives));
         }
     }
