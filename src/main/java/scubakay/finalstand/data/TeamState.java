@@ -34,7 +34,7 @@ public class TeamState {
         Team team = scoreboard.getTeam(teamname);
         if(team != null) {
             scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), team);
-            FinalStand.LOGGER.info(String.format("%s added to %s team with %d lives", player.getDisplayName(), team, lives));
+            FinalStand.LOGGER.info(String.format("%s added to %s team with %d lives", player.getName(), team.getName(), lives));
         }
     }
 

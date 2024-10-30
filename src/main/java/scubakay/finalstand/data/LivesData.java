@@ -12,42 +12,35 @@ import java.util.Random;
 
 public class LivesData {
     public static int addLives(IEntityDataSaver player, int amount) {
-        int lives = getLives(player) + amount;
-
-        if (lives > ModConfig.Lives.max) {
-            lives = ModConfig.Lives.max;
-        }
-
-        setLives(player, lives);
-        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
-        return lives;
+        return setLives(player, getLives(player) + amount);
     }
 
     public static int removeLives(IEntityDataSaver player, int amount) {
-        int lives = getLives(player) - amount;
-
-        if(lives < 0) {
-            lives = 0;
-        }
-
-        setLives(player, lives);
-        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
+        int lives = setLives(player, getLives(player) - amount);
         handleLastLive((ServerPlayerEntity) player, lives);
         return lives;
     }
 
     public static int randomizeLives(IEntityDataSaver player) {
-        int lives = determineRandomLives();
-        setLives(player, lives);
-        TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
-        return lives;
+        return setLives(player, getRandomLives());
     }
 
     public static int setLives(IEntityDataSaver player, int lives) {
+        // Make sure lives doesn't go out of limits
+        if (lives > ModConfig.Lives.max) {
+            lives = ModConfig.Lives.max;
+        } else if(lives < 0) {
+            lives = 0;
+        }
+
+        // Set nbt & Sync
         NbtCompound nbt = player.fs_getPersistentData();
         nbt.putInt("lives", lives);
         syncLives((ServerPlayerEntity) player);
+
+        // Handle game state stuff
         TeamState.setPlayerTeam(lives, (ServerPlayerEntity) player);
+
         return lives;
     }
 
@@ -62,7 +55,7 @@ public class LivesData {
         return nbt.getInt("lives");
     }
 
-    private static int determineRandomLives() {
+    private static int getRandomLives() {
         int minLives = ModConfig.Lives.min;
         int maxLives = ModConfig.Lives.max;
 
