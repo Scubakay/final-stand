@@ -8,7 +8,7 @@ import scubakay.finalstand.FinalStand;
 
 public class ModItems {
     public static Item registerItem(String name, Item item) {
-        return Registry.register(Registries.ITEM, new Identifier(FinalStand.MOD_ID, name), item);
+        return Registry.register(Registries.ITEM, Identifier.of(FinalStand.MOD_ID, name), item);
     }
 
     public static void registerModItems() {

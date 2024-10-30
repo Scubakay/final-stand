@@ -12,7 +12,7 @@ import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.client.CountdownOverlay;
 
 public record SessionTimeSyncPacket(int time) implements CustomPayload {
-    public static final Identifier SESSION_TIME_SYNC = new Identifier(FinalStand.MOD_ID, "finalstand.session_time_sync");
+    public static final Identifier SESSION_TIME_SYNC = Identifier.of(FinalStand.MOD_ID, "finalstand.session_time_sync");
 
     public static final CustomPayload.Id<SessionTimeSyncPacket> ID = new CustomPayload.Id<>(SESSION_TIME_SYNC);
     public static final PacketCodec<RegistryByteBuf, SessionTimeSyncPacket> PACKET_CODEC = PacketCodec.tuple(PacketCodecs.INTEGER, SessionTimeSyncPacket::time, SessionTimeSyncPacket::new);

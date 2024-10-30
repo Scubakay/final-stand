@@ -12,7 +12,7 @@ import scubakay.finalstand.FinalStand;
 import scubakay.finalstand.client.LivesHudOverlay;
 
 public record LivesSyncPacket(int lives) implements CustomPayload {
-    public static final Identifier LIVES_SYNC = new Identifier(FinalStand.MOD_ID, "finalstand.lives_sync");
+    public static final Identifier LIVES_SYNC = Identifier.of(FinalStand.MOD_ID, "finalstand.lives_sync");
 
     public static final CustomPayload.Id<LivesSyncPacket> ID = new CustomPayload.Id<>(LIVES_SYNC);
     public static final PacketCodec<RegistryByteBuf, LivesSyncPacket> PACKET_CODEC = PacketCodec.tuple(PacketCodecs.INTEGER, LivesSyncPacket::lives, LivesSyncPacket::new);

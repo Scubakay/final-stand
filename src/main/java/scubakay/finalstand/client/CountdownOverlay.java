@@ -19,7 +19,7 @@ public class CountdownOverlay implements HotbarRenderCallback {
     }
 
     @Override
-    public void onHudRender(DrawContext context, float tickDelta) {
+    public void onHudRender(DrawContext context) {
         if (sessionTicksLeft > 0) {
             drawCountdownText(context, ticksToFormattedTime(sessionTicksLeft));
         }

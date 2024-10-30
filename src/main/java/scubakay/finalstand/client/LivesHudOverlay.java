@@ -17,9 +17,9 @@ import scubakay.finalstand.util.IAbstractClientPlayerEntityMixin;
  * Draws HUD overlay for lives
  */
 public class LivesHudOverlay implements HotbarRenderCallback {
-    private static final Identifier LIFE_GREEN = new Identifier(FinalStand.MOD_ID, "textures/lives/life-green.png");
-    private static final Identifier LIFE_YELLOW = new Identifier(FinalStand.MOD_ID, "textures/lives/life-yellow.png");
-    private static final Identifier LIFE_RED = new Identifier(FinalStand.MOD_ID, "textures/lives/life-red.png");
+    private static final Identifier LIFE_GREEN = Identifier.of(FinalStand.MOD_ID, "textures/lives/life-green.png");
+    private static final Identifier LIFE_YELLOW = Identifier.of(FinalStand.MOD_ID, "textures/lives/life-yellow.png");
+    private static final Identifier LIFE_RED = Identifier.of(FinalStand.MOD_ID, "textures/lives/life-red.png");
 
     private static int lives = -1;
 
@@ -32,7 +32,7 @@ public class LivesHudOverlay implements HotbarRenderCallback {
     }
 
     @Override
-    public void onHudRender(DrawContext context, float tickDelta) {
+    public void onHudRender(DrawContext context) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if(player == null || !((IAbstractClientPlayerEntityMixin) player).fs_isSurvival()){
             return;
