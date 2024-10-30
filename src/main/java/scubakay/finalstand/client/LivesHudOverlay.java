@@ -59,7 +59,7 @@ public class LivesHudOverlay implements HotbarRenderCallback {
         Text text = Text.literal("" + lives).formatted(Formatting.BOLD);
         TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
         int width = renderer.getWidth(text) / 2;
-        context.drawTextWithShadow(renderer, text, x, y, 0xffffff);
+        context.drawTextWithShadow(renderer, text, x - width, y - 56, 0xffffff);
     }
 
     private static void drawHeart(DrawContext context, int x, int y, int lives) {

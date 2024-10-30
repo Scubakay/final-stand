@@ -1,17 +1,13 @@
 package scubakay.finalstand.event.handler;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.ArrayUtils;
 import scubakay.finalstand.config.ModConfig;
-import scubakay.finalstand.data.HuntersState;
 import scubakay.finalstand.data.SessionState;
-import scubakay.finalstand.networking.ModMessages;
+import scubakay.finalstand.networking.packet.SessionTimeSyncPacket;
 import scubakay.finalstand.util.ChestPlacer;
 
 import java.util.*;
@@ -28,10 +24,7 @@ public class SessionHandler implements ServerTickEvents.StartTick {
      */
     public static void StartSession(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
-        HuntersState.reset(server);
         reset(server);
-        serverState.hunterTicksLeft = ModConfig.Session.hunterSelectionTime * TICKS_TO_MINUTES;
-        serverState.shouldSelectHunters = true;
         serverState.chestTicksLeft = Arrays.stream(ModConfig.Session.treasureChestTimes).map(ct -> ct * TICKS_TO_MINUTES).toArray();
         serverState.sessionTicksLeft = ModConfig.Session.duration * TICKS_TO_MINUTES;
         lastTick = server.getTicks();
@@ -43,12 +36,10 @@ public class SessionHandler implements ServerTickEvents.StartTick {
      * Reset the session and timers for selecting hunters/placing chests and session end
      */
     public static void ResetSession(MinecraftServer server) {
-        HuntersState.reset(server);
         reset(server);
     }
 
     public static void EndSession(MinecraftServer server) {
-        HuntersState.punishHunters(server.getPlayerManager().getPlayerList());
         reset(server);
         server.getPlayerManager().broadcast(Text.translatable("session.finalstand.session_ended"), false);
     }
@@ -80,25 +71,14 @@ public class SessionHandler implements ServerTickEvents.StartTick {
 
             handleSessionTime(server, ticksPassed);
             handleChestPlacement(server, ticksPassed);
-            handleHunterSelection(server, ticksPassed);
 
             serverState.markDirty();
         }
     }
 
-    private static void handleHunterSelection(MinecraftServer server, int ticksPassed) {
+    public static void SyncSessionTime(MinecraftServer server) {
         SessionState serverState = SessionState.getServerState(server);
-        serverState.hunterTicksLeft = serverState.hunterTicksLeft - ticksPassed;
-
-        // Select hunters after x minutes
-        if (serverState.shouldSelectHunters && !serverState.huntersAnnounced && serverState.hunterTicksLeft < TICKS_TO_MINUTES) {
-            serverState.huntersAnnounced = true;
-            server.getPlayerManager().broadcast(Text.translatable("session.finalstand.hunter_chosen_in_one_minute").formatted(Formatting.DARK_RED), false);
-        }
-        if (serverState.shouldSelectHunters && serverState.hunterTicksLeft < 0) {
-            serverState.shouldSelectHunters = false;
-            HuntersState.selectHunters(server);
-        }
+        server.getPlayerManager().getPlayerList().forEach(p -> SessionTimeSyncPacket.send(p, serverState.sessionTicksLeft));
     }
 
     private static void handleChestPlacement(MinecraftServer server, int ticksPassed) {
@@ -138,14 +118,7 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         if (serverState.inSession && serverState.sessionTicksLeft < 0) {
             SessionHandler.EndSession(server);
         }
-        syncSessionTime(server);
-    }
-
-    private static void syncSessionTime(MinecraftServer server) {
-        SessionState serverState = SessionState.getServerState(server);
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(serverState.sessionTicksLeft);
-        server.getPlayerManager().getPlayerList().forEach(p -> ServerPlayNetworking.send(p, ModMessages.SESSION_TIME_SYNC, buffer));
+        SyncSessionTime(server);
     }
 
     private static void reset(MinecraftServer server) {
@@ -153,9 +126,6 @@ public class SessionHandler implements ServerTickEvents.StartTick {
         serverState.inSession = false;
         serverState.sessionTicksLeft = -1;
         serverState.sessionEndAnnounced = false;
-        serverState.hunterTicksLeft = -1;
-        serverState.shouldSelectHunters = false;
-        serverState.huntersAnnounced = false;
         serverState.chestTicksLeft = new int[]{};
         serverState.announcedChests = new int[]{};
         serverState.markDirty();

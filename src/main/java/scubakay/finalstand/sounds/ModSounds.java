@@ -7,8 +7,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
 
 public class ModSounds {
-    public static SoundEvent TRACKING_DEVICE_SEARCHING = registerSoundEvent("tracking_device_searching");
-    public static SoundEvent TRACKING_DEVICE_CONFIRM = registerSoundEvent("tracking_device_confirm");
 
     private static SoundEvent registerSoundEvent(String name) {
         Identifier id = new Identifier(FinalStand.MOD_ID, name);

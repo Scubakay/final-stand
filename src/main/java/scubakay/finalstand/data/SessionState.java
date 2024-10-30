@@ -1,6 +1,7 @@
 package scubakay.finalstand.data;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
@@ -12,9 +13,6 @@ import scubakay.finalstand.FinalStand;
  */
 public class SessionState extends PersistentState {
     public static final String IN_SESSION_NBT = "inSession";
-    public static final String HUNTER_TICK_NBT = "hunterTick";
-    public static final String HUNTERS_ANNOUNCED_NBT = "huntersAnnounced";
-    public static final String HUNTERS_SELECTED_NBT = "huntersSelected";
     public static final String CHEST_TICK_NBT = "chestTick";
     public static final String CHEST_ANNOUNCED_NBT = "chestAnnounced";
     public static final String SESSION_TICK_NBT = "sessionTick";
@@ -22,9 +20,6 @@ public class SessionState extends PersistentState {
     public static final String IS_SESSION_PAUSED = "isSessionPaused";
 
     public boolean inSession = false;
-    public int hunterTicksLeft = -1;
-    public boolean huntersAnnounced = false;
-    public boolean shouldSelectHunters = false;
     public int[] chestTicksLeft = {};
     public int[] announcedChests = {};
     public int sessionTicksLeft = -1;
@@ -32,11 +27,8 @@ public class SessionState extends PersistentState {
     public boolean sessionPaused = false;
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putBoolean(IN_SESSION_NBT, inSession);
-        nbt.putInt(HUNTER_TICK_NBT, hunterTicksLeft);
-        nbt.putBoolean(HUNTERS_ANNOUNCED_NBT, huntersAnnounced);
-        nbt.putBoolean(HUNTERS_SELECTED_NBT, shouldSelectHunters);
         nbt.putIntArray(CHEST_TICK_NBT, chestTicksLeft);
         nbt.putIntArray(CHEST_ANNOUNCED_NBT, announcedChests);
         nbt.putInt(SESSION_TICK_NBT, sessionTicksLeft);
@@ -45,12 +37,9 @@ public class SessionState extends PersistentState {
         return nbt;
     }
 
-    public static SessionState createFromNbt(NbtCompound tag) {
+    public static SessionState createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         SessionState sessionState = new SessionState();
         sessionState.inSession = tag.getBoolean(IN_SESSION_NBT);
-        sessionState.hunterTicksLeft = tag.getInt(HUNTER_TICK_NBT);
-        sessionState.huntersAnnounced = tag.getBoolean(HUNTERS_ANNOUNCED_NBT);
-        sessionState.shouldSelectHunters = tag.getBoolean(HUNTERS_SELECTED_NBT);
         sessionState.chestTicksLeft = tag.getIntArray(CHEST_TICK_NBT);
         sessionState.announcedChests = tag.getIntArray(CHEST_ANNOUNCED_NBT);
         sessionState.sessionTicksLeft = tag.getInt(SESSION_TICK_NBT);

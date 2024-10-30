@@ -3,6 +3,8 @@ package scubakay.finalstand.util;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.random.Random;
@@ -32,7 +34,7 @@ public class ChestPlacer {
         if (canChestSpawn(state, blockUnderneath)) {
             world.setBlockState(pos, Blocks.CHEST.getDefaultState());
             ChestBlockEntity chestBlockEntity = (ChestBlockEntity) world.getBlockEntity(pos);
-            chestBlockEntity.setLootTable(ModLootTables.FINAL_STAND_TREASURE_CHEST, world.getRandom().nextLong());
+            chestBlockEntity.setLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, ModLootTables.FINAL_STAND_TREASURE_CHEST), world.getRandom().nextLong());
             world.getServer().getPlayerManager().broadcast(Text.translatable("session.finalstand.treasure_chest_placed").formatted(Formatting.BLUE), false);
         } else {
             placeChestRandomly(world);

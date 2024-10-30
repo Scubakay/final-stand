@@ -3,7 +3,6 @@ package scubakay.finalstand;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scubakay.finalstand.config.ModConfig;
 import scubakay.finalstand.event.ModEvents;
 import scubakay.finalstand.item.ModItems;
 import scubakay.finalstand.networking.ModMessages;
@@ -23,17 +22,18 @@ public class FinalStand implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Initializing Final Stand");
 
-//        ModConfig config = new ModConfig();
-//        config.load();
-
+        // Stuff in the world
         ModItems.registerModItems();
         ModSounds.registerSounds();
-
-        ModCommandRegister.registerCommands();
-        ModMessages.registerC2SPackets();
-        ModGameruleRegister.registerGamerules();
         ModLootTables.registerLootTables();
 
+        // Commands & Game rules
+        ModCommandRegister.registerCommands();
+        ModGameruleRegister.registerGamerules();
+
+        // Networking & Events
+        ModMessages.registerPayloads();
+        ModMessages.registerServerReceivers();
         ModEvents.registerServerEvents();
     }
 }

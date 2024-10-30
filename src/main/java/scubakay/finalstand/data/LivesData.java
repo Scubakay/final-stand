@@ -1,14 +1,11 @@
 package scubakay.finalstand.data;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 import scubakay.finalstand.config.ModConfig;
-import scubakay.finalstand.networking.ModMessages;
+import scubakay.finalstand.networking.packet.LivesSyncPacket;
 import scubakay.finalstand.util.IEntityDataSaver;
 
 import java.util.Random;
@@ -57,10 +54,7 @@ public class LivesData {
     public static void syncLives(ServerPlayerEntity player) {
         NbtCompound nbt = ((IEntityDataSaver) player).fs_getPersistentData();
         int lives = nbt.getInt("lives");
-
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(lives);
-        ServerPlayNetworking.send(player, ModMessages.LIVES_SYNC, buffer);
+        LivesSyncPacket.send(player, lives);
     }
 
     private static int getLives(IEntityDataSaver player) {

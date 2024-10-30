@@ -9,8 +9,6 @@ public class ModCommandRegister {
         FinalStand.LOGGER.info("Registering commands");
         CommandRegistrationCallback.EVENT.register(SessionCommand::register);
         CommandRegistrationCallback.EVENT.register(PlaceChestCommand::register);
-        CommandRegistrationCallback.EVENT.register(SelectHuntersCommand::register);
-        CommandRegistrationCallback.EVENT.register(CheckBountyCommand::register);
         CommandRegistrationCallback.EVENT.register(LivesCommand::register);
     }
 }

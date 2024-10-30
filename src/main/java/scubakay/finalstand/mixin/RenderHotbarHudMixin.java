@@ -10,7 +10,7 @@ import scubakay.finalstand.event.callback.HotbarRenderCallback;
 
 @Mixin(InGameHud.class)
 public class RenderHotbarHudMixin {
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(FLnet/minecraft/client/gui/DrawContext;)V"))
+    @Inject(method = "renderMainHud", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(Lnet/minecraft/client/gui/DrawContext;F)V"))
     public void injectRender(DrawContext context, float tickDelta, CallbackInfo ci) {
         HotbarRenderCallback.EVENT.invoker().onHudRender(context, tickDelta);
     }
